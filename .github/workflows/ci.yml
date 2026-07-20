@@ -1,0 +1,19 @@
+name: CI
+
+# PR-only gate (type-check + build, no publish). Pipeline body in _build.yml.
+on:
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  packages: read
+
+jobs:
+  check:
+    uses: ./.github/workflows/_build.yml
+    secrets: inherit

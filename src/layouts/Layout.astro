@@ -1,0 +1,142 @@
+---
+// Font faces must be imported here (not via @import in global.css):
+// @tailwindcss/postcss inlines CSS @imports without rebasing their relative
+// url(./files/*.woff2) refs, so Vite never emits the fonts otherwise.
+import "@fontsource/lato/400.css";
+import "@fontsource/lato/700.css";
+import "@fontsource/lato/900.css";
+import "@fontsource-variable/geist";
+import "@fontsource-variable/jetbrains-mono";
+import "~/styles/global.css";
+import { CookieNotice } from "@tracht-digital-solutions/tds-shared/components";
+import Header from "~/components/Header.astro";
+import Footer from "~/components/Footer.astro";
+import { site } from "~/lib/site";
+import { adsConfig } from "~/lib/catalog";
+
+interface Props {
+  title: string;
+  description?: string;
+  /** Canonical URL — defaults to the current page's URL. */
+  canonical?: string;
+  /** Absolute URL or site-relative path for og:image + twitter:image. */
+  ogImage?: string;
+  /** Schema.org structured data — object or array of objects. */
+  jsonLd?: object | object[];
+  /** Set noindex for non-public pages. */
+  noindex?: boolean;
+}
+
+const {
+  title,
+  description = site.description,
+  canonical,
+  ogImage = "/og-default.png",
+  jsonLd,
+  noindex = false,
+} = Astro.props;
+
+const origin = Astro.site?.origin ?? site.origin;
+const url = canonical ?? new URL(Astro.url.pathname, origin).toString();
+const ogImageAbs = ogImage.startsWith("http") ? ogImage : new URL(ogImage, origin).toString();
+
+// AdSense config (build-time, admin-toggleable). When enabled we show the
+// *consent* banner (opt-in gate that also covers the cookie disclosure) and
+// inject the loader only after "granted". Off when absent / demo / API down.
+const ads = await adsConfig();
+const adsActive = ads.enabled && !!ads.publisherId;
+---
+
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#050f68" />
+    {noindex && <meta name="robots" content="noindex,nofollow" />}
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    {/* No-flash theme bootstrap — same key as the other TDS frontends so the
+        light/dark choice carries across properties. */}
+    <script is:inline>
+      document.documentElement.classList.add("js");
+      (function () {
+        try {
+          var saved = localStorage.getItem("tds-theme");
+          if (saved === "light" || saved === "dark") {
+            document.documentElement.setAttribute("data-theme", saved);
+            return;
+          }
+        } catch (e) {}
+        var dark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+        document.documentElement.setAttribute("data-theme", dark ? "dark" : "light");
+      })();
+    </script>
+
+    <link rel="canonical" href={url} />
+    <link rel="preconnect" href="https://api.tracht-digital.de" crossorigin />
+    <link rel="preconnect" href="https://tracht-digital.de" crossorigin />
+    {adsActive && (
+      <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin />
+    )}
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={url} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImageAbs} />
+    <meta property="og:locale" content="de_DE" />
+    <meta property="og:site_name" content={site.name} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageAbs} />
+
+    {jsonLd && (
+      <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />
+    )}
+  </head>
+  <body>
+    <a href="#main" class="absolute -top-full left-0 z-50 px-6 py-3 bg-[var(--color-surface-navy)] text-white text-sm font-semibold focus:top-0 transition-all">
+      Zum Inhalt springen
+    </a>
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+
+    {/* AdSense consent gate — a real Accept/Decline opt-in; the loader below
+        only runs after "granted". */}
+    {adsActive && <CookieNotice client:idle lang="de" consent />}
+
+    {/* Consent-gated AdSense loader. Injects adsbygoogle.js only after the
+        visitor grants ad consent (now or via the banner event) — nothing loads
+        and no ad cookie is set beforehand. Body is raw (define:vars injects the
+        publisher id); never wrap it in a template literal. */}
+    {adsActive && (
+      <script is:inline define:vars={{ adsClient: ads.publisherId }}>
+        (function () {
+          function load() {
+            if (window.__tdsAdsLoaded) return;
+            window.__tdsAdsLoaded = true;
+            var s = document.createElement("script");
+            s.async = true;
+            s.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=" + adsClient;
+            s.crossOrigin = "anonymous";
+            document.head.appendChild(s);
+          }
+          try {
+            if (localStorage.getItem("tds-ad-consent") === "granted") { load(); return; }
+          } catch (e) {}
+          window.addEventListener("tds-ad-consent", function (e) {
+            if (e && e.detail === "granted") load();
+          });
+        })();
+      </script>
+    )}
+  </body>
+</html>

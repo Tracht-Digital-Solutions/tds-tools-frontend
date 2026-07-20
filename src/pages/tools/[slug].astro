@@ -1,0 +1,69 @@
+---
+import type { GetStaticPaths } from "astro";
+import Layout from "~/layouts/Layout.astro";
+import AdSlot from "~/components/AdSlot.astro";
+import Icon from "~/components/Icon.astro";
+import { components } from "virtual:tools-components";
+import { enabledTools, adsConfig } from "~/lib/catalog";
+import { site } from "~/lib/site";
+import type { ResolvedTool } from "~/lib/catalog";
+
+// One static page per enabled tool. The resolved tool (manifest + admin flags)
+// rides along as a prop so the body doesn't re-resolve the catalog per page.
+export const getStaticPaths = (async () => {
+  const tools = await enabledTools();
+  return tools.map((tool) => ({ params: { slug: tool.slug }, props: { tool } }));
+}) satisfies GetStaticPaths;
+
+interface Props {
+  tool: ResolvedTool;
+}
+const { tool } = Astro.props;
+const ads = await adsConfig();
+
+// The tool's UI component, statically imported by `toolHost` into the
+// components map keyed by tool id.
+const Tool = components[tool.id] as unknown as (props: Record<string, unknown>) => unknown;
+
+// Premium tools suppress ads (paid experience); free tools show them if enabled.
+const showAds = ads.enabled && !!ads.slotTool && !tool.isPremium;
+
+const seoTitle = tool.seo?.title ?? `${tool.name} — ${site.name}`;
+const seoDescription = tool.seo?.description ?? tool.description;
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": tool.seo?.jsonLdType ?? "WebApplication",
+  name: tool.name,
+  url: `${site.origin}/tools/${tool.slug}`,
+  applicationCategory: "BusinessApplication",
+  operatingSystem: "Web",
+  description: seoDescription,
+  offers: { "@type": "Offer", price: (tool.priceCents / 100).toFixed(2), priceCurrency: "EUR" },
+  provider: { "@type": "Organization", name: "Tracht Digital Solutions", url: "https://tracht-digital.de" },
+};
+---
+
+<Layout title={seoTitle} description={seoDescription} jsonLd={jsonLd}>
+  <div class="mx-auto max-w-4xl px-4 py-10 sm:px-6">
+    <nav class="mb-6 text-sm text-[color:var(--color-muted)]">
+      <a href="/" class="no-underline hover:text-[color:var(--color-ink)]">Alle Tools</a>
+      <span class="mx-2">/</span>
+      <span class="text-[color:var(--color-ink)]">{tool.name}</span>
+    </nav>
+
+    <header class="mb-8">
+      <h1 class="flex items-center gap-3 font-[family-name:var(--font-display)] text-3xl font-extrabold tracking-tight text-[color:var(--color-ink)]">
+        <Icon name={tool.icon} class="h-7 w-7 text-[color:var(--color-primary)]" />
+        {tool.name}
+      </h1>
+      <p class="mt-3 max-w-2xl text-[color:var(--color-muted)]">{tool.description}</p>
+    </header>
+
+    <section class="rounded-2xl border border-[color:var(--color-line)] bg-[color:var(--color-card)] p-5 sm:p-7">
+      {Tool ? <Tool /> : <p class="text-[color:var(--color-danger)]">Dieses Tool konnte nicht geladen werden.</p>}
+    </section>
+
+    {showAds && <AdSlot client={ads.publisherId} slot={ads.slotTool} />}
+  </div>
+</Layout>

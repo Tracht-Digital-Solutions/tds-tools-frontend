@@ -1,0 +1,86 @@
+@import "tailwindcss";
+
+/* Brand design system + shared application chrome. Tokens, dark theme, base
+   resets, type primitives, chips, spinner/skeleton and status colours all live
+   in tds-shared so every TDS frontend stays consistent. The @fontsource imports
+   live in Layout.astro (NOT here): @tailwindcss/postcss inlines CSS @imports
+   without rebasing the packages' relative url(./files/*.woff2) refs, so Vite
+   would never emit the woff2 and every font 404s. */
+@import "@tracht-digital-solutions/tds-shared/styles/base.css";
+@import "@tracht-digital-solutions/tds-shared/styles/app.css";
+
+/* Scan the composed tool packages (in node_modules) for Tailwind utility
+   classes. Tailwind ignores node_modules by default, so without this the
+   flex/grid/gap utilities used inside the tool islands are never generated.
+   MUST come AFTER the @imports (@source before @import errors). Mirrors the
+   panel host's global.css @source rule. */
+@source "../../node_modules/@tracht-digital-solutions/tds-tool-qr/**/*.{astro,tsx}";
+@source "../../node_modules/@tracht-digital-solutions/tds-tool-textkit/**/*.{astro,tsx}";
+@source "../../node_modules/@tracht-digital-solutions/tds-tool-devkit/**/*.{astro,tsx}";
+
+/* JetBrains Mono for the developer tools (JSON, code) — the token defaults to
+   Geist Mono which we don't ship. */
+:root {
+  --font-mono: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+
+/* ---- Tool catalog + tool page chrome (site-local) ---- */
+.tools-hero {
+  background: var(--color-surface-navy);
+  color: #fff;
+}
+.tool-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  height: 100%;
+  padding: 1.25rem 1.375rem;
+  background: var(--color-card);
+  border: 1px solid var(--color-line);
+  border-radius: 0.9rem;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 180ms ease, transform 180ms ease;
+}
+.tool-card:hover {
+  border-color: var(--color-primary);
+  transform: translateY(-2px);
+}
+.tool-card__title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.125rem;
+  color: var(--color-ink);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.tool-card__desc {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--color-muted);
+  margin: 0;
+  text-wrap: pretty;
+}
+.tool-badge {
+  display: inline-flex;
+  align-items: center;
+  height: 1.4rem;
+  padding: 0 0.5rem;
+  border-radius: 999px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.tool-badge--premium {
+  background: color-mix(in srgb, var(--color-warning) 18%, transparent);
+  color: var(--color-warning);
+}
+.tool-badge--login {
+  background: color-mix(in srgb, var(--color-info) 15%, transparent);
+  color: var(--color-info);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tool-card { transition: none; }
+}

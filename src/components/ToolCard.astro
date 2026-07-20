@@ -1,0 +1,22 @@
+---
+import Icon from "~/components/Icon.astro";
+import type { ResolvedTool } from "~/lib/catalog";
+interface Props {
+  tool: ResolvedTool;
+}
+const { tool } = Astro.props;
+---
+
+<a href={`/tools/${tool.slug}`} class="tool-card">
+  <span class="tool-card__title">
+    <Icon name={tool.icon} class="h-5 w-5 text-[color:var(--color-primary)]" />
+    {tool.name}
+  </span>
+  <p class="tool-card__desc">{tool.description}</p>
+  {(tool.isPremium || tool.requiresLogin) && (
+    <span class="mt-auto flex flex-wrap gap-1.5 pt-1">
+      {tool.isPremium && <span class="tool-badge tool-badge--premium">Premium</span>}
+      {tool.requiresLogin && <span class="tool-badge tool-badge--login">Login</span>}
+    </span>
+  )}
+</a>

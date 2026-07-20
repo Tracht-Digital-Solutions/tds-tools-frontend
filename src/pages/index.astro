@@ -1,0 +1,74 @@
+---
+import Layout from "~/layouts/Layout.astro";
+import ToolCard from "~/components/ToolCard.astro";
+import AdSlot from "~/components/AdSlot.astro";
+import { enabledTools, adsConfig } from "~/lib/catalog";
+import { site, categoryLabels, categoryOrder } from "~/lib/site";
+import type { ToolCategory } from "@tracht-digital-solutions/tds-tools-contract";
+
+const tools = await enabledTools();
+const ads = await adsConfig();
+
+// Group enabled tools by category, in the site's stable category order.
+const groups = categoryOrder
+  .map((cat) => ({ cat, tools: tools.filter((t) => t.category === cat) }))
+  .filter((g) => g.tools.length > 0);
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: site.name,
+    url: site.origin,
+    description: site.description,
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    itemListElement: tools.map((t, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: t.name,
+      url: `${site.origin}/tools/${t.slug}`,
+    })),
+  },
+];
+---
+
+<Layout
+  title={`${site.name} — ${site.tagline}`}
+  description={site.description}
+  jsonLd={jsonLd}
+>
+  <section class="tools-hero">
+    <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
+      <p class="text-sm font-semibold uppercase tracking-[0.14em] text-white/60">Digitalisierung für Unternehmen</p>
+      <h1 class="mt-3 max-w-3xl font-[family-name:var(--font-display)] text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl">
+        Kostenlose digitale Werkzeuge — direkt im Browser.
+      </h1>
+      <p class="mt-4 max-w-2xl text-lg text-white/75">
+        QR-Codes, Passwörter, JSON, Kontrast und mehr. Ohne Anmeldung, ohne Installation.
+        Von Tracht Digital Solutions aus Schwarzenbek bei Hamburg.
+      </p>
+    </div>
+  </section>
+
+  <div class="mx-auto max-w-6xl px-4 py-12 sm:px-6">
+    {ads.enabled && ads.slotCatalog && <AdSlot client={ads.publisherId} slot={ads.slotCatalog} />}
+
+    {groups.length === 0 ? (
+      <p class="text-[color:var(--color-muted)]">Zurzeit sind keine Tools verfügbar.</p>
+    ) : (
+      groups.map(({ cat, tools: catTools }) => (
+        <section class="mb-12">
+          <h2 class="mb-4 font-[family-name:var(--font-display)] text-xl font-bold text-[color:var(--color-ink)]">
+            {categoryLabels[cat as ToolCategory]}
+          </h2>
+          <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {catTools.map((tool) => <ToolCard tool={tool} />)}
+          </div>
+        </section>
+      ))
+    )}
+  </div>
+</Layout>

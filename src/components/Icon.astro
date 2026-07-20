@@ -1,0 +1,37 @@
+---
+/**
+ * Minimal inline-SVG icon set (lucide-style, 24×24, currentColor). Keyed by the
+ * `icon` string a tool manifest declares; falls back to a generic square. Kept
+ * tiny + local — a full icon lib isn't worth the weight for a handful of tools.
+ */
+interface Props {
+  name?: string;
+  class?: string;
+}
+const { name = "", class: cls = "" } = Astro.props;
+
+const paths: Record<string, string> = {
+  "qr-code": "M3 3h6v6H3zM15 3h6v6h-6zM3 15h6v6H3zM15 15h3v3h-3zM18 18h3v3h-3z",
+  key: "M15 7a4 4 0 1 0-3.9 5H12l-2 2v2H8v2H5v-3l6-6a4 4 0 0 1 4-4z",
+  link: "M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1",
+  braces: "M7 4a2 2 0 0 0-2 2v3a2 2 0 0 1-2 2 2 2 0 0 1 2 2v3a2 2 0 0 0 2 2M17 4a2 2 0 0 1 2 2v3a2 2 0 0 0 2 2 2 2 0 0 0-2 2v3a2 2 0 0 1-2 2",
+  contrast: "M12 3a9 9 0 1 0 0 18zM12 3v18",
+  image: "M3 5h18v14H3zM3 15l5-5 4 4 3-3 6 6",
+};
+const d = paths[name] ?? "M4 4h16v16H4z";
+---
+
+<svg
+  class={cls}
+  width="24"
+  height="24"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.75"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden="true"
+>
+  <path d={d}></path>
+</svg>
