@@ -17,6 +17,7 @@
 @source "../../node_modules/@tracht-digital-solutions/tds-tool-qr/**/*.{astro,tsx}";
 @source "../../node_modules/@tracht-digital-solutions/tds-tool-textkit/**/*.{astro,tsx}";
 @source "../../node_modules/@tracht-digital-solutions/tds-tool-devkit/**/*.{astro,tsx}";
+@source "../../node_modules/@tracht-digital-solutions/tds-tool-media/**/*.{astro,tsx}";
 
 /* JetBrains Mono for the developer tools (JSON, code) — the token defaults to
    Geist Mono which we don't ship. */

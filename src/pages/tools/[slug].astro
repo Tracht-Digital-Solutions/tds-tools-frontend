@@ -4,6 +4,7 @@ import Layout from "~/layouts/Layout.astro";
 import AdSlot from "~/components/AdSlot.astro";
 import Icon from "~/components/Icon.astro";
 import { components } from "virtual:tools-components";
+import ToolGate from "~/components/ToolGate.tsx";
 import { enabledTools, adsConfig } from "~/lib/catalog";
 import { site } from "~/lib/site";
 import type { ResolvedTool } from "~/lib/catalog";
@@ -27,6 +28,11 @@ const Tool = components[tool.id] as unknown as (props: Record<string, unknown>) 
 
 // Premium tools suppress ads (paid experience); free tools show them if enabled.
 const showAds = ads.enabled && !!ads.slotTool && !tool.isPremium;
+
+// Login-required or premium tools render behind a client-side gate: the tool
+// body is hidden until the gate confirms the shared session (and, for premium,
+// the entitlement). Free tools render directly.
+const gated = tool.requiresLogin || tool.isPremium;
 
 const seoTitle = tool.seo?.title ?? `${tool.name} — ${site.name}`;
 const seoDescription = tool.seo?.description ?? tool.description;
@@ -60,7 +66,18 @@ const jsonLd = {
       <p class="mt-3 max-w-2xl text-[color:var(--color-muted)]">{tool.description}</p>
     </header>
 
-    <section class="rounded-2xl border border-[color:var(--color-line)] bg-[color:var(--color-card)] p-5 sm:p-7">
+    {gated && (
+      <ToolGate
+        client:load
+        toolId={tool.id}
+        requiresLogin={tool.requiresLogin}
+        isPremium={tool.isPremium}
+        priceCents={tool.priceCents}
+        bodySelector="#tool-body"
+      />
+    )}
+
+    <section id="tool-body" hidden={gated} class="rounded-2xl border border-[color:var(--color-line)] bg-[color:var(--color-card)] p-5 sm:p-7">
       {Tool ? <Tool /> : <p class="text-[color:var(--color-danger)]">Dieses Tool konnte nicht geladen werden.</p>}
     </section>
 

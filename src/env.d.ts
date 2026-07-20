@@ -21,6 +21,10 @@ interface ImportMetaEnv {
   readonly PUBLIC_AUTH_API_URL?: string;
   /** Token for the build-time registry sync (POST /tools/registry). Release only. */
   readonly TOOLS_REGISTRY_TOKEN?: string;
+  /** Public panel API base for the client-side gate (entitlement/checkout/me). */
+  readonly PUBLIC_API_URL?: string;
+  /** Login URL the premium/login gate links to (customer portal). */
+  readonly PUBLIC_LOGIN_URL?: string;
 }
 
 interface ImportMeta {

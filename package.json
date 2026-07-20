@@ -22,6 +22,7 @@
     "@tracht-digital-solutions/tds-tool-qr": "^0.1.0",
     "@tracht-digital-solutions/tds-tool-textkit": "^0.1.0",
     "@tracht-digital-solutions/tds-tool-devkit": "^0.1.0",
+    "@tracht-digital-solutions/tds-tool-media": "^0.1.0",
     "astro": "^6.4.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

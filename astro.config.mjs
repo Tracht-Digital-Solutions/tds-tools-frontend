@@ -13,8 +13,9 @@ import { toolHost } from "@tracht-digital-solutions/tds-tools-contract/astro";
 import qr from "@tracht-digital-solutions/tds-tool-qr";
 import textkit from "@tracht-digital-solutions/tds-tool-textkit";
 import devkit from "@tracht-digital-solutions/tds-tool-devkit";
+import media from "@tracht-digital-solutions/tds-tool-media";
 
-const packs = [qr, textkit, devkit];
+const packs = [qr, textkit, devkit, media];
 
 export default defineConfig({
   site: "https://tools.tracht-digital.de",
