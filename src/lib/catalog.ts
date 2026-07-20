@@ -73,8 +73,39 @@ function fallback(): { tools: ResolvedTool[]; ads: AdsConfig } {
   return { tools: composed.tools.map((t) => resolve(t, undefined)), ads: ADS_OFF };
 }
 
+/**
+ * Best-effort registry sync — push the composed tool list (ids + names +
+ * categories + defaults) to the backend so the admin panel can see + manage
+ * every tool. Runs once per build when `TOOLS_REGISTRY_TOKEN` is set (release
+ * builds); never throws, never clobbers an admin override (the backend upserts).
+ */
+async function syncRegistry(): Promise<void> {
+  const token = import.meta.env.TOOLS_REGISTRY_TOKEN;
+  if (!token) return;
+  try {
+    await fetch(`${BASE_URL}/tools/registry`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        token,
+        tools: composed.tools.map((t) => ({
+          id: t.id,
+          name: t.name,
+          category: t.category,
+          requires_login_default: t.requiresLoginDefault ?? false,
+          premium_default: t.premiumDefault ?? false,
+          price_cents_default: t.priceCentsDefault ?? 0,
+        })),
+      }),
+    });
+  } catch (err) {
+    console.warn("[tds-tools] registry sync failed (non-fatal):", err);
+  }
+}
+
 async function load(): Promise<{ tools: ResolvedTool[]; ads: AdsConfig }> {
   if (DEMO_MODE) return fallback();
+  await syncRegistry();
   try {
     const res = await fetch(`${BASE_URL}/tools/catalog`);
     if (!res.ok) return fallback();

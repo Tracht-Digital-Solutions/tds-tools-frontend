@@ -19,6 +19,8 @@ interface ImportMetaEnv {
   readonly PUBLIC_DEMO_MODE?: string;
   /** Auth API base for the premium login gate (SSO cookie verify). */
   readonly PUBLIC_AUTH_API_URL?: string;
+  /** Token for the build-time registry sync (POST /tools/registry). Release only. */
+  readonly TOOLS_REGISTRY_TOKEN?: string;
 }
 
 interface ImportMeta {
