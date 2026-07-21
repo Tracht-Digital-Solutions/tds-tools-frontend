@@ -15,10 +15,10 @@ Tool-Paketen zusammengesetzt.
 
 | Repo | Typ | Rolle |
 |---|---|---|
-| `tds-tools-contract` | npm-SDK | `defineTool` / `defineToolPack` / `composeToolPacks` / `toolHost()` |
-| `tds-tool-qr` `-textkit` `-devkit` `-media` | Tool-Pakete | je 1–n Tools (Manifest + `.astro`/`.tsx`) |
-| `tds-tools` | Static-Site | die Website; komponiert die Pakete via `toolHost` |
-| `tds-ext-tools` | Panel-Extension | Admin-Verwaltung + Backend (Katalog, AdSense, Stripe-Premium) |
+| `tds-tools-contract-pkg` | npm-SDK | `defineTool` / `defineToolPack` / `composeToolPacks` / `toolHost()` |
+| `tds-tool-qr-pkg` `-textkit` `-devkit` `-media` | Tool-Pakete | je 1–n Tools (Manifest + `.astro`/`.tsx`) |
+| `tds-tools-frontend` | Static-Site | die Website; komponiert die Pakete via `toolHost` |
+| `tds-ext-tools-pkg` | Panel-Extension | Admin-Verwaltung + Backend (Katalog, AdSense, Stripe-Premium) |
 
 **Datenfluss:** Tool-Liste fließt _Pakete → Website → Backend_ (Build-Zeit-Sync),
 Konfiguration fließt zurück (`GET /tools/catalog`). Die **kostenlosen Tools +
@@ -55,7 +55,7 @@ AdSense laufen komplett statisch** und sind unabhängig vom Backend. Der
 ### Tool-Paket / Contract
 
 ```bash
-cd tds-tool-qr           # oder tds-tools-contract, tds-tool-textkit, …
+cd tds-tool-qr-pkg           # oder tds-tools-contract-pkg, tds-tool-textkit-pkg, …
 npm install --no-package-lock
 npm run type-check
 npm run build
@@ -63,12 +63,12 @@ npm run build
 npm run test:run
 ```
 
-### Die Website (`tds-tools`)
+### Die Website (`tds-tools-frontend`)
 
 Normalfall (alle Pakete sind veröffentlicht — Token in `~/.npmrc`/`NPM_TOKEN`):
 
 ```bash
-cd tds-tools
+cd tds-tools-frontend
 npm install --no-package-lock
 npm run dev            # http://localhost:4321
 npm run build          # → dist/ (das Deploy-Artefakt)
@@ -80,7 +80,7 @@ npm run type-check     # astro check — muss 0 Fehler sein (Korrektheits-Gate)
 bauen (die Geschwister-Repos liegen daneben):
 
 ```bash
-cd tds-tools
+cd tds-tools-frontend
 npm install ../tds-shared ../tds-tools-contract \
   ../tds-tool-qr ../tds-tool-textkit ../tds-tool-devkit ../tds-tool-media \
   qrcode pdf-lib --no-save --no-package-lock --install-links
@@ -101,11 +101,11 @@ npm run build
 | `PUBLIC_LOGIN_URL` | Login-Ziel des Premium-/Login-Gates | `https://app.tracht-digital.de/login` |
 | `TOOLS_REGISTRY_TOKEN` | Token für den Build-Zeit-Registry-Sync (nur Release) | – |
 
-### Das Backend (`tds-ext-tools`)
+### Das Backend (`tds-ext-tools-pkg`)
 
 ```bash
-cd tds-ext-tools
-composer install       # löst tds-panel-contract online über die VCS-URL auf
+cd tds-ext-tools-pkg
+composer install       # löst tds-panel-contract-pkg online über die VCS-URL auf
 composer test          # phpunit (DB-Tests werden ohne TDS_TEST_DB_DSN übersprungen)
 npm install --no-package-lock && npm run type-check && npm run build   # FE-Manifest
 ```
@@ -135,18 +135,18 @@ veröffentlicht automatisch eine neue **Patch-Version als `@latest`** (bumpt +
 publisht + Git-Tag) und stößt danach einen **Rebuild+Deploy der abhängigen Seite**
 an (Cross-Repo-`workflow_dispatch`):
 
-- `tds-tools-contract` + `tds-tool-*` → Rebuild von **`tds-tools`**
-- `tds-ext-tools` → Rebuild von **`tds-admin-panel`**
+- `tds-tools-contract-pkg` + `tds-tool-*` → Rebuild von **`tds-tools-frontend`**
+- `tds-ext-tools-pkg` → Rebuild von **`tds-admin-frontend`**
 
 Der Bump-Commit trägt `[skip ci]`, damit das automatische Zurückpushen keinen
-zweiten Release auslöst (keine Endlosschleife). Bei `tds-ext-tools` wird zusätzlich
+zweiten Release auslöst (keine Endlosschleife). Bei `tds-ext-tools-pkg` wird zusätzlich
 `composer.json` mitgebumpt (der Composer-Release-Ref = das Git-Tag).
 
 **Minor/Major** über den manuellen Button: Repo → **Actions → „Release …" → Run
 workflow** (Bump wählen). Oder per CLI:
 
 ```bash
-gh workflow run release.yml -R Tracht-Digital-Solutions/tds-tools-contract -f bump=minor
+gh workflow run release.yml -R Tracht-Digital-Solutions/tds-tools-contract-pkg -f bump=minor
 ```
 
 - **Versionslinien:** Tool-Pakete + Extension bleiben in `0.1.x` (Site/Panel pinnen
@@ -161,7 +161,7 @@ gh workflow run release.yml -R Tracht-Digital-Solutions/tds-tools-contract -f bu
 
 ## 3. Website bereitstellen (Deploy bei jedem Push)
 
-`tds-tools` deployt **bei jedem Push auf `main`** direkt auf den `release`-Branch
+`tds-tools-frontend` deployt **bei jedem Push auf `main`** direkt auf den `release`-Branch
 (Prod-Config `PUBLIC_DEMO_MODE=false`, Live-Katalog mit statischem Fallback) und
 pingt danach `DEPLOY_WEBHOOK_URL`. Denselben Deploy lösen der manuelle Button und der
 Cross-Repo-Dispatch aus einem Package-Release aus (Abschnitt 2). Einen separaten
@@ -173,7 +173,7 @@ Cross-Repo-Dispatch aus einem Package-Release aus (Abschnitt 2). Einen separaten
 
 **Go-live der kostenlosen Tools (reicht ohne Backend):**
 
-1. In `tds-tools` das Repo-Secret **`DEPLOY_WEBHOOK_URL`** setzen (Plesk-Git-Webhook-URL).
+1. In `tds-tools-frontend` das Repo-Secret **`DEPLOY_WEBHOOK_URL`** setzen (Plesk-Git-Webhook-URL).
 2. `tools.tracht-digital.de` in Plesk auf den **`release`-Branch** zeigen lassen.
 3. Fertig — ab jetzt geht jeder Push (bzw. jedes Package-Release) automatisch live.
 
@@ -190,8 +190,8 @@ Tools / AdSense** (Namespace `tools`, DB-first + Env-Fallback):
 | Feld | Wirkung |
 |---|---|
 | AdSense aktivieren + **Publisher-ID** (`ca-pub-…`) + Slots | schaltet die Consent-gated Werbung frei |
-| **Rebuild-Repo** (`Tracht-Digital-Solutions/tds-tools`) + Workflow (`dev.yml`) + **Rebuild-Token** | löst nach Katalog-Änderungen einen Rebuild der Website aus |
-| **Registry-Sync-Token** | muss identisch als `TOOLS_REGISTRY_TOKEN` in `tds-tools` gesetzt sein (Build-Zeit-Sync der Tool-Liste) |
+| **Rebuild-Repo** (`Tracht-Digital-Solutions/tds-tools-frontend`) + Workflow (`dev.yml`) + **Rebuild-Token** | löst nach Katalog-Änderungen einen Rebuild der Website aus |
+| **Registry-Sync-Token** | muss identisch als `TOOLS_REGISTRY_TOKEN` in `tds-tools-frontend` gesetzt sein (Build-Zeit-Sync der Tool-Liste) |
 | **Stripe Secret Key** + **Webhook Secret** + Währung + Success/Cancel-URL | Premium-Bezahlung (Checkout) |
 
 Weiter unter **Tools** (die Verwaltungsseite): je Tool _sichtbar / Login-Pflicht /
@@ -214,7 +214,7 @@ Premium / Preis_. Jede Änderung löst automatisch einen Rebuild aus.
 ## 5. Ein neues Tool hinzufügen (die „Erweiterung")
 
 Ein neues Tool = ein neues `tds-tool-*`-Paket, das die Website komponiert. Am
-schnellsten ein bestehendes Paket als Vorlage klonen (z. B. `tds-tool-textkit` für
+schnellsten ein bestehendes Paket als Vorlage klonen (z. B. `tds-tool-textkit-pkg` für
 rein clientseitige Tools ohne Extra-Dependency).
 
 **a) Repo anlegen & umbenennen**
@@ -257,7 +257,7 @@ export default defineToolPack({
 `islands/MeinTool.tsx` mit `client:load`. Rein clientseitig (kein Backend nötig).
 Styling über tds-shared-Tokens + Tailwind-Utilities.
 
-**d) In die Website einbauen** (`tds-tools`) — die einzige Kompositions-Entscheidung:
+**d) In die Website einbauen** (`tds-tools-frontend`) — die einzige Kompositions-Entscheidung:
 
 ```js
 // astro.config.mjs
@@ -275,7 +275,7 @@ const packs = [qr, textkit, devkit, media, mein];   // hinzufügen
 ```
 
 **e) Veröffentlichen & ausrollen:** neues Paket **Release** drücken → dann
-`tds-tools` neu bauen (Push/Release oder Rebuild-Button im Panel). Das Tool
+`tds-tools-frontend` neu bauen (Push/Release oder Rebuild-Button im Panel). Das Tool
 erscheint automatisch im Katalog; nach dem nächsten Build synct es sich (mit
 `TOOLS_REGISTRY_TOKEN`) in die Admin-Verwaltung.
 
@@ -305,14 +305,14 @@ erscheint automatisch im Katalog; nach dem nächsten Build synct es sich (mit
 
 ## 7. Panel-Extension hinzufügen (allgemein, zur Einordnung)
 
-Das obige `tds-ext-tools` ist selbst eine **Panel-Extension**. Eine neue Panel-
-Extension entsteht analog aus `tds-ext-template` (siehe dessen `README.md`):
+Das obige `tds-ext-tools-pkg` ist selbst eine **Panel-Extension**. Eine neue Panel-
+Extension entsteht analog aus `tds-ext-template-pkg` (siehe dessen `README.md`):
 
-1. Repo aus `tds-ext-template` klonen, umbenennen (id, Paketname, PHP-Namespace,
+1. Repo aus `tds-ext-template-pkg` klonen, umbenennen (id, Paketname, PHP-Namespace,
    Migration-Klassenpräfix).
 2. Slots implementieren (nav / widgets / settings / routes / permissions / i18n)
    und den PHP-`Module` (Routen, Migrationen, Rechte).
-3. Aktivieren: Manifest ins **Produkt** (`tds-admin-panel`/`tds-customer-panel`)
+3. Aktivieren: Manifest ins **Produkt** (`tds-admin-frontend`/`tds-customer-frontend`)
    `astro.config.mjs` `extensions[]` + `package.json` eintragen **und**
    `new DeinModule()` in `tds-core-panel-api`s `Modules::enabled()` + dort ein
    Composer-`path`-Repo ergänzen.
@@ -327,9 +327,9 @@ Details: `tds-ext-template/README.md` + `tds-panel-contract/AGENTS.md`.
 ### Secrets (GitHub)
 - **`PACKAGE_TOKEN`** — auf allen Plattform-Repos (Install aus Packages +
   Publish + Branch-Push). Speist die CI-Variable `NPM_TOKEN`.
-- **`DEPLOY_WEBHOOK_URL`** — nur auf `tds-tools` (Deploy-Ping nach `release`).
+- **`DEPLOY_WEBHOOK_URL`** — nur auf `tds-tools-frontend` (Deploy-Ping nach `release`).
 
-### Wichtige Endpunkte (`tds-ext-tools`, über die Panel-API)
+### Wichtige Endpunkte (`tds-ext-tools-pkg`, über die Panel-API)
 | Methode | Pfad | Auth |
 |---|---|---|
 | GET | `/tools/catalog` | öffentlich |
@@ -341,7 +341,7 @@ Details: `tds-ext-template/README.md` + `tds-panel-contract/AGENTS.md`.
 | POST | `/tools/stripe-webhook` | Stripe-Signatur |
 
 ### Häufige Stolperfallen
-- **`tds-tools` braucht `postcss.config.mjs`** — sonst läuft Tailwind gar nicht
+- **`tds-tools-frontend` braucht `postcss.config.mjs`** — sonst läuft Tailwind gar nicht
   (der Build gelingt, aber die Seite ist unstyled).
 - **`@source` je Tool-Paket** in `global.css`, NACH den `@imports`.
 - **Fonts sind JS-Imports in `Layout.astro`**, keine CSS-`@import`s.

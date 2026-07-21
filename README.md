@@ -1,12 +1,12 @@
-# tds-tools
+# tds-tools-frontend
 
 The **public tools site** — `tools.tracht-digital.de`. A static Astro site that
 composes tool packages (`tds-tool-*`) into a catalog of free, browser-based
 digitalisation tools, monetised with consent-gated Google AdSense and steered
-from the admin panel (`tds-ext-tools`).
+from the admin panel (`tds-ext-tools-pkg`).
 
 Public, indexable, no login for free tools. It is the tools-platform sibling of
-`tds-landingpage` / `tds-blog` — a standalone static product, **not** part of the
+`tds-landingpage-frontend` / `tds-blog-frontend` — a standalone static product, **not** part of the
 noindex panel host.
 
 > **Operator handbook:** `TOOLS-PLATFORM.md` is the hands-on guide (local dev,
@@ -28,7 +28,7 @@ Adding a tool = publish a new `tds-tool-*` package, add it to the `packs` array 
 ## Catalog + ads config
 
 `src/lib/catalog.ts` fetches the admin-controlled catalog (enabled / requires-login
-/ premium / price + the AdSense config) from `tds-ext-tools`' public
+/ premium / price + the AdSense config) from `tds-ext-tools-pkg`' public
 `GET /tools/catalog` at build time, merged onto the manifest defaults. A
 failed/absent fetch (or `PUBLIC_DEMO_MODE=true`) falls back to the manifest
 defaults with ads OFF — so the site always builds, even before the panel backend
@@ -70,7 +70,7 @@ symlink). Keep the published `^` ranges in `package.json` for CI.
 
 Continuous: **every push to `main` builds + deploys** to the orphan `release` branch
 (`release.yml`, prod config) and pings `DEPLOY_WEBHOOK_URL`. The same deploy is also
-dispatched automatically when a dependency package (`tds-tools-contract` /
+dispatched automatically when a dependency package (`tds-tools-contract-pkg` /
 `tds-tool-*`) publishes a new `@latest` — so a tool update rebuilds the site with no
 manual step. Point `tools.tracht-digital.de` at the `release` branch. See
 `TOOLS-PLATFORM.md` + `AGENTS.md`.
