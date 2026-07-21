@@ -1,11 +1,14 @@
-name: Release → release branch (manual)
+name: Deploy → release branch (push + manual + dispatch)
 
-# Production build, ONLY on the manual Actions button. Builds with the real
-# production config (PUBLIC_DEMO_MODE=false → live catalog from tds-ext-tools),
-# force-publishes dist/ to the orphan `release` branch, then pings the deploy
-# webhook so the host pulls `release` and goes live. Pipeline body in _build.yml.
+# Production deploy. Runs on every push to main, on the manual button, AND when a
+# dependency package dispatches it (workflow_dispatch from a tds-tool-* / contract
+# release). Builds with prod config (PUBLIC_DEMO_MODE=false → live catalog with
+# static fallback), force-pushes dist/ to the orphan `release` branch, then pings
+# DEPLOY_WEBHOOK_URL. Pipeline body in _build.yml.
 
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
 
 concurrency:
