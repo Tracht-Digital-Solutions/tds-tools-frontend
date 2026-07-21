@@ -9,6 +9,9 @@ Public, indexable, no login for free tools. It is the tools-platform sibling of
 `tds-landingpage` / `tds-blog` — a standalone static product, **not** part of the
 noindex panel host.
 
+> **Operator handbook:** `TOOLS-PLATFORM.md` is the hands-on guide (local dev,
+> release, deploy, admin config, **how to add a new tool**).
+
 ## How it composes
 
 `astro.config.mjs` spreads `toolHost({ packs })` (from `tds-tools-contract/astro`)
