@@ -40,7 +40,7 @@ jobs:
         # the right native binaries on the Linux runner (npm/cli#4828).
         run: npm install --no-package-lock
         env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_TOKEN: ${{ secrets.PACKAGE_TOKEN }}
 
       - name: Type check
         run: npm run type-check
@@ -67,7 +67,7 @@ jobs:
         if: ${{ inputs.publish_branch != '' }}
         uses: peaceiris/actions-gh-pages@v4
         with:
-          github_token: ${{ secrets.NPM_TOKEN }}
+          github_token: ${{ secrets.PACKAGE_TOKEN }}
           publish_dir: ./dist
           publish_branch: ${{ inputs.publish_branch }}
           commit_message: '${{ inputs.publish_branch }} ${{ github.sha }}'
