@@ -128,54 +128,54 @@ npm install --no-package-lock && npm run type-check && npm run build   # FE-Mani
 
 ---
 
-## 2. Veröffentlichen (Release → GitHub Packages `@latest`)
+## 2. Veröffentlichen (Auto-Release `@latest` bei jedem Push)
 
-Jedes SDK-/Paket-/Extension-Repo hat einen manuellen **Release**-Button
-(`workflow_dispatch → Release …`). Er bumpt die Version, baut, publisht `@latest`
-und pusht das Git-Tag (bei `tds-ext-tools` auch der Composer-Release-Ref).
+**Continuous Delivery:** Jeder Push auf `main` eines Paket-/SDK-/Extension-Repos
+veröffentlicht automatisch eine neue **Patch-Version als `@latest`** (bumpt +
+publisht + Git-Tag) und stößt danach einen **Rebuild+Deploy der abhängigen Seite**
+an (Cross-Repo-`workflow_dispatch`):
 
-**Reihenfolge einhalten** (Abhängigkeiten):
+- `tds-tools-contract` + `tds-tool-*` → Rebuild von **`tds-tools`**
+- `tds-ext-tools` → Rebuild von **`tds-admin-panel`**
 
-1. `tds-tools-contract`
-2. dann `tds-tool-qr`, `-textkit`, `-devkit`, `-media` (parallel möglich)
-3. dann `tds-ext-tools` (hängt nur an `tds-panel-contract`, unabhängig vom Contract)
+Der Bump-Commit trägt `[skip ci]`, damit das automatische Zurückpushen keinen
+zweiten Release auslöst (keine Endlosschleife). Bei `tds-ext-tools` wird zusätzlich
+`composer.json` mitgebumpt (der Composer-Release-Ref = das Git-Tag).
 
-Über die UI: Repo → **Actions** → **Release …** → *Run workflow* (Bump wählen).
-Oder per CLI:
+**Minor/Major** über den manuellen Button: Repo → **Actions → „Release …" → Run
+workflow** (Bump wählen). Oder per CLI:
 
 ```bash
-gh workflow run release.yml -R Tracht-Digital-Solutions/tds-tools-contract -f bump=patch
-# warten bis fertig …
-gh run watch $(gh run list -R Tracht-Digital-Solutions/tds-tools-contract \
-  --workflow release.yml -L1 --json databaseId -q '.[0].databaseId') \
-  -R Tracht-Digital-Solutions/tds-tools-contract --exit-status
+gh workflow run release.yml -R Tracht-Digital-Solutions/tds-tools-contract -f bump=minor
 ```
 
-- **Push auf `main`** (ohne Release-Button) publisht automatisch eine
-  Prerelease unter dem `@dev`-Tag — nützlich zum Testen, wird aber von `^`-Ranges
-  nicht gezogen.
-- **`bump`:** patch = Fixes, minor = additive Features, major = Breaking.
-  **Tool-Pakete + Extension bleiben in der `0.1.x`-Linie** (die Site/das Panel
-  pinnen `^0.1.x`); der Contract ist stabil bei `1.x`.
+- **Versionslinien:** Tool-Pakete + Extension bleiben in `0.1.x` (Site/Panel pinnen
+  `^0.1.x`); der Contract ist stabil bei `1.x`.
+- **Reihenfolge** ist bei normalen Änderungen egal — der Cross-Repo-Dispatch baut die
+  Seite nach jedem Package-Release neu. Nur bei einem **Breaking-Change des Contracts**
+  erst den Contract, dann die Pakete releasen.
+- **Doku-/Nicht-Release-Änderungen:** `[skip ci]` in die Commit-Message schreiben, dann
+  läuft kein Auto-Release.
 
 ---
 
-## 3. Website bereitstellen (Deploy)
+## 3. Website bereitstellen (Deploy bei jedem Push)
 
-Zwei-Branch-Modell wie bei Landingpage/Blog:
+`tds-tools` deployt **bei jedem Push auf `main`** direkt auf den `release`-Branch
+(Prod-Config `PUBLIC_DEMO_MODE=false`, Live-Katalog mit statischem Fallback) und
+pingt danach `DEPLOY_WEBHOOK_URL`. Denselben Deploy lösen der manuelle Button und der
+Cross-Repo-Dispatch aus einem Package-Release aus (Abschnitt 2). Einen separaten
+`dev`-Branch gibt es nicht mehr.
 
-- **`dev`-Branch** — automatisch bei jedem Push auf `main` gebaut (Demo-Config,
-  `PUBLIC_DEMO_MODE=true`). **Nicht** deployt; Bau-Gate + Staging-Artefakt.
-- **`release`-Branch** — nur über den manuellen **Release**-Button gebaut
-  (Prod-Config). Der Prod-Host zieht `release`; danach wird `DEPLOY_WEBHOOK_URL`
-  gepingt.
+> Laufen mehrere Package-Releases fast gleichzeitig, fasst GitHub die Site-Deploys per
+> Concurrency zusammen (der letzte Build gewinnt und zieht alle neuen Versionen) —
+> gewollt, kein Fehler.
 
 **Go-live der kostenlosen Tools (reicht ohne Backend):**
 
-1. In `tds-tools` das Repo-Secret **`DEPLOY_WEBHOOK_URL`** setzen (die Plesk-Git-
-   Webhook-URL mit Token).
-2. **Actions → Release → Run workflow** drücken → baut `release`, pingt den Webhook.
-3. `tools.tracht-digital.de` auf den `release`-Branch zeigen lassen (Plesk).
+1. In `tds-tools` das Repo-Secret **`DEPLOY_WEBHOOK_URL`** setzen (Plesk-Git-Webhook-URL).
+2. `tools.tracht-digital.de` in Plesk auf den **`release`-Branch** zeigen lassen.
+3. Fertig — ab jetzt geht jeder Push (bzw. jedes Package-Release) automatisch live.
 
 Ab hier sind alle **freien Tools + AdSense** live. AdSense bleibt aus, bis eine
 Publisher-ID im Panel gesetzt ist (siehe unten).

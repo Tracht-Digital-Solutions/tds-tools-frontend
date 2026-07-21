@@ -68,6 +68,9 @@ symlink). Keep the published `^` ranges in `package.json` for CI.
 
 ## Deploy
 
-`dev.yml` (push → `dev` branch, demo config) and `release.yml` (manual → `release`
-branch + `DEPLOY_WEBHOOK_URL` ping). Point `tools.tracht-digital.de` at the
-`release` branch. See `AGENTS.md`.
+Continuous: **every push to `main` builds + deploys** to the orphan `release` branch
+(`release.yml`, prod config) and pings `DEPLOY_WEBHOOK_URL`. The same deploy is also
+dispatched automatically when a dependency package (`tds-tools-contract` /
+`tds-tool-*`) publishes a new `@latest` — so a tool update rebuilds the site with no
+manual step. Point `tools.tracht-digital.de` at the `release` branch. See
+`TOOLS-PLATFORM.md` + `AGENTS.md`.
