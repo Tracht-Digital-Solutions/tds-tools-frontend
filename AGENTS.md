@@ -9,7 +9,7 @@ The public, indexable static site at `tools.tracht-digital.de`. Composes
 `tds-tool-*` packages (via `tds-tools-contract-pkg`'s `toolHost`) into a tool catalog;
 consent-gated AdSense; admin-controlled catalog + premium from `tds-ext-tools-pkg`.
 A standalone Astro `output:"static"` product modelled on `tds-landingpage-frontend` /
-`tds-blog-frontend` — NOT the noindex panel host.
+`tds-blog-frontend` — NOT the noindex frontend host.
 
 ## Architecture
 
@@ -24,9 +24,9 @@ A standalone Astro `output:"static"` product modelled on `tds-landingpage-fronte
   and merges enabled/requires-login/premium/price + ads config onto the manifest
   defaults. A failed/absent fetch or `PUBLIC_DEMO_MODE=true` → manifest defaults,
   ads OFF (the site always builds; **this is why the free tools ship independently
-  of the not-yet-deployed `tds-core-panel-api`**). Memoised for the whole build.
+  of the not-yet-deployed `tds-core-frontend-api`**). Memoised for the whole build.
 - **Premium gate (Phase 3).** Premium tools require login; entitlement is bound to
-  `userId` and checked against the panel API. Free tools stay anonymous. Premium
+  `userId` and checked against the frontend API. Free tools stay anonymous. Premium
   pages suppress ads.
 
 ## Gotchas (repo-wide conventions apply — see root CLAUDE.md)

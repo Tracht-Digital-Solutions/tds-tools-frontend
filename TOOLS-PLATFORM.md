@@ -1,7 +1,7 @@
 # TDS Tools-Plattform — Handbuch (Installation, Betrieb, Erweiterung)
 
 Praxis-Anleitung für die öffentliche Tools-Plattform `tools.tracht-digital.de`:
-lokal entwickeln, veröffentlichen, ausrollen, im Admin-Panel konfigurieren und
+lokal entwickeln, veröffentlichen, ausrollen, im Admin-Frontend konfigurieren und
 **neue Tools einbauen**. Für die Architektur-Details siehe `CLAUDE.md` und die
 `AGENTS.md` im jeweiligen Repo.
 
@@ -10,7 +10,7 @@ lokal entwickeln, veröffentlichen, ausrollen, im Admin-Panel konfigurieren und
 ## Überblick
 
 Die Tools-Plattform ist eine **eigene öffentliche Static-Site** (wie Landingpage
-und Blog) — NICHT Teil des noindex-Panels. Sie wird **zur Build-Zeit** aus
+und Blog) — NICHT Teil des noindex-Frontends. Sie wird **zur Build-Zeit** aus
 Tool-Paketen zusammengesetzt.
 
 | Repo | Typ | Rolle |
@@ -18,12 +18,12 @@ Tool-Paketen zusammengesetzt.
 | `tds-tools-contract-pkg` | npm-SDK | `defineTool` / `defineToolPack` / `composeToolPacks` / `toolHost()` |
 | `tds-tool-qr-pkg` `-textkit` `-devkit` `-media` | Tool-Pakete | je 1–n Tools (Manifest + `.astro`/`.tsx`) |
 | `tds-tools-frontend` | Static-Site | die Website; komponiert die Pakete via `toolHost` |
-| `tds-ext-tools-pkg` | Panel-Extension | Admin-Verwaltung + Backend (Katalog, AdSense, Stripe-Premium) |
+| `tds-ext-tools-pkg` | Frontend-Extension | Admin-Verwaltung + Backend (Katalog, AdSense, Stripe-Premium) |
 
 **Datenfluss:** Tool-Liste fließt _Pakete → Website → Backend_ (Build-Zeit-Sync),
 Konfiguration fließt zurück (`GET /tools/catalog`). Die **kostenlosen Tools +
 AdSense laufen komplett statisch** und sind unabhängig vom Backend. Der
-**dynamische Katalog + Premium** brauchen ein deploytes `tds-core-panel-api`.
+**dynamische Katalog + Premium** brauchen ein deploytes `tds-core-frontend-api`.
 
 ---
 
@@ -97,7 +97,7 @@ npm run build
 |---|---|---|
 | `CATALOG_API_URL` | Backend-Basis für den Katalog-Fetch (Build-Zeit) | `https://api.tracht-digital.de` |
 | `PUBLIC_DEMO_MODE` | `true` → statischer Fallback-Katalog, Werbung aus | – |
-| `PUBLIC_API_URL` | Panel-API für den Client-Gate (Entitlement/Checkout/`/me`) | `https://api.tracht-digital.de` |
+| `PUBLIC_API_URL` | Frontend-API für den Client-Gate (Entitlement/Checkout/`/me`) | `https://api.tracht-digital.de` |
 | `PUBLIC_LOGIN_URL` | Login-Ziel des Premium-/Login-Gates | `https://app.tracht-digital.de/login` |
 | `TOOLS_REGISTRY_TOKEN` | Token für den Build-Zeit-Registry-Sync (nur Release) | – |
 
@@ -105,7 +105,7 @@ npm run build
 
 ```bash
 cd tds-ext-tools-pkg
-composer install       # löst tds-panel-contract-pkg online über die VCS-URL auf
+composer install       # löst tds-frontend-contract-pkg online über die VCS-URL auf
 composer test          # phpunit (DB-Tests werden ohne TDS_TEST_DB_DSN übersprungen)
 npm install --no-package-lock && npm run type-check && npm run build   # FE-Manifest
 ```
@@ -121,7 +121,7 @@ npm install --no-package-lock && npm run type-check && npm run build   # FE-Mani
 - **Offline / lokale Contract-Änderung:** temporäres Composer-`path`-Repo statt der
   VCS-URL nutzen — NIE committen (CI FATALt auf ein fehlendes `path`-Geschwister):
   ```bash
-  node -e "const j=require('./composer.json');j.repositories=[{type:'path',url:'../tds-panel-contract',options:{symlink:false}},...j.repositories];require('fs').writeFileSync('composer.local.json',JSON.stringify(j,null,2))"
+  node -e "const j=require('./composer.json');j.repositories=[{type:'path',url:'../tds-frontend-contract',options:{symlink:false}},...j.repositories];require('fs').writeFileSync('composer.local.json',JSON.stringify(j,null,2))"
   COMPOSER=composer.local.json composer install
   rm composer.local.json composer.local.lock   # danach wieder aufräumen
   ```
@@ -149,7 +149,7 @@ workflow** (Bump wählen). Oder per CLI:
 gh workflow run release.yml -R Tracht-Digital-Solutions/tds-tools-contract-pkg -f bump=minor
 ```
 
-- **Versionslinien:** Tool-Pakete + Extension bleiben in `0.1.x` (Site/Panel pinnen
+- **Versionslinien:** Tool-Pakete + Extension bleiben in `0.1.x` (Site/Frontend pinnen
   `^0.1.x`); der Contract ist stabil bei `1.x`.
 - **Reihenfolge** ist bei normalen Änderungen egal — der Cross-Repo-Dispatch baut die
   Seite nach jedem Package-Release neu. Nur bei einem **Breaking-Change des Contracts**
@@ -178,13 +178,13 @@ Cross-Repo-Dispatch aus einem Package-Release aus (Abschnitt 2). Einen separaten
 3. Fertig — ab jetzt geht jeder Push (bzw. jedes Package-Release) automatisch live.
 
 Ab hier sind alle **freien Tools + AdSense** live. AdSense bleibt aus, bis eine
-Publisher-ID im Panel gesetzt ist (siehe unten).
+Publisher-ID im Frontend gesetzt ist (siehe unten).
 
 ---
 
-## 4. Im Admin-Panel konfigurieren
+## 4. Im Admin-Frontend konfigurieren
 
-Sobald `tds-core-panel-api` deployt ist, im Panel unter **Einstellungen →
+Sobald `tds-core-frontend-api` deployt ist, im Frontend unter **Einstellungen →
 Tools / AdSense** (Namespace `tools`, DB-first + Env-Fallback):
 
 | Feld | Wirkung |
@@ -200,13 +200,13 @@ Premium / Preis_. Jede Änderung löst automatisch einen Rebuild aus.
 **Zusätzlich nötig:**
 - Stripe-Webhook in Stripe auf `https://api.tracht-digital.de/tools/stripe-webhook`
   zeigen lassen (Event `checkout.session.completed`).
-- `CORS_ALLOWED_ORIGINS` der Panel-Backends muss `https://tools.tracht-digital.de`
+- `CORS_ALLOWED_ORIGINS` der Frontend-Backends muss `https://tools.tracht-digital.de`
   enthalten (die Site ruft `/auth/me`, `/tools/entitlement`, `/tools/checkout`
   cross-origin mit Cookie auf).
-- `SETTINGS_ENCRYPTION_KEY` für `tds-core-panel-api` (verschlüsselt die Secrets).
+- `SETTINGS_ENCRYPTION_KEY` für `tds-core-frontend-api` (verschlüsselt die Secrets).
 
 > **Abhängigkeit:** Der Registry-Sync, die Admin-Verwaltung und Premium
-> funktionieren erst mit deploytem `tds-core-panel-api`. Bis dahin nutzt die Site
+> funktionieren erst mit deploytem `tds-core-frontend-api`. Bis dahin nutzt die Site
 > ihren statischen Fallback-Katalog (alle Tools sichtbar, keine Werbung/Premium).
 
 ---
@@ -244,7 +244,7 @@ export default defineToolPack({
       icon: "braces",
       keywords: ["…"],
       component: "@tracht-digital-solutions/tds-tool-mein/tools/MeinTool.astro",
-      // Defaults (überschreibbar im Admin-Panel):
+      // Defaults (überschreibbar im Admin-Frontend):
       // requiresLoginDefault: true,
       // premiumDefault: true, priceCentsDefault: 500,
       seo: { title: "…", description: "…" },
@@ -275,7 +275,7 @@ const packs = [qr, textkit, devkit, media, mein];   // hinzufügen
 ```
 
 **e) Veröffentlichen & ausrollen:** neues Paket **Release** drücken → dann
-`tds-tools-frontend` neu bauen (Push/Release oder Rebuild-Button im Panel). Das Tool
+`tds-tools-frontend` neu bauen (Push/Release oder Rebuild-Button im Frontend). Das Tool
 erscheint automatisch im Katalog; nach dem nächsten Build synct es sich (mit
 `TOOLS_REGISTRY_TOKEN`) in die Admin-Verwaltung.
 
@@ -303,9 +303,9 @@ erscheint automatisch im Katalog; nach dem nächsten Build synct es sich (mit
 
 ---
 
-## 7. Panel-Extension hinzufügen (allgemein, zur Einordnung)
+## 7. Frontend-Extension hinzufügen (allgemein, zur Einordnung)
 
-Das obige `tds-ext-tools-pkg` ist selbst eine **Panel-Extension**. Eine neue Panel-
+Das obige `tds-ext-tools-pkg` ist selbst eine **Frontend-Extension**. Eine neue Frontend-
 Extension entsteht analog aus `tds-ext-template-pkg` (siehe dessen `README.md`):
 
 1. Repo aus `tds-ext-template-pkg` klonen, umbenennen (id, Paketname, PHP-Namespace,
@@ -314,11 +314,11 @@ Extension entsteht analog aus `tds-ext-template-pkg` (siehe dessen `README.md`):
    und den PHP-`Module` (Routen, Migrationen, Rechte).
 3. Aktivieren: Manifest ins **Produkt** (`tds-admin-frontend`/`tds-customer-frontend`)
    `astro.config.mjs` `extensions[]` + `package.json` eintragen **und**
-   `new DeinModule()` in `tds-core-panel-api`s `Modules::enabled()` + dort ein
+   `new DeinModule()` in `tds-core-frontend-api`s `Modules::enabled()` + dort ein
    Composer-`path`-Repo ergänzen.
 4. `PACKAGE_TOKEN` setzen, Release drücken, Produkt neu bauen.
 
-Details: `tds-ext-template/README.md` + `tds-panel-contract/AGENTS.md`.
+Details: `tds-ext-template/README.md` + `tds-frontend-contract/AGENTS.md`.
 
 ---
 
@@ -329,7 +329,7 @@ Details: `tds-ext-template/README.md` + `tds-panel-contract/AGENTS.md`.
   Publish + Branch-Push). Speist die CI-Variable `NPM_TOKEN`.
 - **`DEPLOY_WEBHOOK_URL`** — nur auf `tds-tools-frontend` (Deploy-Ping nach `release`).
 
-### Wichtige Endpunkte (`tds-ext-tools-pkg`, über die Panel-API)
+### Wichtige Endpunkte (`tds-ext-tools-pkg`, über die Frontend-API)
 | Methode | Pfad | Auth |
 |---|---|---|
 | GET | `/tools/catalog` | öffentlich |

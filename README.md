@@ -3,11 +3,11 @@
 The **public tools site** — `tools.tracht-digital.de`. A static Astro site that
 composes tool packages (`tds-tool-*`) into a catalog of free, browser-based
 digitalisation tools, monetised with consent-gated Google AdSense and steered
-from the admin panel (`tds-ext-tools-pkg`).
+from the admin frontend (`tds-ext-tools-pkg`).
 
 Public, indexable, no login for free tools. It is the tools-platform sibling of
 `tds-landingpage-frontend` / `tds-blog-frontend` — a standalone static product, **not** part of the
-noindex panel host.
+noindex frontend host.
 
 > **Operator handbook:** `TOOLS-PLATFORM.md` is the hands-on guide (local dev,
 > release, deploy, admin config, **how to add a new tool**).
@@ -31,7 +31,7 @@ Adding a tool = publish a new `tds-tool-*` package, add it to the `packs` array 
 / premium / price + the AdSense config) from `tds-ext-tools-pkg`' public
 `GET /tools/catalog` at build time, merged onto the manifest defaults. A
 failed/absent fetch (or `PUBLIC_DEMO_MODE=true`) falls back to the manifest
-defaults with ads OFF — so the site always builds, even before the panel backend
+defaults with ads OFF — so the site always builds, even before the frontend backend
 is deployed. An admin change fires a rebuild (the `RebuildTrigger` pattern).
 
 ## Commands
