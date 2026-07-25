@@ -1,13 +1,22 @@
 @import "tailwindcss";
 
-/* Brand design system + shared application chrome. Tokens, dark theme, base
-   resets, type primitives, chips, spinner/skeleton and status colours all live
-   in tds-shared so every TDS frontend stays consistent. The @fontsource imports
-   live in Layout.astro (NOT here): @tailwindcss/postcss inlines CSS @imports
-   without rebasing the packages' relative url(./files/*.woff2) refs, so Vite
-   would never emit the woff2 and every font 404s. */
+/* Shared design library — this public site is a `marketing` surface (the
+   same family as the landingpage; see `data-surface` on <html> in
+   Layout.astro). Tokens, dark theme, base resets, type primitives, chips,
+   spinner/skeleton and status colours all live in tds-shared so every TDS
+   surface stays consistent. The @fontsource imports live in Layout.astro
+   (NOT here): @tailwindcss/postcss inlines CSS @imports without rebasing
+   the packages' relative url(./files/*.woff2) refs, so Vite would never
+   emit the woff2 and every font 404s.
+
+   app.css is deliberately NOT imported any more: it is dashboard chrome
+   (.portal-sidebar, .nav-item*, .stat-tile*, .editorial-grid) and this site
+   renders none of it — verified, 0 occurrences of each. The cross-surface
+   primitives it does use (.status-pill, .brand-header) are in
+   primitives.css. */
 @import "@tracht-digital-solutions/tds-shared/styles/base.css";
-@import "@tracht-digital-solutions/tds-shared/styles/app.css";
+@import "@tracht-digital-solutions/tds-shared/styles/primitives.css";
+@import "@tracht-digital-solutions/tds-shared/styles/surfaces/marketing.css";
 
 /* Scan the composed tool packages (in node_modules) for Tailwind utility
    classes. Tailwind ignores node_modules by default, so without this the
@@ -19,11 +28,10 @@
 @source "../../node_modules/@tracht-digital-solutions/tds-tool-devkit/**/*.{astro,tsx}";
 @source "../../node_modules/@tracht-digital-solutions/tds-tool-media/**/*.{astro,tsx}";
 
-/* JetBrains Mono for the developer tools (JSON, code) — the token defaults to
-   Geist Mono which we don't ship. */
-:root {
-  --font-mono: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
-}
+/* --font-mono is no longer overridden here: base.css declares JetBrains Mono
+   as the canonical mono face for every surface, so this local copy was
+   redundant. (It existed because the shared token used to name Geist Mono,
+   which no app shipped.) */
 
 /* ---- Tool catalog + tool page chrome (site-local) ---- */
 .tools-hero {
