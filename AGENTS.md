@@ -41,7 +41,27 @@ A standalone Astro `output:"static"` product modelled on `tds-landingpage-fronte
   never generated (Tailwind ignores node_modules by default). Add one `@source`
   line per new tool package.
 - **Fonts are JS imports in `Layout.astro`**, never CSS `@import`s in `global.css`
-  (@tailwindcss/postcss doesn't rebase the woff2 urls → fonts 404).
+  (@tailwindcss/postcss doesn't rebase the woff2 urls → fonts 404). The stack is
+  Lato / Plus Jakarta Sans / JetBrains Mono, matching tds-shared's tokens. (This
+  site was on Geist and carried a local `--font-mono` override, which existed only
+  because the shared token used to name a Geist Mono that no app shipped.)
+- **This site is the `marketing` surface of the shared design library.**
+  `<html data-surface="marketing">` in `Layout.astro` selects
+  `tds-shared/styles/surfaces/marketing.css`, which owns the geometry: round pill
+  buttons, 6px cards, and the only card elevation of the three surfaces.
+  `global.css` imports `base.css` → `primitives.css` → `surfaces/marketing.css`.
+  **Don't hand-author a radius and don't re-declare a shared class** — set the
+  token in the surface layer in tds-shared and bump. (The convention used to be
+  the opposite, "geometry stays app-local", and that is exactly what let one
+  design drift into three separately-maintained variations.)
+  `app.css` is deliberately **not** imported: it is dashboard chrome
+  (`.portal-sidebar`, `.nav-item*`, `.stat-tile*`, `.editorial-grid`) and this site
+  renders none of it. The cross-surface primitives it does use (`.status-pill`,
+  `.brand-header`) live in `primitives.css`.
+- **`--color-border` is an accepted alias of `--color-line`.** The composed
+  `tds-tool-*` packs write `border-[color:var(--color-border)]`; that token was
+  defined nowhere for a long time, so every one of those borders silently fell
+  back to `currentColor`. It resolves now — prefer `--color-line` in new code.
 - **AdSense loader body is raw** (`is:inline define:vars={{ adsClient }}`) — never
   wrap it in a template literal (leaks braces into dist). Consent-gated: the
   loader only injects `adsbygoogle.js` after `tds-ad-consent === "granted"`.
