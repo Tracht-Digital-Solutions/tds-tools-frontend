@@ -1,22 +1,24 @@
 @import "tailwindcss";
 
-/* Shared design library — this public site is a `marketing` surface (the
-   same family as the landingpage; see `data-surface` on <html> in
-   Layout.astro). Tokens, dark theme, base resets, type primitives, chips,
-   spinner/skeleton and status colours all live in tds-shared so every TDS
-   surface stays consistent. The @fontsource imports live in Layout.astro
-   (NOT here): @tailwindcss/postcss inlines CSS @imports without rebasing
-   the packages' relative url(./files/*.woff2) refs, so Vite would never
-   emit the woff2 and every font 404s.
+/* Shared design library — this site renders on the `panel` surface (see
+   `data-surface` on <html> in Layout.astro): the same 8px product-UI
+   geometry, chip radius, elevation and navy accent axis as the admin
+   frontend and the customer portal. Tokens, dark theme, base resets, type
+   primitives, chips, cards, spinner/skeleton and status colours all live in
+   tds-shared so every TDS surface stays consistent. The @fontsource imports
+   live in Layout.astro (NOT here): @tailwindcss/postcss inlines CSS @imports
+   without rebasing the packages' relative url(./files/*.woff2) refs, so Vite
+   would never emit the woff2 and every font 404s.
 
-   app.css is deliberately NOT imported any more: it is dashboard chrome
-   (.portal-sidebar, .nav-item*, .stat-tile*, .editorial-grid) and this site
-   renders none of it — verified, 0 occurrences of each. The cross-surface
-   primitives it does use (.status-pill, .brand-header) are in
-   primitives.css. */
+   app.css IS imported: the panel's card elevation and hover lift live there
+   (scoped to [data-surface="panel"]), and without it `.tds-card` renders flat
+   here while the panels lift. The dashboard chrome it also carries
+   (.portal-sidebar, .nav-item*, .stat-tile*) is simply never used on this
+   site — it is a public catalog, not a dashboard. */
 @import "@tracht-digital-solutions/tds-shared/styles/base.css";
 @import "@tracht-digital-solutions/tds-shared/styles/primitives.css";
-@import "@tracht-digital-solutions/tds-shared/styles/surfaces/marketing.css";
+@import "@tracht-digital-solutions/tds-shared/styles/app.css";
+@import "@tracht-digital-solutions/tds-shared/styles/surfaces/panel.css";
 
 /* Scan the composed tool packages (in node_modules) for Tailwind utility
    classes. Tailwind ignores node_modules by default, so without this the
@@ -34,26 +36,38 @@
    which no app shipped.) */
 
 /* ---- Tool catalog + tool page chrome (site-local) ---- */
+/* The hero reuses the panel's RAIL gradient rather than a flat navy block, so
+   it descends the same way the products' sidebar does and follows
+   `--tds-panel-accent` instead of pinning its own colour. Both rail tokens are
+   fixed-dark, so this stays a dark band in light and dark alike. */
 .tools-hero {
-  background: var(--color-surface-navy);
+  background: linear-gradient(180deg, var(--tds-panel-rail-from), var(--tds-panel-rail-to));
   color: #fff;
 }
+
+/* Page canvas — the same 4% accent tint the panels put behind their cards, so
+   a `.tds-card` reads as an object ON a surface instead of a slightly
+   different white patch of the same sheet. Applied to <body> because this site
+   has no `.panel-main` wrapper (app.css scopes the tint to that class). */
+body {
+  background: var(--tds-panel-canvas);
+}
+/* Card-as-link only. Surface, border, radius, elevation and the hover lift
+   all come from `.tds-card` (tds-shared primitives.css + the panel block in
+   app.css) — re-declaring any of them here would pin this site to whatever
+   the library looked like the day it was written. */
 .tool-card {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
   height: 100%;
   padding: 1.25rem 1.375rem;
-  background: var(--color-card);
-  border: 1px solid var(--color-line);
-  border-radius: 0.9rem;
   text-decoration: none;
   color: inherit;
-  transition: border-color 180ms ease, transform 180ms ease;
 }
-.tool-card:hover {
-  border-color: var(--color-primary);
-  transform: translateY(-2px);
+.tool-card:hover,
+.tool-card:focus-visible {
+  border-color: var(--tds-panel-accent, var(--color-primary));
 }
 .tool-card__title {
   font-family: var(--font-display);
@@ -71,25 +85,7 @@
   margin: 0;
   text-wrap: pretty;
 }
-.tool-badge {
-  display: inline-flex;
-  align-items: center;
-  height: 1.4rem;
-  padding: 0 0.5rem;
-  border-radius: 999px;
-  font-size: 0.6875rem;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-}
-.tool-badge--premium {
-  background: color-mix(in srgb, var(--color-warning) 18%, transparent);
-  color: var(--color-warning);
-}
-.tool-badge--login {
-  background: color-mix(in srgb, var(--color-info) 15%, transparent);
-  color: var(--color-info);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .tool-card { transition: none; }
-}
+/* `.tool-badge*` is gone: it re-implemented `chip--warning` / `chip--info`
+   with a hand-authored 999px radius, which also meant the badges kept the
+   marketing pill shape after this site moved to the panel surface (where
+   chips round to 0.75rem). Use `.chip` + a shared variant. */

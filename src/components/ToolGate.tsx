@@ -127,7 +127,7 @@ export default function ToolGate({ toolId, requiresLogin, isPremium, priceCents,
   if (state === "buy") {
     return (
       <div className={box}>
-        <span className="tool-badge tool-badge--premium mb-2 inline-flex">Premium</span>
+        <span className="chip chip--warning mb-2 inline-flex">Premium</span>
         <p className="mb-1 text-lg font-semibold">Dieses Tool freischalten</p>
         <p className="mb-4 text-sm text-[color:var(--color-muted)]">
           Einmalig {(priceCents / 100).toLocaleString("de-DE", { style: "currency", currency: "EUR" })} — danach dauerhaft nutzbar.

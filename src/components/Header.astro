@@ -3,11 +3,13 @@ import { ThemeToggle } from "@tracht-digital-solutions/tds-shared/components";
 import { site } from "~/lib/site";
 ---
 
-<header class="brand-header sticky top-0 z-40 border-b border-[color:var(--color-line)] bg-[color:var(--color-paper)]/85 backdrop-blur">
+{/* Sits on the panel canvas, not on paper: the page is tinted, so a paper-
+    coloured bar would read as a separate sheet floating above it. */}
+<header class="brand-header sticky top-0 z-40 border-b border-[color:var(--color-line)] bg-[color:var(--tds-panel-canvas)]/85 backdrop-blur">
   <div class="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
     <a href="/" class="flex items-center gap-2 no-underline">
       <span class="font-[family-name:var(--font-display)] text-lg font-extrabold tracking-tight text-[color:var(--color-ink)]">
-        TDS <span class="text-[color:var(--color-primary)]">Tools</span>
+        TDS <span class="text-[color:var(--tds-panel-accent)]">Tools</span>
       </span>
     </a>
     <nav class="flex items-center gap-4 text-sm">

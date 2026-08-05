@@ -45,19 +45,33 @@ A standalone Astro `output:"static"` product modelled on `tds-landingpage-fronte
   Lato / Plus Jakarta Sans / JetBrains Mono, matching tds-shared's tokens. (This
   site was on Geist and carried a local `--font-mono` override, which existed only
   because the shared token used to name a Geist Mono that no app shipped.)
-- **This site is the `marketing` surface of the shared design library.**
-  `<html data-surface="marketing">` in `Layout.astro` selects
-  `tds-shared/styles/surfaces/marketing.css`, which owns the geometry: round pill
-  buttons, 6px cards, and the only card elevation of the three surfaces.
-  `global.css` imports `base.css` → `primitives.css` → `surfaces/marketing.css`.
-  **Don't hand-author a radius and don't re-declare a shared class** — set the
-  token in the surface layer in tds-shared and bump. (The convention used to be
-  the opposite, "geometry stays app-local", and that is exactly what let one
-  design drift into three separately-maintained variations.)
-  `app.css` is deliberately **not** imported: it is dashboard chrome
-  (`.portal-sidebar`, `.nav-item*`, `.stat-tile*`, `.editorial-grid`) and this site
-  renders none of it. The cross-surface primitives it does use (`.status-pill`,
-  `.brand-header`) live in `primitives.css`.
+- **This site renders on the `panel` surface** — the same layer the admin frontend
+  and the customer portal use. `<html data-surface="panel">` in `Layout.astro`
+  selects `tds-shared/styles/surfaces/panel.css`: 8px product-UI geometry, 0.75rem
+  chips, softly elevated cards and the navy accent axis. `global.css` imports
+  `base.css` → `primitives.css` → `app.css` → `surfaces/panel.css`.
+  - It was the `marketing` surface until 2026-08-05. A tool site reads as a piece
+    of software, not as a brochure, so it now matches the products it belongs to.
+  - **`app.css` IS imported** (it was not, under `marketing`): the panel's card
+    elevation and hover lift live there, scoped to `[data-surface="panel"]`, so
+    without it `.tds-card` renders flat here while the panels lift. The dashboard
+    chrome it also carries (`.portal-sidebar`, `.nav-item*`, `.stat-tile*`) is
+    simply never used — this is a public catalog, not a dashboard.
+  - **`data-frontend` is deliberately unset**, which resolves `--tds-panel-accent`
+    to `--color-primary` (management navy). Setting it to `customer` would paint
+    the public site in the portal's teal.
+  - The page canvas is `--tds-panel-canvas` on `<body>`, because app.css scopes
+    that tint to `.panel-main` and this site has no such wrapper. Without it cards
+    sit on the same white they are made of.
+  - **Still a PUBLIC, indexable site.** The surface choice is geometry and colour
+    only — the panel products are `noindex`, this one must never become so.
+  - **Don't hand-author a radius and don't re-declare a shared class** — set the
+    token in the surface layer in tds-shared and bump. (The convention used to be
+    the opposite, "geometry stays app-local", and that is exactly what let one
+    design drift into three separately-maintained variations.) `.tool-badge*` was
+    a live example: it re-implemented `chip--warning`/`chip--info` with a
+    hand-authored 999px radius, so the badges kept marketing pill geometry after
+    the surface moved. Deleted — use `.chip` + a shared variant.
 - **`--color-border` is an accepted alias of `--color-line`.** The composed
   `tds-tool-*` packs write `border-[color:var(--color-border)]`; that token was
   defined nowhere for a long time, so every one of those borders silently fell

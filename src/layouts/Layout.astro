@@ -51,9 +51,16 @@ const adsActive = ads.enabled && !!ads.publisherId;
 
 <!DOCTYPE html>
 <!-- data-surface selects the geometry layer from tds-shared's design library.
-     This is a public marketing surface, so it shares the landingpage's layer
-     (surfaces/marketing.css): round pills, 6px lifted cards. -->
-<html lang="de" data-surface="marketing">
+     This site reads as a TOOL, not as a brochure, so it takes the **panel**
+     layer: 8px product-UI geometry, 0.75rem chips, softly elevated cards and
+     the panel's navy accent axis — the same surface the admin frontend and the
+     customer portal render.
+
+     It is still a PUBLIC, indexable site (the panel products are noindex), so
+     the surface choice is about geometry and colour only: no rail, no drawer,
+     no dashboard chrome. `data-frontend` is left unset, which resolves
+     `--tds-panel-accent` to `--color-primary` — management navy. -->
+<html lang="de" data-surface="panel">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
