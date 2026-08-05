@@ -60,7 +60,11 @@ const adsActive = ads.enabled && !!ads.publisherId;
     <meta name="description" content={description} />
     <meta name="theme-color" content="#050f68" />
     {noindex && <meta name="robots" content="noindex,nofollow" />}
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    {/* The brand mark shared by every TDS property — byte-identical to the
+        landingpage's and the blog's. It used to be a hand-drawn SVG unique to
+        this site; the tools site is indexable and links back to the main
+        domain, so a different tab icon read as a different service. */}
+    <link rel="icon" type="image/png" href="/favicon.png" sizes="any" />
 
     {/* No-flash theme bootstrap — same key as the other TDS frontends so the
         light/dark choice carries across properties. */}
