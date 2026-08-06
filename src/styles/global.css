@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import "tailwindcss/index.css";
 
 /* Shared design library — this site renders on the `panel` surface (see
    `data-surface` on <html> in Layout.astro): the same 8px product-UI
