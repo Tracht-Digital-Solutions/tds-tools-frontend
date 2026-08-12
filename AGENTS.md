@@ -61,7 +61,7 @@ A standalone Astro `output:"static"` product modelled on `tds-landingpage-fronte
     to the base `--color-primary` (brand navy) — the same accent the customer
     portal renders. Setting it to `admin` would paint this **public** site in
     `--color-management`, the burgundy that signals management rights, which is
-    exactly the claim a public catalog must not make. (Since tds-shared 0.20.0 the
+    exactly the claim a public catalog must not make. (Since tds-shared 0.20.1 the
     base accent is the navy and ADMIN is the override; tds-shared's
     `design.test.ts` fails the build if the management red ever moves into the
     base block, because this site is what would inherit it.)
