@@ -40,6 +40,16 @@ A standalone Astro `output:"static"` product modelled on `tds-landingpage-fronte
   error). Without it the flex/grid/gap utilities used inside tool islands are
   never generated (Tailwind ignores node_modules by default). Add one `@source`
   line per new tool package.
+  - **`tds-shared` needs its own `@source` line, and this repo was the one app
+    of six that lacked it** (fixed 2026-08-16). The shared React islands are
+    built from utilities too — `ThemeToggle` is `inline-flex w-9 h-9
+    rounded-full … hover:bg-black/5` — so `.w-9` / `.h-9` / the hover tint were
+    never emitted here and the theme toggle shipped as a bare **18×18** icon
+    with no target box and no hover feedback, against 36×36 everywhere else.
+    No error, no warning; it survived a redesign and two release rounds.
+    **Judge this by grepping the BUILT css** (`grep -c '\.w-9' dist/_astro/*.css`),
+    not by reading the diff — and grep the escaped form, since a search for
+    `hover:bg-black/5` never matches what Tailwind emits.
 - **Fonts are JS imports in `Layout.astro`**, never CSS `@import`s in `global.css`
   (@tailwindcss/postcss doesn't rebase the woff2 urls → fonts 404). The stack is
   Lato / Plus Jakarta Sans / JetBrains Mono, matching tds-shared's tokens. (This

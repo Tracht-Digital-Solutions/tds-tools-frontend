@@ -29,6 +29,16 @@
 @source "../../node_modules/@tracht-digital-solutions/tds-tool-textkit/**/*.{astro,tsx}";
 @source "../../node_modules/@tracht-digital-solutions/tds-tool-devkit/**/*.{astro,tsx}";
 @source "../../node_modules/@tracht-digital-solutions/tds-tool-media/**/*.{astro,tsx}";
+/* …and tds-shared itself, for exactly the same reason. Its React islands are
+   built out of utilities too (`ThemeToggle` is `inline-flex w-9 h-9
+   rounded-full … hover:bg-black/5`), and this was the ONE app of the six
+   missing the line: `.w-9` and `.h-9` were never generated here, so the theme
+   toggle shipped as a bare 18×18 SVG with no box and no hover feedback. No
+   error, no warning — it just looked wrong, which is why it survived a
+   redesign and two release rounds.
+   Judge a fix here by grepping the BUILT css for `.w-9`, not by reading the
+   diff. */
+@source "../../node_modules/@tracht-digital-solutions/tds-shared";
 
 /* --font-mono is no longer overridden here: base.css declares JetBrains Mono
    as the canonical mono face for every surface, so this local copy was
