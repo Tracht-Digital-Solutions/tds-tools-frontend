@@ -68,6 +68,16 @@ A standalone Astro `output:"static"` product modelled on `tds-landingpage-fronte
   - The page canvas is `--tds-panel-canvas` on `<body>`, because app.css scopes
     that tint to `.panel-main` and this site has no such wrapper. Without it cards
     sit on the same white they are made of.
+    - **Since tds-shared 0.23.0 ("Digitale Maßarbeit") `<body>` also restates
+      the two soft brand fields** that `[data-surface="panel"] .panel-main`
+      paints in app.css, for the same reason: there is no `.panel-main` here to
+      inherit them from. They are `background-attachment: fixed` so a long tool
+      page does not repeat them down the scroll. **If the panel's canvas is
+      retuned in tds-shared, retune this with it** — the tokens
+      (`--tds-decor-*`) are shared, the two gradient declarations are not.
+  - **The hero carries `.tds-brandbar--on-dark`** under its `<h1>`. The `--on-dark`
+    run is not optional there: the band is a fixed dark surface in both themes,
+    and the bar's light bordeaux segment sinks into it.
   - **Still a PUBLIC, indexable site.** The surface choice is geometry and colour
     only — the panel products are `noindex`, this one must never become so.
   - **Don't hand-author a radius and don't re-declare a shared class** — set the

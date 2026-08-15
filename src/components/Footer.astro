@@ -2,7 +2,11 @@
 const year = new Date().getFullYear();
 ---
 
-<footer class="mt-20 border-t border-[color:var(--color-line)] bg-[color:var(--color-surface-navy)] text-white">
+{/* `.tds-tone-navy` carries the fill AND re-maps the page tokens inside
+    the footer, which is what lets the border below stay
+    `var(--color-line)` and still resolve to a low-opacity white here
+    instead of the light page's warm hairline. */}
+<footer class="mt-20 border-t border-[color:var(--color-line)] tds-tone-navy">
   <div class="mx-auto grid max-w-6xl gap-8 px-4 py-12 sm:px-6 md:grid-cols-3">
     <div>
       <p class="font-[family-name:var(--font-display)] text-lg font-extrabold">TDS Tools</p>

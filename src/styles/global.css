@@ -45,12 +45,30 @@
   color: #fff;
 }
 
-/* Page canvas — the same 4% accent tint the panels put behind their cards, so
-   a `.tds-card` reads as an object ON a surface instead of a slightly
-   different white patch of the same sheet. Applied to <body> because this site
-   has no `.panel-main` wrapper (app.css scopes the tint to that class). */
+/* Page canvas — the same treatment `[data-surface="panel"] .panel-main`
+   applies in tds-shared's app.css: the 4% accent tint, plus two very soft
+   brand fields pinned to the outer edges so the page reads warm rather than
+   as a flat product sheet. Applied to <body> because this site has no
+   `.panel-main` wrapper (app.css scopes that rule to the class).
+
+   The gradients are RESTATED rather than shared because there is nothing to
+   share them through — a class would have to be put on <body> by the layout,
+   and the tokens (`--tds-decor-*`, base.css) are the part that actually has
+   to stay in sync. If the panel's canvas is retuned, retune this with it. */
 body {
-  background: var(--tds-panel-canvas);
+  background:
+    radial-gradient(
+      42rem 30rem at 0% 18%,
+      rgb(var(--tds-decor-navy) / calc(0.06 * var(--tds-decor-field-strength))) 0%,
+      transparent 68%
+    ),
+    radial-gradient(
+      38rem 26rem at 92% 82%,
+      rgb(var(--tds-decor-bordeaux) / calc(0.05 * var(--tds-decor-field-strength))) 0%,
+      transparent 66%
+    ),
+    var(--tds-panel-canvas);
+  background-attachment: fixed;
 }
 /* Card-as-link only. Surface, border, radius, elevation and the hover lift
    all come from `.tds-card` (tds-shared primitives.css + the panel block in
