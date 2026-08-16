@@ -12,6 +12,28 @@
  *
  * When an admin toggles a tool or the ads config, the extension fires a rebuild
  * of this site (the `RebuildTrigger` pattern), so the baked catalog refreshes.
+ *
+ * ### The catalog only ever OVERRIDES — it never supplies the tool list
+ *
+ * `composed.tools` is the list; the backend can flip flags on it and nothing
+ * more. A tool with no matching row resolves to `enabled: true`. So no state of
+ * the backend — down, 500, empty, unparseable — can empty this site.
+ *
+ * ### Why there is no registry sync here any more
+ *
+ * This module used to POST the composed catalog to `/tools/registry` at build
+ * time, gated on `import.meta.env.TOOLS_REGISTRY_TOKEN`. That never ran once:
+ * no workflow exported the variable, and without a `PUBLIC_` prefix Vite never
+ * puts it on `import.meta.env` at all (there is no `envField` schema in
+ * `astro.config.mjs`), so the guard was unconditionally true. It failed soft by
+ * design, so nothing went red — and the admin panel's tool list stayed empty
+ * for the whole life of the platform while the panel told the operator the
+ * tools would "appear automatically".
+ *
+ * The sync lives host-side now: the build publishes the same payload as a
+ * static artefact (`src/pages/tools-catalog.json.ts` → `dist/tools-catalog.json`)
+ * and `/_setup/install.php` posts it with the token entered in its form. That
+ * also keeps the token off the CI runner. See TOOLS-PLATFORM.md.
  */
 
 import { catalog as composed } from "virtual:tools-catalog";
@@ -36,7 +58,22 @@ export interface AdsConfig {
 const ADS_OFF: AdsConfig = { enabled: false, publisherId: "", slotCatalog: "", slotTool: "" };
 
 const DEMO_MODE = import.meta.env.PUBLIC_DEMO_MODE === "true";
-const BASE_URL = import.meta.env.CATALOG_API_URL ?? "https://api.tracht-digital.de";
+
+/**
+ * The catalog API this build reads its overrides from.
+ *
+ * Deliberately a constant, not an env lookup. This used to read
+ * `import.meta.env.CATALOG_API_URL`, which — like the registry token above —
+ * is never populated: it carries no `PUBLIC_` prefix and there is no
+ * `envField` schema, so Vite leaves it undefined and the `??` default was the
+ * only value it ever had. A key with no working reader is worse than a
+ * constant, because it reads like configuration that exists.
+ *
+ * Runtime targets are a different question and are answered by
+ * `tds-runtime.json` on the host (see `apiBase()` in tds-shared); this is the
+ * BUILD-time read, and the gateway hostname is stable.
+ */
+const BASE_URL = "https://api.tracht-digital.de";
 
 interface CatalogApiTool {
   id: string;
@@ -73,41 +110,14 @@ function fallback(): { tools: ResolvedTool[]; ads: AdsConfig } {
   return { tools: composed.tools.map((t) => resolve(t, undefined)), ads: ADS_OFF };
 }
 
-/**
- * Best-effort registry sync — push the composed tool list (ids + names +
- * categories + defaults) to the backend so the admin panel can see + manage
- * every tool. Runs once per build when `TOOLS_REGISTRY_TOKEN` is set (release
- * builds); never throws, never clobbers an admin override (the backend upserts).
- */
-async function syncRegistry(): Promise<void> {
-  const token = import.meta.env.TOOLS_REGISTRY_TOKEN;
-  if (!token) return;
-  try {
-    await fetch(`${BASE_URL}/tools/registry`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        token,
-        tools: composed.tools.map((t) => ({
-          id: t.id,
-          name: t.name,
-          category: t.category,
-          requires_login_default: t.requiresLoginDefault ?? false,
-          premium_default: t.premiumDefault ?? false,
-          price_cents_default: t.priceCentsDefault ?? 0,
-        })),
-      }),
-    });
-  } catch (err) {
-    console.warn("[tds-tools] registry sync failed (non-fatal):", err);
-  }
-}
-
 async function load(): Promise<{ tools: ResolvedTool[]; ads: AdsConfig }> {
   if (DEMO_MODE) return fallback();
-  await syncRegistry();
   try {
-    const res = await fetch(`${BASE_URL}/tools/catalog`);
+    // The timeout is the point: every other failure mode here already falls
+    // back, but a HANGING api host (not refusing, not erroring) would block
+    // the release build until the job timeout — the one path that could
+    // actually leave the live site stale.
+    const res = await fetch(`${BASE_URL}/tools/catalog`, { signal: AbortSignal.timeout(10_000) });
     if (!res.ok) return fallback();
     const data = (await res.json()) as CatalogApiResponse;
     const byId = new Map((data.tools ?? []).map((r) => [r.id, r]));

@@ -45,6 +45,13 @@ jobs:
       - name: Type check
         run: npm run type-check
 
+      - name: Lint primitives
+        # This site renders on the `panel` surface, so its geometry has to come
+        # from the surface layer's tokens. Hand-authored radii bypass them: the
+        # gate box and the tool box were both `rounded-2xl` (16px) while the
+        # panel card token is 8px. Scoped to src/ — dist/ is build output.
+        run: npm run lint:primitives
+
       - name: Configure demo mode
         if: ${{ inputs.publish_branch != '' }}
         run: echo "PUBLIC_DEMO_MODE=${{ inputs.demo_mode }}" >> "$GITHUB_ENV"

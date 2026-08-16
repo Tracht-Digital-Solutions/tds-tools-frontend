@@ -291,43 +291,48 @@ describe("memoisation", () => {
   });
 });
 
+/**
+ * The build no longer syncs the registry — `/_setup/install.php` does, from
+ * the `dist/tools-catalog.json` artefact.
+ *
+ * These tests replace a suite that asserted the opposite and passed for the
+ * platform's whole life, because it injected `TOOLS_REGISTRY_TOKEN` into a
+ * stubbed `import.meta.env`. A real build never could: the key has no
+ * `PUBLIC_` prefix and there is no `envField` schema, so Vite left it
+ * undefined and the POST never happened once. The green test is why nobody
+ * looked, while the admin panel sat empty.
+ */
 describe("registry sync", () => {
-  it("does not run without a token", async () => {
+  it("never posts to the registry, whatever the environment says", async () => {
+    fetchMock.mockResolvedValue(apiResponse({ tools: [] }));
+    // The token is injected exactly as the old suite did. A real build cannot
+    // deliver it — and now it would change nothing if it could.
+    const { toolsData } = await loadCatalog({ TOOLS_REGISTRY_TOKEN: "secret" });
+    await toolsData();
+
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    const [url, init] = fetchMock.mock.calls[0] as [string, RequestInit | undefined];
+    expect(url).toContain("/tools/catalog");
+    expect(url).not.toContain("/tools/registry");
+    expect(init?.method ?? "GET").toBe("GET");
+  });
+
+  it("reads the catalog from the gateway constant, not from an env var", async () => {
+    fetchMock.mockResolvedValue(apiResponse({ tools: [] }));
+    // CATALOG_API_URL was the twin dead key; overriding it must not move the
+    // request, or the constant has quietly become configuration again.
+    const { toolsData } = await loadCatalog({ CATALOG_API_URL: "https://example.invalid" });
+    await toolsData();
+
+    expect(fetchMock.mock.calls[0]?.[0]).toBe("https://api.tracht-digital.de/tools/catalog");
+  });
+
+  it("bounds the catalog fetch so a hanging host cannot stall the build", async () => {
     fetchMock.mockResolvedValue(apiResponse({ tools: [] }));
     const { toolsData } = await loadCatalog();
     await toolsData();
 
-    expect(fetchMock).toHaveBeenCalledTimes(1);
-    expect(fetchMock.mock.calls[0]?.[0]).toContain("/tools/catalog");
-  });
-
-  it("posts the composed tool list when a token is set", async () => {
-    fetchMock.mockResolvedValue(apiResponse({ tools: [] }));
-    const { toolsData } = await loadCatalog({ TOOLS_REGISTRY_TOKEN: "secret" });
-    await toolsData();
-
-    const [url, init] = fetchMock.mock.calls[0] as [string, RequestInit];
-    expect(url).toContain("/tools/registry");
-    expect(init.method).toBe("POST");
-
-    const body = JSON.parse(init.body as string);
-    expect(body.token).toBe("secret");
-    expect(body.tools.map((t: { id: string }) => t.id)).toEqual([
-      "free-tool",
-      "login-tool",
-      "premium-tool",
-    ]);
-    // Defaults are sent in the backend's snake_case shape.
-    expect(body.tools[2]).toMatchObject({ premium_default: true, price_cents_default: 500 });
-  });
-
-  it("never fails the build when the sync errors", async () => {
-    fetchMock
-      .mockRejectedValueOnce(new TypeError("registry down"))
-      .mockResolvedValueOnce(apiResponse({ tools: [] }));
-
-    const { toolsData } = await loadCatalog({ TOOLS_REGISTRY_TOKEN: "secret" });
-
-    await expect(toolsData()).resolves.toMatchObject({ tools: expect.any(Array) });
+    const [, init] = fetchMock.mock.calls[0] as [string, RequestInit];
+    expect(init.signal).toBeInstanceOf(AbortSignal);
   });
 });

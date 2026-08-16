@@ -12,15 +12,19 @@ declare module "virtual:tools-components" {
   export const components: Record<string, unknown>;
 }
 
+/**
+ * NB: only `PUBLIC_`-prefixed keys actually reach `import.meta.env` — Astro/Vite
+ * inline those and nothing else, and this app declares no `envField` schema. A
+ * non-prefixed key declared here would type-check everywhere and be `undefined`
+ * at runtime, which is exactly how `CATALOG_API_URL` and `TOOLS_REGISTRY_TOKEN`
+ * survived here as dead configuration (see src/lib/catalog.ts). Do not add one
+ * back without a matching `envField` entry.
+ */
 interface ImportMetaEnv {
-  /** Build-time base URL of the tools catalog API (tds-ext-tools via the gateway). */
-  readonly CATALOG_API_URL?: string;
   /** "true" builds with the static fallback catalog + ads off (dev/staging). */
   readonly PUBLIC_DEMO_MODE?: string;
   /** Auth API base for the premium login gate (SSO cookie verify). */
   readonly PUBLIC_AUTH_API_URL?: string;
-  /** Token for the build-time registry sync (POST /tools/registry). Release only. */
-  readonly TOOLS_REGISTRY_TOKEN?: string;
   /** Public panel API base for the client-side gate (entitlement/checkout/me). */
   readonly PUBLIC_API_URL?: string;
   /** Login URL the premium/login gate links to (customer portal). */

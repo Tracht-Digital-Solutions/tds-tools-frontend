@@ -91,15 +91,17 @@ npm run build
 > Tailwinds `@source` einen Symlink NICHT scannt. Die veröffentlichten `^`-Ranges
 > in `package.json` NICHT ändern/committen.
 
-**Environment-Variablen der Website:**
+**Environment-Variablen der Website.** Nur `PUBLIC_`-Präfixe wirken: Astro/Vite
+legen ausschließlich diese auf `import.meta.env`, und dieses Repo deklariert kein
+`envField`-Schema. `CATALOG_API_URL` und `TOOLS_REGISTRY_TOKEN` standen hier
+jahrelang ohne Präfix — beide waren im Build immer `undefined`. Sie sind entfernt;
+die Katalog-Basis ist jetzt eine Konstante in `src/lib/catalog.ts`.
 
 | Variable | Zweck | Default |
 |---|---|---|
-| `CATALOG_API_URL` | Backend-Basis für den Katalog-Fetch (Build-Zeit) | `https://api.tracht-digital.de` |
 | `PUBLIC_DEMO_MODE` | `true` → statischer Fallback-Katalog, Werbung aus | – |
 | `PUBLIC_API_URL` | Frontend-API für den Client-Gate (Entitlement/Checkout/`/me`) | `https://api.tracht-digital.de` |
 | `PUBLIC_LOGIN_URL` | Login-Ziel des Premium-/Login-Gates | `https://app.tracht-digital.de/login` |
-| `TOOLS_REGISTRY_TOKEN` | Token für den Build-Zeit-Registry-Sync (nur Release) | – |
 
 ### Das Backend (`tds-ext-tools-pkg`)
 
@@ -190,11 +192,14 @@ sie zur Laufzeit und zieht sie dem eingebackenen Wert vor) und richtet auf Wunsc
 einen Same-Origin-Proxy unter `/api` ein, sodass `/auth/me`,
 `/tools/entitlement` und `/tools/checkout` ganz ohne CORS auskommen.
 
-Er übernimmt außerdem den **Registry-Sync**. Der gehörte in den Build, lief dort
-aber nie: `src/lib/catalog.ts` synchronisiert nur, wenn `TOOLS_REGISTRY_TOKEN`
-gesetzt ist, und **kein Workflow in `tds-tools-frontend` exportiert diese
-Variable**. Der Katalog im Panel blieb deshalb leer, ohne dass irgendetwas rot
-wurde — der Sync ist bewusst fail-soft. Im Assistenten wird das Token einmal
+Er übernimmt außerdem den **Registry-Sync** — und ist seit 2026-08-16 der einzige
+Weg dafür. Der Sync gehörte in den Build, lief dort aber nie und konnte es nicht:
+`src/lib/catalog.ts` synchronisierte nur bei gesetztem `TOOLS_REGISTRY_TOKEN`,
+kein Workflow exportierte die Variable, und ohne `PUBLIC_`-Präfix hätte Vite sie
+auch dann nicht durchgereicht. Der Katalog im Panel blieb leer, ohne dass etwas
+rot wurde — der Sync ist bewusst fail-soft. Der tote Pfad ist aus `catalog.ts`
+entfernt; die leere Tool-Verwaltung nennt jetzt beide Schritte statt "erscheinen
+automatisch" zu versprechen. Im Assistenten wird das Token einmal
 eingegeben, und der Katalog aus `dist/tools-catalog.json` geht an
 `POST /tools/registry`. Es muss dem Wert unter *Einstellungen → Tools*
 entsprechen.
@@ -214,7 +219,7 @@ Tools / AdSense** (Namespace `tools`, DB-first + Env-Fallback):
 |---|---|
 | AdSense aktivieren + **Publisher-ID** (`ca-pub-…`) + Slots | schaltet die Consent-gated Werbung frei |
 | **Rebuild-Repo** (`Tracht-Digital-Solutions/tds-tools-frontend`) + Workflow (`dev.yml`) + **Rebuild-Token** | löst nach Katalog-Änderungen einen Rebuild der Website aus |
-| **Registry-Sync-Token** | muss identisch als `TOOLS_REGISTRY_TOKEN` in `tds-tools-frontend` gesetzt sein (Build-Zeit-Sync der Tool-Liste) |
+| **Registry-Sync-Token** | muss identisch im Setup-Assistenten der Website (`/_setup`) eingegeben werden — er überträgt die Tool-Liste. Ohne diesen Eintrag hier antwortet `POST /tools/registry` mit 503 |
 | **Stripe Secret Key** + **Webhook Secret** + Währung + Success/Cancel-URL | Premium-Bezahlung (Checkout) |
 
 Weiter unter **Tools** (die Verwaltungsseite): je Tool _sichtbar / Login-Pflicht /
@@ -299,8 +304,9 @@ const packs = [qr, textkit, devkit, media, mein];   // hinzufügen
 
 **e) Veröffentlichen & ausrollen:** neues Paket **Release** drücken → dann
 `tds-tools-frontend` neu bauen (Push/Release oder Rebuild-Button im Frontend). Das Tool
-erscheint automatisch im Katalog; nach dem nächsten Build synct es sich (mit
-`TOOLS_REGISTRY_TOKEN`) in die Admin-Verwaltung.
+erscheint damit auf der öffentlichen Website. **In die Admin-Verwaltung kommt es
+erst durch den Registry-Sync** — einmal `/_setup` auf der Tools-Website fahren und
+dort den Schritt *Tool-Katalog übertragen* ausführen. Der Build macht das nicht.
 
 **Wichtige Regeln:**
 - Tool-`id` UND `slug` sind **global eindeutig** über alle Pakete — `composeToolPacks`

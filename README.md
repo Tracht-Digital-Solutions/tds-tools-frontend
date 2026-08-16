@@ -88,7 +88,6 @@ symlink). Keep the published `^` ranges in `package.json` for CI.
 
 | var | purpose |
 |---|---|
-| `CATALOG_API_URL` | base URL of the catalog API (default `https://api.tracht-digital.de`) |
 | `PUBLIC_DEMO_MODE` | `true` → static fallback catalog, ads off (dev branch) |
 | `PUBLIC_AUTH_API_URL` | auth base for the premium login gate (Phase 3) |
 
@@ -156,9 +155,11 @@ Nur diese Site hat im Assistenten das Feld **Registry-Sync-Token**. Es überträ
 den gebauten Tool-Katalog an `POST /tools/registry`, damit die Tools im
 Admin-Panel auftauchen.
 
-Das gehörte eigentlich in den Build: `src/lib/catalog.ts` macht den Sync, wenn
-`TOOLS_REGISTRY_TOKEN` gesetzt ist — **nur exportiert kein Workflow in diesem
-Repo diese Variable**, also lief er nie. Der Katalog im Panel war leer, seit es
+Das gehörte eigentlich in den Build: `src/lib/catalog.ts` hat den Sync gemacht,
+wenn `TOOLS_REGISTRY_TOKEN` gesetzt war — **nur exportierte kein Workflow diese
+Variable, und ohne `PUBLIC_`-Präfix legt Vite sie ohnehin nie auf
+`import.meta.env`** (es gibt kein `envField`-Schema). Der Sync lief also nie,
+konnte nie laufen, und ist inzwischen aus `catalog.ts` entfernt. Der Katalog im Panel war leer, seit es
 ihn gibt, und nichts wurde je rot, weil der Sync bewusst fail-soft ist. Der
 Assistent macht ihn host-seitig, und zwar mit dem besseren Ablageort für das
 Token: Es bleibt vom CI-Runner fern, und wer den Setup fährt, hat es ohnehin.

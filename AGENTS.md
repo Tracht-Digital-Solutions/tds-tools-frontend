@@ -20,7 +20,7 @@ A standalone Astro `output:"static"` product modelled on `tds-landingpage-fronte
   template owns the Layout/SEO/ads/premium chrome, so it can't live in the
   contract).
 - **Catalog = manifest defaults + admin overrides.** `src/lib/catalog.ts` fetches
-  `GET {CATALOG_API_URL}/tools/catalog` (served by `tds-ext-tools-pkg`) at build time
+  `GET /tools/catalog` on the gateway (served by `tds-ext-tools-pkg`) at build time
   and merges enabled/requires-login/premium/price + ads config onto the manifest
   defaults. A failed/absent fetch or `PUBLIC_DEMO_MODE=true` → manifest defaults,
   ads OFF (the site always builds; **this is why the free tools ship independently
@@ -62,6 +62,21 @@ A standalone Astro `output:"static"` product modelled on `tds-landingpage-fronte
   `base.css` → `primitives.css` → `app.css` → `surfaces/panel.css`.
   - It was the `marketing` surface until 2026-08-05. A tool site reads as a piece
     of software, not as a brochure, so it now matches the products it belongs to.
+  - **Choosing the surface is not the same as USING it.** The surface layer only
+    sets tokens; they reach an element through a shared class. Until 2026-08-16
+    the markup wrote its own geometry — `rounded-2xl` (16px) for the gate box and
+    the tool box while `--tds-radius-card` is 8px, `rounded-lg` buttons, and in
+    the tool packs `rounded-full` tabs that kept the **marketing** pill long after
+    the site had moved here. So the site declared the panel surface and did not
+    look like it. Every control now carries `btn` / `chip` / `field-boxed` /
+    `tds-card`, and `npm run lint:primitives` (CI step) fails the build on a bare
+    one. Never hand-author a radius here.
+    - Do **not** reach for `rounded-[var(--tds-radius-card)]` as a middle ground:
+      Tailwind does not generate arbitrary values out of a package inside
+      `node_modules`, so in the tool packs that ships as *no rule at all*.
+    - The one deliberate exception is the password-strength meter's
+      `rounded-full` — a 6px readout, not a control, and a capsule on every
+      surface. It is commented as such at the call site.
   - **`app.css` IS imported** (it was not, under `marketing`): the panel's card
     elevation and hover lift live there, scoped to `[data-surface="panel"]`, so
     without it `.tds-card` renders flat here while the panels lift. The dashboard

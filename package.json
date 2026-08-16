@@ -1,6 +1,6 @@
 {
   "name": "tds-tools-frontend",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -8,6 +8,7 @@
     "prebuild": "node scripts/sync-installer.mjs tools",
     "build": "astro build",
     "preview": "astro preview",
+    "lint:primitives": "node scripts/lint-primitives.mjs src",
     "type-check": "astro check",
     "test": "vitest",
     "test:run": "vitest run"
