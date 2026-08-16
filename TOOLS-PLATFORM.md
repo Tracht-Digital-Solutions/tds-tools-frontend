@@ -180,6 +180,29 @@ Cross-Repo-Dispatch aus einem Package-Release aus (Abschnitt 2). Einen separaten
 Ab hier sind alle **freien Tools + AdSense** live. AdSense bleibt aus, bis eine
 Publisher-ID im Frontend gesetzt ist (siehe unten).
 
+**4. Optional, aber empfohlen: `https://tools.tracht-digital.de/_setup/install.php`.**
+Jeder Build liefert einen Setup-Assistenten mit (Quelle:
+`@tracht-digital-solutions/tds-shared/install`, kopiert vom `prebuild`-Schritt).
+Er meldet sich per Plattform-Admin-Login an, prüft `GET /tools/catalog` auf
+echte Inhalte statt nur auf HTTP 200, fährt den CORS-Preflight für
+`https://tools.tracht-digital.de`, schreibt `tds-runtime.json` (die Site liest
+sie zur Laufzeit und zieht sie dem eingebackenen Wert vor) und richtet auf Wunsch
+einen Same-Origin-Proxy unter `/api` ein, sodass `/auth/me`,
+`/tools/entitlement` und `/tools/checkout` ganz ohne CORS auskommen.
+
+Er übernimmt außerdem den **Registry-Sync**. Der gehörte in den Build, lief dort
+aber nie: `src/lib/catalog.ts` synchronisiert nur, wenn `TOOLS_REGISTRY_TOKEN`
+gesetzt ist, und **kein Workflow in `tds-tools-frontend` exportiert diese
+Variable**. Der Katalog im Panel blieb deshalb leer, ohne dass irgendetwas rot
+wurde — der Sync ist bewusst fail-soft. Im Assistenten wird das Token einmal
+eingegeben, und der Katalog aus `dist/tools-catalog.json` geht an
+`POST /tools/registry`. Es muss dem Wert unter *Einstellungen → Tools*
+entsprechen.
+
+Nach einem erfolgreichen Lauf sperrt sich der Assistent per
+`_setup/.tds-site-installed` in einen Nur-Lese-Diagnosemodus. Zum Neu-Verbinden
+diese Datei löschen.
+
 ---
 
 ## 4. Im Admin-Frontend konfigurieren

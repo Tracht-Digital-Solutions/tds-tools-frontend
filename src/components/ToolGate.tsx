@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { runtimeSetting } from "@tracht-digital-solutions/tds-shared/api";
 
 interface Props {
   toolId: string;
@@ -9,6 +10,11 @@ interface Props {
   bodySelector: string;
 }
 
+/**
+ * Build-time fallbacks. A host configured with `/_setup/install.php` overrides
+ * both through `tds-runtime.json`, which is also what switches this gate onto
+ * the same-origin proxy (`/api/auth/me` instead of the API domain).
+ */
 const API = import.meta.env.PUBLIC_API_URL ?? "https://api.tracht-digital.de";
 const LOGIN = import.meta.env.PUBLIC_LOGIN_URL ?? "https://app.tracht-digital.de/login";
 
@@ -29,6 +35,10 @@ export default function ToolGate({ toolId, requiresLogin, isPremium, priceCents,
   const [state, setState] = useState<State>("checking");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // Held in state because `buy()` and the login link render outside the effect
+  // that resolves them. Seeded with the build-time values, so an unconfigured
+  // host behaves exactly as before.
+  const [endpoints, setEndpoints] = useState({ api: API, login: LOGIN });
 
   const reveal = () => {
     const el = document.querySelector<HTMLElement>(bodySelector);
@@ -39,7 +49,12 @@ export default function ToolGate({ toolId, requiresLogin, isPremium, priceCents,
     let cancelled = false;
     (async () => {
       try {
-        const me = await fetch(`${API}/auth/me`, { credentials: "include" }).catch(() => null);
+        const api = await runtimeSetting("apiBase", API);
+        const login = await runtimeSetting("loginUrl", LOGIN);
+        if (cancelled) return;
+        setEndpoints({ api, login });
+
+        const me = await fetch(`${api}/auth/me`, { credentials: "include" }).catch(() => null);
         const authed = !!me && me.ok;
         if (cancelled) return;
         if (!authed) {
@@ -51,7 +66,7 @@ export default function ToolGate({ toolId, requiresLogin, isPremium, priceCents,
           setState("granted");
           return;
         }
-        const res = await fetch(`${API}/tools/entitlement?tool=${encodeURIComponent(toolId)}`, {
+        const res = await fetch(`${api}/tools/entitlement?tool=${encodeURIComponent(toolId)}`, {
           credentials: "include",
         }).catch(() => null);
         const ent = res && res.ok ? await res.json() : null;
@@ -71,13 +86,13 @@ export default function ToolGate({ toolId, requiresLogin, isPremium, priceCents,
     };
   }, [toolId, isPremium]);
 
-  const loginHref = `${LOGIN}?next=${encodeURIComponent(typeof location !== "undefined" ? location.href : "")}`;
+  const loginHref = `${endpoints.login}?next=${encodeURIComponent(typeof location !== "undefined" ? location.href : "")}`;
 
   const buy = async () => {
     setBusy(true);
     setError(null);
     try {
-      const res = await fetch(`${API}/tools/checkout`, {
+      const res = await fetch(`${endpoints.api}/tools/checkout`, {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },

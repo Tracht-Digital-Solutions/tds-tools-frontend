@@ -2,6 +2,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import {
+  primeRuntimeConfig,
+  resetRuntimeConfig,
+} from "@tracht-digital-solutions/tds-shared/api";
 import ToolGate from "./ToolGate";
 
 /**
@@ -47,6 +51,11 @@ function res(status: number, body: unknown = {}) {
 beforeEach(() => {
   fetchMock = vi.fn();
   vi.stubGlobal("fetch", fetchMock);
+  // The gate resolves the host's runtime config before its first probe.
+  // Priming it to "absent" keeps these tests about the ACCESS flow and pins the
+  // unconfigured behaviour — the build-time endpoints, exactly as before. The
+  // configured path is covered in tds-shared's own api suite.
+  primeRuntimeConfig(null);
   Object.defineProperty(window, "location", {
     configurable: true,
     writable: true,
@@ -57,6 +66,7 @@ beforeEach(() => {
 afterEach(() => {
   cleanup();
   vi.unstubAllGlobals();
+  resetRuntimeConfig();
   document.body.innerHTML = "";
 });
 

@@ -92,6 +92,85 @@ symlink). Keep the published `^` ranges in `package.json` for CI.
 | `PUBLIC_DEMO_MODE` | `true` → static fallback catalog, ads off (dev branch) |
 | `PUBLIC_AUTH_API_URL` | auth base for the premium login gate (Phase 3) |
 
+
+## Setup auf dem Host: `/_setup/install.php`
+
+Jeder Produktions-Build enthält einen Setup-Assistenten unter
+`https://<domain>/_setup/install.php`. Er verbindet die ausgelieferte Site mit
+der API — **ohne Rebuild**.
+
+**Warum es ihn gibt.** Diese Site ist statisch: Vite backt jede `PUBLIC_*`-URL
+zur Buildzeit ein. Eine deployte `dist/` lässt sich deshalb nicht umkonfigurieren,
+und — schlimmer — eine Site, die die API gar nicht erreicht, fällt still auf ihre
+statischen Platzhalter zurück: kein Fehler, kein Log, nichts wird rot. Der
+Assistent prüft die Verbindung mit echten Aussagen („12 Blöcke", nicht „HTTP
+200"), fährt pro Origin einen CORS-Preflight und schreibt `tds-runtime.json`
+neben die `index.html`. Die Site liest diese Datei zur Laufzeit und zieht sie
+dem eingebackenen Wert vor.
+
+**Ablauf.**
+
+1. `https://<domain>/_setup/install.php` aufrufen.
+2. **Anmeldung** als Plattform-Administrator (dieselben Zugangsdaten wie
+   `auth.tracht-digital.de`). Der Assistent liegt auf einer öffentlich
+   erreichbaren Domain und kommt mit jedem Deploy zurück — ein reines Lockfile
+   wie beim Gateway-Installer würde jedes Deploy-Fenster offen lassen.
+3. **Konfiguration**: API-Basis-URL, Auth-URL, Login-Seite und der
+   Verbindungsmodus.
+4. **Verbinden**: erst prüfen, dann schreiben. Fehlschläge in den Prüfschritten
+   brechen den Lauf nicht ab, sie werden gemeldet.
+
+**Zwei Verbindungsmodi.**
+
+- **Same-Origin-Proxy** (Standard, wenn Rewrites verfügbar sind) — die Site ruft
+  `/api/…` auf dem eigenen Host auf; `api/index.php` reicht ausschließlich die
+  in ihrer Allowlist stehenden Routen an die API weiter. Kein CORS, und ein
+  Site-Token verlässt den Server nie. Die Allowlist ist die Sicherheitsgrenze:
+  `[Methode, Muster]`-Paare, beidseitig verankert, nie ein Präfix-Vergleich.
+- **Direkt** — der Browser ruft die API-Domain direkt. Setzt voraus, dass die
+  Origins dieser Site in `CORS_ALLOWED_ORIGINS` stehen; der Assistent sagt
+  genau, welche fehlen.
+
+**Was der Assistent nicht ablöst.** Die Inhalte, die beim `astro build` geholt
+werden, kommen weiterhin aus den Umgebungsvariablen der GitHub Action — dort
+gibt es keinen Host und keine `tds-runtime.json`. Laufzeit und Buildzeit sind
+getrennt konfiguriert und müssen zusammenpassen; der Assistent prüft beides,
+konfiguriert aber nur die Laufzeit.
+
+**Sperre und erneutes Ausführen.** Nach einem erfolgreichen Lauf setzt der
+Assistent `_setup/.tds-site-installed` und läuft ab dann nur noch im
+Diagnosemodus (er zeigt den aktuellen Stand, bietet aber kein Formular). Zum
+Neu-Verbinden diese Datei löschen. Es gibt bewusst keinen Selbstlöschen-Knopf:
+`_setup/` ist Teil von `dist/`, das nächste Release brächte die Datei ohnehin
+zurück.
+
+**Erzeugte Dateien.** `_setup/` wird vom `prebuild`-Schritt
+(`scripts/sync-installer.mjs`) aus `@tracht-digital-solutions/tds-shared/install`
+kopiert und ist deshalb nicht eingecheckt. `tds-runtime.json`, `api/` und die
+Geheimnis-Datei entstehen erst auf dem Host und liegen nicht in `dist/` — ein
+erneuter Deploy überschreibt sie nicht.
+
+### Registry-Sync — hier ist er zu Hause
+
+Nur diese Site hat im Assistenten das Feld **Registry-Sync-Token**. Es überträgt
+den gebauten Tool-Katalog an `POST /tools/registry`, damit die Tools im
+Admin-Panel auftauchen.
+
+Das gehörte eigentlich in den Build: `src/lib/catalog.ts` macht den Sync, wenn
+`TOOLS_REGISTRY_TOKEN` gesetzt ist — **nur exportiert kein Workflow in diesem
+Repo diese Variable**, also lief er nie. Der Katalog im Panel war leer, seit es
+ihn gibt, und nichts wurde je rot, weil der Sync bewusst fail-soft ist. Der
+Assistent macht ihn host-seitig, und zwar mit dem besseren Ablageort für das
+Token: Es bleibt vom CI-Runner fern, und wer den Setup fährt, hat es ohnehin.
+
+Grundlage ist `dist/tools-catalog.json` (erzeugt von
+`src/pages/tools-catalog.json.ts`). Die Nutzlast hat **exakt** dieselbe Form wie
+die von `syncRegistry()`, damit beide Wege dieselben Zeilen schreiben und keiner
+in einen leicht abweichenden Datensatz driften kann. Das Token muss dem Wert
+unter *Einstellungen → Tools* entsprechen; leer lassen überspringt den Schritt,
+und eine noch nicht konfigurierte API antwortet mit `503` statt mit einem
+Fehler.
+
 ## Deploy
 
 Continuous: **every push to `main` builds + deploys** to the orphan `release` branch

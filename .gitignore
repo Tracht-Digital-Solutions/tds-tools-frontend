@@ -24,3 +24,7 @@ package-lock.json
 # env
 .env
 .env.production
+
+# Host-side setup wizard, copied out of tds-shared by the prebuild step.
+# Generated, never edited here — see scripts/sync-installer.mjs.
+public/_setup/
