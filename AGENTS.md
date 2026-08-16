@@ -125,10 +125,25 @@ A standalone Astro `output:"static"` product modelled on `tds-landingpage-fronte
 - **SEO rides along** with any page/section change (title/description/canonical/
   JSON-LD/sitemap). Keywords: "Digitalisierung für Unternehmen" + 21493
   Schwarzenbek bei Hamburg (NAP matches the Impressum).
+- **Every meta description has ONE budget: 80 < n ≤ 160**, asserted in
+  `lib/site.test.ts` for `site.description` AND for every composed tool.
+  `site.description` shipped at **201** characters until 2026-08-16, so the
+  SERP cut everything from "Von Tracht Digital Solutions, 21493 Schwarzenbek
+  bei Hamburg" onward — the site published a description that identified
+  nobody, keeping only the generic half. A meta description has **no visible
+  failure mode**: nothing renders wrong, nothing errors, the page looks
+  perfect, and the tail is simply absent from a search result nobody is
+  looking at. That is why it is measured rather than reviewed.
+  Order matters: concrete tool names first (this site ranks on tool queries),
+  brand + town in the tail where they still fit inside the cut.
+- **The per-tool descriptions are asserted HERE, not in the four
+  `tds-tool-*` repos.** Those publish independently, and this is the surface
+  that renders them into `<meta>` — so a pack shipping an over-long or
+  duplicate description fails the site build that would have deployed it.
 
 ## Tests
 
-`npm run test:run` (vitest). 47 tests over `lib/catalog.ts` and `ToolGate.tsx`;
+`npm run test:run` (vitest). 61 tests over `lib/catalog.ts`, `lib/site.ts` and `ToolGate.tsx`;
 the `.astro` pages stay on `astro check` + the real build.
 
 - **`virtual:tools-catalog` is aliased to `test/fixtures/tools-catalog.ts`.**

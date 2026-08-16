@@ -6,8 +6,23 @@ export const site = {
   name: "TDS Tools",
   origin: "https://tools.tracht-digital.de",
   tagline: "Kostenlose digitale Werkzeuge für Unternehmen",
+  /**
+   * Site-level meta description. Google renders roughly the first 155–160
+   * characters and truncates the rest — `site.test.ts` fails the build past
+   * that bound.
+   *
+   * This was 201 characters until 2026-08-16, so everything from "Von Tracht
+   * Digital Solutions, 21493 Schwarzenbek bei Hamburg" onward was cut in the
+   * SERP: the site lost its brand AND its local signal while keeping the
+   * generic half. Exactly the defect the landingpage's seo.ts fixed in
+   * 2026-07-29, repeated here because nothing measured it.
+   *
+   * Order is deliberate: the concrete tool names come first (this site ranks
+   * on tool queries), and the brand + town ride in the tail where they still
+   * fit inside the cut.
+   */
   description:
-    "Kostenlose Online-Tools für die Digitalisierung: QR-Codes, Passwörter, JSON, Kontrast-Checker und mehr — direkt im Browser, ohne Anmeldung. Von Tracht Digital Solutions, 21493 Schwarzenbek bei Hamburg.",
+    "Kostenlose Online-Tools ohne Anmeldung: QR-Codes, Passwörter, UTM-Links, JSON und Bildkomprimierung — im Browser, von TDS aus Schwarzenbek bei Hamburg.",
 } as const;
 
 /** German labels for the tool categories (catalog section headings). */
