@@ -69,12 +69,12 @@ body {
   background:
     radial-gradient(
       42rem 30rem at 0% 18%,
-      rgb(var(--tds-decor-navy) / calc(0.06 * var(--tds-decor-field-strength))) 0%,
+      rgb(var(--tds-decor-navy) / calc(0.07 * var(--tds-decor-field-strength))) 0%,
       transparent 68%
     ),
     radial-gradient(
       38rem 26rem at 92% 82%,
-      rgb(var(--tds-decor-bordeaux) / calc(0.05 * var(--tds-decor-field-strength))) 0%,
+      rgb(var(--tds-decor-bordeaux) / calc(0.06 * var(--tds-decor-field-strength))) 0%,
       transparent 66%
     ),
     var(--tds-panel-canvas);
