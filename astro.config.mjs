@@ -25,6 +25,31 @@ export default defineConfig({
     toolHost({ packs }),
     sitemap({
       filter: (page) => !page.includes("/404") && !page.includes("/500"),
+      // The site publishes German at `/` and English at `/en/` with the same
+      // slugs. Declaring the pair here makes the sitemap carry `xhtml:link`
+      // alternates alongside the ones in each page's <head> — the two are
+      // read by different parts of a crawler, and Search Console reports an
+      // hreflang set as valid only when both agree.
+      i18n: {
+        defaultLocale: "de",
+        locales: { de: "de-DE", en: "en-GB" },
+      },
+      serialize(item) {
+        // The catalog is the entry point; the tool pages are the corpus.
+        // Everything else (og routes are not pages, 404 is filtered) keeps
+        // the default. `lastmod` is the build time, which for a static site
+        // rebuilt on every content change is the honest answer.
+        const path = new URL(item.url).pathname.replace(/^\/en/, "") || "/";
+        item.lastmod = new Date().toISOString();
+        if (path === "/") {
+          item.priority = 1.0;
+          item.changefreq = "weekly";
+        } else if (path.startsWith("/tools/")) {
+          item.priority = 0.8;
+          item.changefreq = "monthly";
+        }
+        return item;
+      },
     }),
   ],
   trailingSlash: "ignore",

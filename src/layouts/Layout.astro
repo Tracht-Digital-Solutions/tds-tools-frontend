@@ -15,11 +15,14 @@ import { themeBootstrapScript } from "@tracht-digital-solutions/tds-shared/astro
 import Header from "~/components/Header.astro";
 import Footer from "~/components/Footer.astro";
 import { site } from "~/lib/site";
+import { seoConfig, ogLocale, localizedPath, EN_ENABLED, type Lang } from "~/lib/seo";
 import { adsConfig } from "~/lib/catalog";
 
 interface Props {
   title: string;
   description?: string;
+  /** Content language of this page. Drives <html lang>, OG locale, hreflang. */
+  lang?: Lang;
   /** Canonical URL — defaults to the current page's URL. */
   canonical?: string;
   /** Absolute URL or site-relative path for og:image + twitter:image. */
@@ -32,9 +35,10 @@ interface Props {
 
 const {
   title,
+  lang = "de",
   description = site.description,
   canonical,
-  ogImage = "/og-default.png",
+  ogImage = seoConfig.defaultOgImage,
   jsonLd,
   noindex = false,
 } = Astro.props;
@@ -42,6 +46,17 @@ const {
 const origin = Astro.site?.origin ?? site.origin;
 const url = canonical ?? new URL(Astro.url.pathname, origin).toString();
 const ogImageAbs = ogImage.startsWith("http") ? ogImage : new URL(ogImage, origin).toString();
+
+// hreflang alternates. English is mounted under `/en/…` with the SAME slugs,
+// so the pair is a pure prefix operation and the two URLs always point at each
+// other — the single most common way an hreflang set goes wrong is one side
+// naming a URL that does not name it back.
+//
+// Skipped entirely when the page opts out of search: a noindex page with
+// alternates tells a crawler to follow a link it is also told to ignore.
+const deAltUrl = new URL(localizedPath(Astro.url.pathname, "de"), origin).toString();
+const enAltUrl = new URL(localizedPath(Astro.url.pathname, "en"), origin).toString();
+const altOgLocale = lang === "de" ? ogLocale.en : ogLocale.de;
 
 // AdSense config (build-time, admin-toggleable). When enabled we show the
 // *consent* banner (opt-in gate that also covers the cookie disclosure) and
@@ -79,7 +94,7 @@ const adsActive = ads.enabled && !!ads.publisherId;
      Do NOT author radii or shadows locally — that is exactly what made the
      blog repo fork `.chip`, `.display` and `.eyebrow` before the surface
      split. Set a token in the surface layer or use a shared class. -->
-<html lang="de" data-surface="blog">
+<html lang={lang} data-surface="blog">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -104,6 +119,28 @@ const adsActive = ads.enabled && !!ads.publisherId;
     <script is:inline set:html={themeBootstrapScript} />
 
     <link rel="canonical" href={url} />
+
+    {/* i18n alternates — only on indexable pages. `x-default` is the German
+        page: the audience is local businesses in Northern Germany, so German
+        is the right guess for a visitor whose language we do not know. */}
+    {EN_ENABLED && !noindex && (
+      <>
+        <link rel="alternate" hreflang="de" href={deAltUrl} />
+        <link rel="alternate" hreflang="en" href={enAltUrl} />
+        <link rel="alternate" hreflang="x-default" href={deAltUrl} />
+      </>
+    )}
+
+    {/* Cross-property: the sibling journal's feed. Same declaration the
+        landingpage carries — it is how a reader's feed client and a crawler
+        learn the two properties belong together. */}
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="Tracht Digital — Journal"
+      href={`${seoConfig.blogUrl}/rss.xml`}
+    />
+
     <link rel="preconnect" href="https://api.tracht-digital.de" crossorigin />
     <link rel="preconnect" href="https://tracht-digital.de" crossorigin />
     {adsActive && (
@@ -117,7 +154,16 @@ const adsActive = ads.enabled && !!ads.publisherId;
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={ogImageAbs} />
-    <meta property="og:locale" content="de_DE" />
+    {/* Dimensions and alt are not decoration: without width/height several
+        scrapers (LinkedIn among them) skip the fetch and fall back to no
+        card at all. */}
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={title} />
+    <meta property="og:locale" content={ogLocale[lang]} />
+    {EN_ENABLED && !noindex && (
+      <meta property="og:locale:alternate" content={altOgLocale} />
+    )}
     <meta property="og:site_name" content={site.name} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />

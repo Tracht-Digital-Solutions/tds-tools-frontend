@@ -4,6 +4,13 @@ import ToolCard from "~/components/ToolCard.astro";
 import AdSlot from "~/components/AdSlot.astro";
 import { enabledTools, adsConfig } from "~/lib/catalog";
 import { site, links, categoryLabels, categoryOrder, toolCountLabel } from "~/lib/site";
+import {
+  asGraph,
+  itemListSchema,
+  organizationSchema,
+  personSchema,
+  websiteSchema,
+} from "~/lib/jsonld";
 import type { ToolCategory } from "@tracht-digital-solutions/tds-tools-contract";
 
 const tools = await enabledTools();
@@ -14,36 +21,21 @@ const groups = categoryOrder
   .map((cat) => ({ cat, tools: tools.filter((t) => t.category === cat) }))
   .filter((g) => g.tools.length > 0);
 
-const jsonLd = [
-  {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    name: site.name,
-    url: site.origin,
-    description: site.description,
-    /* The mark now renders in the header, so it is also a publisher signal —
-       an Organization node with a resolvable `logo` is what lets a search
-       engine associate this property with the same brand as
-       tracht-digital.de. The URL must be absolute; a search engine does not
-       resolve it against the page. */
-    publisher: {
-      "@type": "Organization",
-      name: "Tracht Digital Solutions",
-      url: "https://tracht-digital.de",
-      logo: `${site.origin}/brand/td-logomark.webp`,
-    },
-  },
-  {
-    "@context": "https://schema.org",
-    "@type": "ItemList",
-    itemListElement: tools.map((t, i) => ({
-      "@type": "ListItem",
-      position: i + 1,
-      name: t.name,
-      url: `${site.origin}/tools/${t.slug}`,
-    })),
-  },
-];
+/* One `@graph`, not four sibling script blocks: inside a graph the nodes
+   reference each other by `@id`, so the organization is DESCRIBED once here
+   and merely POINTED AT from every tool page. Emitting a second, differently
+   shaped Organization per page is how a site ends up looking like several
+   businesses that share a logo.
+   The organization node is anchored on the main site's origin for the same
+   reason — see `lib/jsonld.ts`. */
+const jsonLd = asGraph(
+  organizationSchema(),
+  personSchema(),
+  websiteSchema(site.description),
+  itemListSchema(
+    tools.map((t) => ({ name: t.name, url: `${site.origin}/tools/${t.slug}` })),
+  ),
+);
 ---
 
 <Layout

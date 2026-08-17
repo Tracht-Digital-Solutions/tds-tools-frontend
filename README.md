@@ -50,6 +50,7 @@ npm run build                   # → dist/ (the static artifact deployed)
 npm run preview
 npm run type-check              # astro check — the correctness gate (0 errors)
 npm run test:run                # vitest — catalog resolution + the access gate
+npm run og:smoke                # render the OG cards to scripts/ and eyeball them
 ```
 
 ## Tests

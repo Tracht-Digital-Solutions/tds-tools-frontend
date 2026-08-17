@@ -8,6 +8,9 @@ dist/
 # deps
 node_modules/
 
+# og:smoke output — rendered locally to eyeball the cards, never committed
+scripts/og-smoke-*.png
+
 # logs / os / editor
 *.log
 .DS_Store

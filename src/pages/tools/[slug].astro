@@ -7,6 +7,7 @@ import { components } from "virtual:tools-components";
 import ToolGate from "~/components/ToolGate.tsx";
 import { enabledTools, adsConfig } from "~/lib/catalog";
 import { site } from "~/lib/site";
+import { asGraph, breadcrumbSchema, softwareApplicationSchema } from "~/lib/jsonld";
 import type { ResolvedTool } from "~/lib/catalog";
 
 // One static page per enabled tool. The resolved tool (manifest + admin flags)
@@ -36,21 +37,36 @@ const gated = tool.requiresLogin || tool.isPremium;
 
 const seoTitle = tool.seo?.title ?? `${tool.name} — ${site.name}`;
 const seoDescription = tool.seo?.description ?? tool.description;
+const toolUrl = `${site.origin}/tools/${tool.slug}`;
 
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": tool.seo?.jsonLdType ?? "WebApplication",
-  name: tool.name,
-  url: `${site.origin}/tools/${tool.slug}`,
-  applicationCategory: "BusinessApplication",
-  operatingSystem: "Web",
-  description: seoDescription,
-  offers: { "@type": "Offer", price: (tool.priceCents / 100).toFixed(2), priceCurrency: "EUR" },
-  provider: { "@type": "Organization", name: "Tracht Digital Solutions", url: "https://tracht-digital.de" },
-};
+/* The breadcrumb this page has always DRAWN, now also declared. Without the
+   node the hierarchy was visible to a reader and to nothing else — a search
+   result showed the bare URL where it could have shown "Alle Tools ›
+   QR-Code-Generator". */
+const jsonLd = asGraph(
+  softwareApplicationSchema({
+    name: tool.name,
+    url: toolUrl,
+    description: seoDescription,
+    type: tool.seo?.jsonLdType ?? "WebApplication",
+    lang: "de",
+    isFree: !tool.isPremium,
+    priceCents: tool.priceCents,
+    keywords: tool.keywords,
+  }),
+  breadcrumbSchema([
+    { name: "Alle Tools", url: `${site.origin}/` },
+    { name: tool.name, url: toolUrl },
+  ]),
+);
 ---
 
-<Layout title={seoTitle} description={seoDescription} jsonLd={jsonLd}>
+<Layout
+  title={seoTitle}
+  description={seoDescription}
+  ogImage={`/og/tools/${tool.slug}.png`}
+  jsonLd={jsonLd}
+>
   <div class="tds-page mx-auto max-w-4xl px-4 py-10 sm:px-6">
     <nav class="text-sm text-[color:var(--color-muted)]">
       {/* `.tnav-link` carries the muted→ink hover. A `hover:text-…` utility

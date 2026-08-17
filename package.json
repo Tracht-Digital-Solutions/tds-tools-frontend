@@ -1,6 +1,6 @@
 {
   "name": "tds-tools-frontend",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -9,6 +9,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "lint:primitives": "node scripts/lint-primitives.mjs src",
+    "og:smoke": "tsx scripts/og-smoke.ts",
     "type-check": "astro check",
     "test": "vitest",
     "test:run": "vitest run"
@@ -17,6 +18,7 @@
     "@astrojs/check": "^0.9.9",
     "@astrojs/react": "^6.0.2",
     "@astrojs/sitemap": "^3.7.3",
+    "@resvg/resvg-js": "^2.6.2",
     "@fontsource-variable/jetbrains-mono": "^5.2.8",
     "@fontsource-variable/plus-jakarta-sans": "^5.2.8",
     "@fontsource/lato": "^5.2.7",
@@ -30,6 +32,7 @@
     "astro": "^7.1.6",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "satori": "^0.26.0",
     "tailwindcss": "~4.3.3",
     "typescript": "^5.6.0"
   },
@@ -41,6 +44,7 @@
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "jsdom": "^25.0.1",
+    "tsx": "^4.22.3",
     "vitest": "^2.1.9"
   }
 }

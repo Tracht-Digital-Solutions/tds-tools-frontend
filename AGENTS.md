@@ -214,6 +214,51 @@ A standalone Astro `output:"static"` product modelled on `tds-landingpage-fronte
 - **SEO rides along** with any page/section change (title/description/canonical/
   JSON-LD/sitemap). Keywords: "Digitalisierung für Unternehmen" + 21493
   Schwarzenbek bei Hamburg (NAP matches the Impressum).
+- **The identity lives in `lib/seo.ts`, the schema renderers in `lib/jsonld.ts`.**
+  Both are ports of the landingpage's files of the same names, deliberately
+  keeping the function names and shapes. Two rules that are not stylistic:
+  - **Every NAP value is a verbatim copy of the landingpage's.** A local
+    business signal is worth something only when name, address and phone are
+    byte-identical wherever they appear; a paraphrased street reads as a
+    *different* business, which is worse than saying nothing. `seo.test.ts`
+    greps the landingpage's `seo.ts` for each value, so a change on either
+    side fails this build.
+  - **The `@id` of the organization is anchored on `tracht-digital.de`,** not
+    on this origin, and the page emits ONE `@graph` rather than several script
+    blocks. Inside a graph the nodes reference each other by `@id`, so the
+    business is described once and merely pointed at from every tool page. A
+    second, differently shaped Organization per property is how a brand ends
+    up looking like several businesses that share a logo.
+- **OG cards are rendered at build time (`src/og/render.ts`), and this was a
+  live defect for the whole life of the site.** `Layout.astro` advertised
+  `og:image = /og-default.png`, a file that existed in no repo — not in
+  `public/`, not in `dist/`. The tag is well-formed, the build is green, and
+  the only symptom is a blank card in someone else's preview pane, so nothing
+  ever reported it. There are now two renderers: `/og/default.png` (catalog +
+  fallback) and `/og/tools/<slug>.png` (one per enabled tool, keyed off the
+  same `enabledTools()` as the routes, so a disabled tool leaves no orphan
+  image). The card is the JOURNAL's hero band — navy ground, coral eyebrow,
+  the three-part brand accent — because a share should look like the page it
+  links to.
+  - **`npm run og:smoke` after any change to the renderer.** Satori draws
+    outside the viewport without warning, so an over-long headline is simply
+    missing from the shared image — invisible to `astro check`, vitest and the
+    build alike. `headlineSize()` steps the size down at 18 and 26 characters;
+    the smoke script renders the longest name the packs currently produce.
+  - Colours are literals in that file, not tokens: satori resolves no CSS
+    custom properties. The bar is the `--on-dark` run (cranberry · coral ·
+    gold) as it resolves in the light theme — a raster card cannot follow the
+    viewer's theme.
+- **`hreflang` is gated on `EN_ENABLED` (`lib/seo.ts`).** An `hreflang="en"`
+  pointing at a URL that 404s invalidates the entire set *including the German
+  side*, so the flag and the existence of `src/pages/en/` must agree —
+  `seo.test.ts` asserts exactly that. English is mounted under `/en/` with the
+  SAME slugs, which makes an alternate pair a pure prefix operation
+  (`localizedPath`/`neutralPath`) and keeps the two URLs naming each other.
+- **Titles are budgeted too, not just descriptions** (`seo.test.ts`, ≤ 60
+  chars, distinct, and never leading with the brand — a site that ranks on
+  tool queries must not spend the rendered budget on a word nobody searched
+  for).
 - **Every meta description has ONE budget: 80 < n ≤ 160**, asserted in
   `lib/site.test.ts` for `site.description` AND for every composed tool.
   `site.description` shipped at **201** characters until 2026-08-16, so the
@@ -232,7 +277,7 @@ A standalone Astro `output:"static"` product modelled on `tds-landingpage-fronte
 
 ## Tests
 
-`npm run test:run` (vitest). 69 tests over `lib/catalog.ts`, `lib/site.ts`,
+`npm run test:run` (vitest). 102 tests over `lib/catalog.ts`, `lib/site.ts`,
 `ToolGate.tsx` and — as plain text — the layout/CSS surface contract
 (`lib/surface.test.ts`). The `.astro` pages otherwise stay on `astro check` +
 the real build.
