@@ -11,6 +11,7 @@ import "@fontsource-variable/plus-jakarta-sans";
 import "@fontsource-variable/jetbrains-mono";
 import "~/styles/global.css";
 import { CookieNotice } from "@tracht-digital-solutions/tds-shared/components";
+import { themeBootstrapScript } from "@tracht-digital-solutions/tds-shared/astro";
 import Header from "~/components/Header.astro";
 import Footer from "~/components/Footer.astro";
 import { site } from "~/lib/site";
@@ -51,30 +52,34 @@ const adsActive = ads.enabled && !!ads.publisherId;
 
 <!DOCTYPE html>
 <!-- data-surface selects the geometry layer from tds-shared's design library.
-     This site reads as a TOOL, not as a brochure, so it takes the **panel**
-     layer: 8px product-UI geometry, 0.75rem chips, softly elevated cards and
-     the panel's navy accent axis — the same surface the admin frontend and the
-     customer portal render.
+     Since 0.9.0 this site renders the **blog** surface (surfaces/blog.css) —
+     the same layer `blog.tracht-digital.de` renders: the flat "kantig" kit,
+     every radius 0, no elevation anywhere, the 800 display voice and the
+     `--tds-flat-tint` / `--tds-flat-hover` fills. The two public properties
+     that link to each other now also read as one property.
 
-     It is still a PUBLIC, indexable site (the panel products are noindex), so
-     the surface choice is about geometry and colour only: no rail, no drawer,
-     no dashboard chrome. `data-frontend` is left unset, which resolves
-     `--tds-panel-accent` to `--color-primary` — management navy.
+     It replaces the panel surface + its `data-flat` variant, which this site
+     was the only consumer of. That pairing was already most of the way here
+     (flat is flat), but it kept the panel's 8px cards, 0.75rem chips and
+     `--tds-panel-*` colour axis — i.e. it looked like the ADMIN dashboard, on
+     a public marketing-adjacent site whose sibling is the journal.
 
-     `data-flat` selects the panel layer's FLAT variant (tds-shared 0.24.2):
-     no self-outlines and no card elevation anywhere, so the page separates
-     through fill, tone and spacing alone. The panel's own base block is
-     untouched — the admin frontend and the customer portal keep their
-     hairlines, where a dozen equal-weight cards need the edge to read apart.
-     Overlays (modal, dropdown) deliberately KEEP their depth: flat is about
-     the page, not about what floats above it.
+     Consequence worth knowing before you edit anything here: the
+     `--tds-panel-*` family no longer carries panel VALUES. Real values come
+     from surfaces/panel.css, which this site no longer imports; base.css
+     still declares the family with deliberately INERT defaults (accent =
+     `--color-primary`, rail = a flat `--color-surface-navy`, canvas =
+     `--color-paper`). So a stale reference does not error and does not go
+     blank either — it quietly renders in the panel's fallback navy, i.e. a
+     plausible wrong colour on a surface whose accent is the bordeaux. Nothing
+     but a browser would tell you, so `src/lib/surface.test.ts` fails the
+     build on one. Use `--color-accent`, `--color-primary` and
+     `--color-surface-navy` instead.
 
-     Read the "FLAT variant" section in tds-shared's primitives.css before
-     adding a control here. Every primitive that separated only by its edge
-     trades it for a fill there — a borderless `.field-boxed` inside a
-     `.tds-card` would otherwise be an invisible input, and nothing but a
-     browser would ever say so. -->
-<html lang="de" data-surface="panel" data-flat>
+     Do NOT author radii or shadows locally — that is exactly what made the
+     blog repo fork `.chip`, `.display` and `.eyebrow` before the surface
+     split. Set a token in the surface layer or use a shared class. -->
+<html lang="de" data-surface="blog">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -87,22 +92,16 @@ const adsActive = ads.enabled && !!ads.publisherId;
         domain, so a different tab icon read as a different service. */}
     <link rel="icon" type="image/png" href="/favicon.png" sizes="any" />
 
-    {/* No-flash theme bootstrap — same key as the other TDS frontends so the
-        light/dark choice carries across properties. */}
-    <script is:inline>
-      document.documentElement.classList.add("js");
-      (function () {
-        try {
-          var saved = localStorage.getItem("tds-theme");
-          if (saved === "light" || saved === "dark") {
-            document.documentElement.setAttribute("data-theme", saved);
-            return;
-          }
-        } catch (e) {}
-        var dark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
-        document.documentElement.setAttribute("data-theme", dark ? "dark" : "light");
-      })();
-    </script>
+    {/* No-flash theme bootstrap — the SHARED implementation (tds-shared/astro),
+        the same one the landingpage, the blog and the frontend host inject.
+        This used to be a hand-typed copy that retyped the `"tds-theme"` storage
+        key, which is the contract between the bootstrap (reads), `ThemeToggle`
+        (writes) and base.css (selects) — three places, one string, no test.
+        Must stay `is:inline` (Astro would otherwise defer it into a module and
+        the theme would apply after first paint) and `set:html` (an attribute
+        expression, written out unescaped — a raw body would need the script
+        source inline). */}
+    <script is:inline set:html={themeBootstrapScript} />
 
     <link rel="canonical" href={url} />
     <link rel="preconnect" href="https://api.tracht-digital.de" crossorigin />

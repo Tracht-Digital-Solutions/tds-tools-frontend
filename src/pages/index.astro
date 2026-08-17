@@ -3,7 +3,7 @@ import Layout from "~/layouts/Layout.astro";
 import ToolCard from "~/components/ToolCard.astro";
 import AdSlot from "~/components/AdSlot.astro";
 import { enabledTools, adsConfig } from "~/lib/catalog";
-import { site, categoryLabels, categoryOrder, toolCountLabel } from "~/lib/site";
+import { site, links, categoryLabels, categoryOrder, toolCountLabel } from "~/lib/site";
 import type { ToolCategory } from "@tracht-digital-solutions/tds-tools-contract";
 
 const tools = await enabledTools();
@@ -51,18 +51,34 @@ const jsonLd = [
   description={site.description}
   jsonLd={jsonLd}
 >
+  {/* Flat navy hero band, the journal's own hero treatment: an `.eyebrow` in
+      coral, a `.display` headline with one accent word, the brand accent bar.
+      `.display` and `.eyebrow` are shared type primitives — the blog surface
+      is what makes them read at weight 800 with the display face, so neither
+      the weight nor the family belongs in this markup. */}
   <section class="tools-hero">
     <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
-      <p class="text-sm font-semibold uppercase tracking-[0.14em] text-white/60">Digitalisierung für Unternehmen</p>
-      <h1 class="mt-3 max-w-3xl font-[family-name:var(--font-display)] text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl">
-        Kostenlose digitale Werkzeuge — direkt im Browser.
+      <p class="eyebrow" style="color: var(--color-accent-pink);">Digitalisierung für Unternehmen</p>
+      <h1 class="display mt-3 max-w-3xl text-4xl leading-tight sm:text-5xl">
+        Kostenlose digitale <span class="accent-italic" style="color: var(--color-accent-pink);">Werkzeuge</span> — direkt im Browser.
       </h1>
       {/* The three-part brand accent, on its lifted run because the hero
           band is a fixed dark surface in both themes. */}
       <span aria-hidden="true" class="tds-brandbar tds-brandbar--on-dark mt-5"></span>
-      <p class="mt-4 max-w-2xl text-lg text-white/75">
+      <p class="mt-4 max-w-2xl text-lg" style="color: rgb(255 255 255 / 0.75); line-height: 1.6;">
         QR-Codes, Passwörter, JSON, Kontrast und mehr. Ohne Anmeldung, ohne Installation.
         Von Tracht Digital Solutions aus Schwarzenbek bei Hamburg.
+      </p>
+      {/* The sibling properties, named in the hero as well as the nav: this
+          band is the one thing every visitor sees, including the ones who
+          arrived on a deep link from a search result. */}
+      {/* No colour utility on these: `.link-underline` is unlayered tds-shared
+          CSS and declares `color: inherit`, which beats a layered
+          `text-white/80`. Inheriting is right here anyway — the band's own
+          white — and the underline follows as `currentColor`. */}
+      <p class="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
+        <a href={links.blog} class="link-underline">Zum Blog</a>
+        <a href={links.main} class="link-underline">Zur Startseite</a>
       </p>
     </div>
   </section>

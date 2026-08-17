@@ -1,37 +1,109 @@
 ---
+/**
+ * Footer in the journal's idiom: a fixed navy block, brand wordmark + the
+ * three-part brand accent + blurb on the left, link columns on the right.
+ * Same structure as `tds-blog-frontend`'s JournalFooter, with this site's IA.
+ *
+ * The columns carry the sibling properties by name — Blog and Startseite are
+ * in the header too, deliberately: a reader who has scrolled a catalog to its
+ * end is exactly the reader looking for what else exists.
+ */
+import { adsConfig } from "~/lib/catalog";
+import { links } from "~/lib/site";
+
 const year = new Date().getFullYear();
+// Ad-consent revoke control — only meaningful when AdSense actually runs, in
+// which case the visitor was asked for consent and must be able to take it
+// back. Mirrors the blog's footer control (same storage key, same reload).
+const ads = await adsConfig();
+const adsEnabled = ads.enabled && !!ads.publisherId;
+
+const groups = [
+  {
+    head: "Tracht Digital",
+    items: [
+      { label: "Startseite", href: links.main },
+      { label: "Blog", href: links.blog },
+      { label: "Kundenportal", href: links.portal },
+      { label: "Kontakt", href: links.contact },
+    ],
+  },
+  {
+    head: "Rechtliches",
+    items: [
+      { label: "Impressum", href: links.impressum },
+      { label: "Datenschutz", href: links.datenschutz },
+    ],
+  },
+];
 ---
 
-{/* `.tds-tone-navy` carries the fill AND re-maps the page tokens inside the
-    footer. It used to also draw a `border-t` in the re-mapped `--color-line`;
-    on a flat surface that line is redundant, because a navy ground against the
-    light canvas already separates by fill alone — which is the only thing that
-    ever made the border invisible enough to look right. */}
+{/* `.tds-tone-navy` (tds-shared) carries the fill AND re-maps the page tokens
+    inside the footer, so any shared primitive rendered here reads on the dark
+    ground instead of keeping the light page's warm line. */}
 <footer class="mt-20 tds-tone-navy">
-  <div class="mx-auto grid max-w-6xl gap-8 px-4 py-12 sm:px-6 md:grid-cols-3">
+  <div class="mx-auto grid max-w-6xl gap-9 px-4 py-12 sm:px-6 md:grid-cols-[1.4fr_repeat(2,1fr)]">
     <div>
-      <p class="font-[family-name:var(--font-display)] text-lg font-extrabold">TDS Tools</p>
-      <p class="mt-2 text-sm text-white/70">
-        Kostenlose digitale Werkzeuge für die Digitalisierung — direkt im Browser.
+      <p class="brand-wordmark mb-3 inline-flex items-center gap-2 text-lg" style="color: #fff;">
+        <span class="brand-logo brand-logo--inverse" aria-hidden="true"></span>
+        <span>TDS <span style="color: var(--color-accent-pink);">Tools</span></span>
+      </p>
+      {/* The three-part brand accent as the footer's closing detail — the same
+          mark the blog and the landingpage footers carry, which is what makes
+          the properties read as one brand. `--on-dark` is the lifted run. */}
+      <span aria-hidden="true" class="tds-brandbar tds-brandbar--sm tds-brandbar--on-dark mb-4"></span>
+      <p class="text-sm leading-relaxed" style="color: rgb(255 255 255 / 0.65); max-width: 34ch;">
+        Kostenlose digitale Werkzeuge für die Digitalisierung — direkt im Browser,
+        ohne Anmeldung und ohne Installation.
+      </p>
+      <p class="mt-5 text-[0.8125rem]" style="font-family: var(--font-mono); color: rgb(255 255 255 / 0.5);">
+        Julian Tracht · 21493 Schwarzenbek bei Hamburg
       </p>
     </div>
-    <div class="text-sm">
-      <p class="mb-2 font-semibold uppercase tracking-wide text-white/60">Tracht Digital Solutions</p>
-      <p class="text-white/80">Julian Tracht<br />21493 Schwarzenbek bei Hamburg</p>
-    </div>
-    <div class="text-sm">
-      <p class="mb-2 font-semibold uppercase tracking-wide text-white/60">Rechtliches</p>
-      <ul class="space-y-1">
-        <li><a class="text-white/80 no-underline hover:text-white" href="https://tracht-digital.de/legal/impressum">Impressum</a></li>
-        <li><a class="text-white/80 no-underline hover:text-white" href="https://tracht-digital.de/legal/datenschutz">Datenschutz</a></li>
-        <li><a class="text-white/80 no-underline hover:text-white" href="https://tracht-digital.de">tracht-digital.de</a></li>
-      </ul>
-    </div>
+    {groups.map((g) => (
+      <div>
+        <p class="eyebrow mb-4" style="color: rgb(255 255 255 / 0.5);">{g.head}</p>
+        <ul class="m-0 flex list-none flex-col gap-2.5 p-0">
+          {g.items.map((it) => (
+            <li>
+              <a href={it.href} class="text-sm text-white/75 no-underline transition-colors hover:text-white">
+                {it.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    ))}
   </div>
-  {/* The copyright bar was split off with a `border-t`. Flat trades the line
-      for a tone STEP — a slightly deeper navy plus the padding it already had.
-      A fill only separates against a different ground, and here it does. */}
-  <div class="bg-black/15 px-4 py-4 text-center text-xs text-white/50 sm:px-6">
-    © {year} Tracht Digital Solutions · Digitalisierung für Unternehmen
+  {/* A hairline, not a tone step: the flat kit drops the outlines a primitive
+      draws around ITSELF, while a line BETWEEN two things keeps its literal
+      1px. Same rule, same value, as the blog footer's. */}
+  <div
+    class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 pt-4 pb-8 text-xs sm:px-6"
+    style="border-top: 1px solid rgb(255 255 255 / 0.1); font-family: var(--font-mono); color: rgb(255 255 255 / 0.5);"
+  >
+    <p>© {year} Tracht Digital Solutions · Digitalisierung für Unternehmen</p>
+    {adsEnabled && (
+      <button
+        type="button"
+        id="tds-ad-consent-reset"
+        class="btn btn-ghost"
+        style="font-family: var(--font-mono); font-size: inherit;"
+      >
+        Werbe-Einwilligung ändern
+      </button>
+    )}
   </div>
+  {adsEnabled && (
+    <script is:inline>
+      (function () {
+        var b = document.getElementById("tds-ad-consent-reset");
+        if (!b) return;
+        b.addEventListener("click", function () {
+          try { localStorage.removeItem("tds-ad-consent"); } catch (e) {}
+          location.reload();
+        });
+      })();
+    </script>
+  )}
 </footer>

@@ -53,17 +53,19 @@ const jsonLd = {
 <Layout title={seoTitle} description={seoDescription} jsonLd={jsonLd}>
   <div class="tds-page mx-auto max-w-4xl px-4 py-10 sm:px-6">
     <nav class="text-sm text-[color:var(--color-muted)]">
-      <a href="/" class="no-underline hover:text-[color:var(--color-ink)]">Alle Tools</a>
+      {/* `.tnav-link` carries the muted→ink hover. A `hover:text-…` utility
+          would not: tds-shared is unlayered and `.link-underline` declares
+          `color: inherit`, which beats anything in `@layer utilities`. */}
+      <a href="/" class="tnav-link link-underline">Alle Tools</a>
       <span class="mx-2">/</span>
       <span class="text-[color:var(--color-ink)]">{tool.name}</span>
     </nav>
 
-    {/* `.tds-page__head` carries the panel's fluid title size and the accent
-        rule beneath it — the same page head the admin frontend and the
-        customer portal render, which is what makes this read as one product
-        rather than a brochure page. The accent comes from
-        `--tds-panel-accent`, not `--color-primary`: identical today only
-        because this public site deliberately sets no `data-frontend`. */}
+    {/* The page head is the journal's display voice (`.tool-title`, this
+        repo's global.css), not the panel's product heading: `.tds-page__title`
+        alone is the 1.5rem base size, because the fluid, heavier override the
+        products get lives in app.css behind `[data-surface="panel"]` — which
+        this site no longer is. */}
     {/* Head and lede are ONE group. `.tds-page` is a flex column with a
         uniform 1.5rem gap, which spaced a title from its own subtitle exactly
         as far as from the tool below it — on a surface with no edges left to
@@ -72,8 +74,8 @@ const jsonLd = {
         hold the pair together, without re-declaring the shared class. */}
     <div class="tool-intro">
       <div class="tds-page__head">
-        <h1 class="tds-page__title flex items-center gap-3">
-          <Icon name={tool.icon} class="h-7 w-7 text-[color:var(--tds-panel-accent)]" />
+        <h1 class="tds-page__title tool-title flex items-center gap-3">
+          <Icon name={tool.icon} class="h-7 w-7 text-[color:var(--color-accent)]" />
           {tool.name}
         </h1>
       </div>

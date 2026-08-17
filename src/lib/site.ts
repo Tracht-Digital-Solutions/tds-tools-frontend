@@ -25,6 +25,27 @@ export const site = {
     "Kostenlose Online-Tools ohne Anmeldung: QR-Codes, Passwörter, UTM-Links, JSON und Bildkomprimierung — im Browser, von TDS aus Schwarzenbek bei Hamburg.",
 } as const;
 
+/**
+ * The sibling TDS properties this site links to.
+ *
+ * Declared once here rather than inline in the header/footer markup: the blog
+ * links back to this site from its own `nav.ts` (`TOOLS_URL`), and the two
+ * link sets are each other's counterpart — a public property that only ever
+ * gets linked TO is a dead end for a reader and an orphan for a crawler.
+ *
+ * Absolute URLs on purpose. These are separate hosts (`tracht-digital.de`,
+ * `blog.tracht-digital.de`), so a site-relative path would resolve against
+ * `tools.tracht-digital.de` and 404 into this site's own SPA-less 404 page.
+ */
+export const links = {
+  main: "https://tracht-digital.de",
+  blog: "https://blog.tracht-digital.de",
+  contact: "https://tracht-digital.de/#contact",
+  portal: "https://app.tracht-digital.de",
+  impressum: "https://tracht-digital.de/legal/impressum",
+  datenschutz: "https://tracht-digital.de/legal/datenschutz",
+} as const;
+
 /** German labels for the tool categories (catalog section headings). */
 export const categoryLabels: Record<ToolCategory, string> = {
   content: "Inhalte",

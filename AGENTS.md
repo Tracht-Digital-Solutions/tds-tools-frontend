@@ -55,40 +55,60 @@ A standalone Astro `output:"static"` product modelled on `tds-landingpage-fronte
   Lato / Plus Jakarta Sans / JetBrains Mono, matching tds-shared's tokens. (This
   site was on Geist and carried a local `--font-mono` override, which existed only
   because the shared token used to name a Geist Mono that no app shipped.)
-- **This site renders on the `panel` surface, in its FLAT variant** — the same
-  layer the admin frontend and the customer portal use.
-  `<html data-surface="panel" data-flat>` in `Layout.astro` selects
-  `tds-shared/styles/surfaces/panel.css`: 8px product-UI geometry, 0.75rem chips
-  and the navy accent axis, with **no self-outlines and no card elevation**.
-  `global.css` imports `base.css` → `primitives.css` → `app.css` →
-  `surfaces/panel.css`.
-  - **`data-flat` (tds-shared 0.24.2) is what makes the site borderless**, and it
-    is an opt-in on the panel layer rather than a change to it: the admin
-    frontend and the customer portal render the same file and keep their
-    hairlines, where a dozen equal-weight dashboard cards need the edge to read
-    apart. Overlays (modal, dropdown) keep their depth on purpose — flat is
-    about the page, not about what floats above it.
-  - **Flat is not achieved by deleting borders here.** Four shared primitives
-    separate from their ground *only* by their edge and get a fill counterpart
-    in tds-shared's "FLAT variant" section: `.field-boxed` (whose `--color-card`
-    fill is the same fill as the `.tds-card` it sits in — a borderless boxed
-    input inside a card is an invisible input, and the tool islands use ten of
-    them), `.status-pill`, `.chip--neutral`, `.btn-ghost`. Read that section
-    before adding a control; the browser is the only thing that reports a miss.
+- **This site renders on the `blog` surface** — the same layer
+  `blog.tracht-digital.de` renders. `<html data-surface="blog">` in
+  `Layout.astro` selects `tds-shared/styles/surfaces/blog.css`: the flat
+  "kantig" kit from the design-system handoff — *"keine Rundungen, kaum Borders
+  — Abgrenzung über Farbflächen"*. Every radius collapses to 0, nothing is
+  elevated, the display voice runs at 800, and separation comes from colour
+  blocks (`--color-soft`, `--tds-flat-tint`, `--tds-flat-hover`) plus 2px accent
+  bars. `global.css` imports `base.css` → `primitives.css` →
+  `surfaces/blog.css`.
+  - **It was `panel` + `data-flat` until 2026-08-17** (and `marketing` before
+    2026-08-05). The flat panel was already flat, but it was the *dashboard's*
+    geometry and colour axis — 8px cards, 0.75rem chips, `--tds-panel-accent` —
+    on a public site whose sibling property is the journal. The two now link to
+    each other in both directions and read as one property.
+  - **`--tds-panel-*` no longer carries a panel value here, and that does not
+    error.** `surfaces/panel.css` is what gives the family real values; base.css
+    also declares it with deliberately INERT defaults (accent =
+    `--color-primary`, rail = a flat `--color-surface-navy`, canvas =
+    `--color-paper`) so a non-panel consumer renders unchanged. A missed
+    reference therefore renders in the fallback **navy** — a plausible wrong
+    colour, not a blank — on a surface whose accent is the bordeaux. There were
+    nine of them; `lib/surface.test.ts` fails the build on the next one.
+  - **`app.css` and `prose.css` are NOT imported.** `app.css` is dashboard +
+    editorial chrome and scopes every rule on a generic primitive to
+    `[data-surface="panel"]`, so on this surface it is dead weight; the blog
+    imports it only for `.editorial-grid`, which this site does not render.
+    `prose.css` is `.tds-prose` long-form typography and no page here renders a
+    body of markdown. (Under the panel surface `app.css` WAS required — it is
+    where the flat variant's hover-lift opt-out and the `.panel-main` canvas
+    live.)
+  - **`<body>` no longer paints a canvas.** The tinted `--tds-panel-canvas` plus
+    the two `background-attachment: fixed` brand fields were the panel's page
+    surface, restated here because this site has no `.panel-main`. The journal
+    sits on plain `--color-paper` and separates with `--color-soft` blocks, so
+    the restatement is gone with the surface it belonged to.
+  - **Flat here does NOT mean borderless.** The blog surface keeps
+    `--tds-border-hairline: 1px` — it is angular and unelevated, not edgeless —
+    so `.tds-card`, `.field-boxed`, `.status-pill` and `.chip--neutral` all keep
+    their outlines and need none of the fill counterparts the panel's
+    `data-flat` variant required. Nothing in the tool islands had to change.
   - **The card hover cue is site-local and lives on `.tool-card`, not
-    `.tds-card`.** It used to be `border-color: accent` plus the panel's shadow
-    lift, and flat removes both — so the catalog card now changes its FILL on
-    hover (`global.css`). Deliberately not on `.tds-card`: the tool page wraps
-    its non-interactive body in one, and tinting that would claim it does
-    something.
-  - **The header owns none of its own chrome any more.** Fill, blur and bottom
-    edge come from `.brand-header` + its `[data-flat]` variant. It used to
-    hand-author an 85% canvas tint, `backdrop-blur`, a `border-b` *on top of* the
-    shared rule's own, and `z-40` against the shared stacking ladder's 30 — and
-    it could not have gone flat locally anyway, because `.brand-header` draws its
-    border with a literal 1px that no app-level class can reach.
-  - It was the `marketing` surface until 2026-08-05. A tool site reads as a piece
-    of software, not as a brochure, so it now matches the products it belongs to.
+    `.tds-card`.** `.tool-card` is now the journal's flat card: a `--color-soft`
+    colour block, no border, no radius, hover deepening the fill to
+    `--tds-flat-hover` and growing a 2px accent bar down its left edge —
+    `.post-card`'s affordance, expressed with the same shared tokens. It used to
+    stack on `.tds-card`, which added a second fill and an outline. `.tds-card`
+    still wraps the tool BODY on `/tools/[slug]`, where a bordered panel around
+    an interactive form is right.
+  - **The header owns none of its own chrome.** Fill, blur and the warm bottom
+    hairline come from `.brand-header`. It used to hand-author an 85% canvas
+    tint, `backdrop-blur`, a `border-b` *on top of* the shared rule's own, and
+    `z-40` against the shared stacking ladder's 30. Note the blur is back: the
+    panel's `[data-flat]` variant had turned the bar opaque, and the journal's
+    bar is the translucent one.
   - **Choosing the surface is not the same as USING it.** The surface layer only
     sets tokens; they reach an element through a shared class. Until 2026-08-16
     the markup wrote its own geometry — `rounded-2xl` (16px) for the gate box and
@@ -104,37 +124,37 @@ A standalone Astro `output:"static"` product modelled on `tds-landingpage-fronte
     - The one deliberate exception is the password-strength meter's
       `rounded-full` — a 6px readout, not a control, and a capsule on every
       surface. It is commented as such at the call site.
-  - **`app.css` IS imported** (it was not, under `marketing`). It used to be
-    imported to GET the panel's card elevation and hover lift; since the flat
-    variant it is imported partly to switch that lift OFF — the overlay drawing
-    it is an `::after` in that file, and `--tds-elevation-card: none` only clears
-    the *resting* shadow. It also carries the canvas and page-head rules this
-    site reads. The dashboard chrome (`.portal-sidebar`, `.nav-item*`,
-    `.stat-tile*`) is simply never used — this is a public catalog, not a
-    dashboard.
-  - **`data-frontend` is deliberately unset**, which resolves `--tds-panel-accent`
-    to the base `--color-primary` (brand navy) — the same accent the customer
-    portal renders. Setting it to `admin` would paint this **public** site in
+  - **`data-frontend` is still deliberately unset**, and it must stay that way
+    even though this site no longer renders the panel. It is the panel layer's
+    accent axis: setting it to `admin` there paints a surface in
     `--color-management`, the burgundy that signals management rights, which is
-    exactly the claim a public catalog must not make. (Since tds-shared 0.20.1 the
-    base accent is the navy and ADMIN is the override; tds-shared's
-    `design.test.ts` fails the build if the management red ever moves into the
-    base block, because this site is what would inherit it.)
-  - The page canvas is `--tds-panel-canvas` on `<body>`, because app.css scopes
-    that tint to `.panel-main` and this site has no such wrapper. Without it cards
-    sit on the same white they are made of.
-    - **Since tds-shared 0.23.0 ("Digitale Maßarbeit") `<body>` also restates
-      the two soft brand fields** that `[data-surface="panel"] .panel-main`
-      paints in app.css, for the same reason: there is no `.panel-main` here to
-      inherit them from. They are `background-attachment: fixed` so a long tool
-      page does not repeat them down the scroll. **If the panel's canvas is
-      retuned in tds-shared, retune this with it** — the tokens
-      (`--tds-decor-*`) are shared, the two gradient declarations are not.
-  - **The hero carries `.tds-brandbar--on-dark`** under its `<h1>`. The `--on-dark`
-    run is not optional there: the band is a fixed dark surface in both themes,
-    and the bar's light bordeaux segment sinks into it.
+    exactly the claim a public catalog must not make. tds-shared's
+    `design.test.ts` pins the other half of that invariant (the management red
+    may never move into the panel's base block), and it names this repo as the
+    site that would inherit it — so the two files have to stay agreed.
+  - **The hero is a flat navy band** (`.tools-hero` = `--color-surface-navy`),
+    the journal's own hero treatment, with an `.eyebrow` in coral, a `.display`
+    headline carrying one `.accent-italic` word and `.tds-brandbar--on-dark`
+    beneath it. It used to be a gradient over the panel's rail tokens — which
+    do not exist on this surface, and a gradient is elevation-adjacent anyway.
+    The `--on-dark` run is not optional: the band is a fixed dark surface in
+    both themes and the bar's light bordeaux segment sinks into it. Same reason
+    the eyebrow and the accent word take `--color-accent-pink` rather than
+    `--color-accent`: the bordeaux is the light-mode accent and lands ~2:1 on
+    navy.
   - **Still a PUBLIC, indexable site.** The surface choice is geometry and colour
     only — the panel products are `noindex`, this one must never become so.
+  - **A Tailwind utility CANNOT override a shared class on the same element,
+    and this is not a specificity question.** tds-shared's stylesheets are
+    unlayered CSS; Tailwind emits its utilities inside `@layer utilities`, and
+    unlayered CSS beats every cascade layer regardless of specificity or source
+    order. Two live cases, both verified in a browser and both silent in the
+    build: `text-[color:var(--color-muted)]` on a `.link-underline` lost to that
+    class's own `color: inherit`, so the whole nav rendered in the body ink with
+    a dead hover; and `hidden sm:inline-flex` on a `.btn` did nothing at all,
+    because the component declares its own `display`. Colour a shared component
+    from a rule in `global.css` (that file is unlayered too — see `.tnav-link`),
+    or wrap the element and put the utility on the wrapper.
   - **Don't hand-author a radius and don't re-declare a shared class** — set the
     token in the surface layer in tds-shared and bump. (The convention used to be
     the opposite, "geometry stays app-local", and that is exactly what let one
@@ -155,14 +175,25 @@ A standalone Astro `output:"static"` product modelled on `tds-landingpage-fronte
 - **Category sections are strengthened typographically, not structurally.** Every
   `ToolDef` has always carried a `category` and `index.astro` has always grouped
   by it; with 7 tools over 6 categories those sections run 1–2 cards and the page
-  read as one long list with headings in it. The heading is now an eyebrow in the
-  accent colour + a tool counter (`toolCountLabel` in `lib/site.ts`, because
-  four of the six sections hold exactly one tool) over a short accent **fill**
-  bar, with a wider gap between sections. Deliberately no rule under the heading:
-  this surface is flat, so five hairlines would be the heaviest thing on the
+  read as one long list with headings in it. The heading is a **display** heading
+  in the journal's 800 voice (fluid — at that weight and tracking a fixed
+  1.875rem runs to the edge of a 375px phone once the counter sits beside it) +
+  a mono tool counter (`toolCountLabel` in `lib/site.ts`, because four of the six
+  sections hold exactly one tool) over a short accent **fill** bar, with a wider
+  gap between sections. Deliberately no rule under the heading: this surface
+  draws almost no borders, so five hairlines would be the heaviest thing on the
   page. `.tds-brandbar` is also wrong here — it is punctuation, and five per page
-  is wallpaper. The bar matches `.tds-page__head::before`, the panel's own 3px
-  accent mark.
+  is wallpaper. (Until 2026-08-17 the heading was a small uppercase eyebrow in
+  the panel accent, which read as a label rather than as a section.)
+- **The two sibling properties are linked by name, from three places.** The
+  header nav, the hero band and the footer all carry *Blog*
+  (`blog.tracht-digital.de`) and *Startseite* (`tracht-digital.de`); the URLs
+  live once in `lib/site.ts` as `links`, never inline in markup. The blog links
+  here from its own nav and footer (`TOOLS_URL` in its `nav.ts`), so a one-way
+  link left this site a dead end for a reader and an orphan for a crawler —
+  which is also why the header used to show a bare `tracht-digital.de` domain
+  and nothing else. `lib/surface.test.ts` asserts both links exist in both
+  components.
 - **Every icon a manifest declares needs a path in `Icon.astro`.** The lookup is
   `paths[name] ?? "M4 4h16v16H4z"`, so a missing key is completely silent: the
   tool renders a blank square on its card *and* in its page heading, with nothing
@@ -201,9 +232,18 @@ A standalone Astro `output:"static"` product modelled on `tds-landingpage-fronte
 
 ## Tests
 
-`npm run test:run` (vitest). 61 tests over `lib/catalog.ts`, `lib/site.ts` and `ToolGate.tsx`;
-the `.astro` pages stay on `astro check` + the real build.
+`npm run test:run` (vitest). 69 tests over `lib/catalog.ts`, `lib/site.ts`,
+`ToolGate.tsx` and — as plain text — the layout/CSS surface contract
+(`lib/surface.test.ts`). The `.astro` pages otherwise stay on `astro check` +
+the real build.
 
+- **`lib/surface.test.ts` reads the markup and the CSS as TEXT**, because
+  `.astro` is compiled by neither vitest nor tsc and because the defect it
+  guards is invisible to every other gate: a `var(--tds-panel-…)` left behind
+  after the surface move type-checks, builds, minifies and then renders in
+  base.css's inert navy fallback rather than the surface's accent. It also pins
+  `data-surface="blog"`, the absence of `data-frontend` / `data-flat`, the
+  imported surface layer, and the blog + main-site links in header and footer.
 - **`virtual:tools-catalog` is aliased to `test/fixtures/tools-catalog.ts`.**
   The real module is generated by `toolHost()` during `astro build`, so it does
   not exist under vitest. The fixture mirrors a real composition — a free tool,

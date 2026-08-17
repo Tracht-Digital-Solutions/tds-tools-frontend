@@ -1,14 +1,24 @@
 ---
 import Layout from "~/layouts/Layout.astro";
+import { links } from "~/lib/site";
 ---
 
 <Layout title="Seite nicht gefunden — TDS Tools" noindex>
   <div class="mx-auto max-w-2xl px-4 py-24 text-center sm:px-6">
-    <p class="text-6xl font-extrabold text-[color:var(--tds-panel-accent)]">404</p>
-    <h1 class="tds-page__title mt-4">Diese Seite gibt es nicht.</h1>
+    {/* `--color-accent` — the panel accent this used to read still resolves on
+        this surface, to base.css's inert fallback (`--color-primary`), so the
+        404 would have kept rendering navy while everything around it moved to
+        the brand accent. Wrong, plausible, and silent. */}
+    <p class="display text-6xl" style="color: var(--color-accent);">404</p>
+    <h1 class="tds-page__title tool-title mt-4">Diese Seite gibt es nicht.</h1>
     <p class="tds-page__lede mt-3">Vielleicht findest du das passende Werkzeug in der Übersicht.</p>
-    <a href="/" class="btn btn-primary mt-6 no-underline">
-      Zu allen Tools
-    </a>
+    <div class="mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-3">
+      <a href="/" class="btn btn-primary no-underline">Zu allen Tools</a>
+      {/* `.tnav-link` for the colour, not a `text-…` utility — see the note on
+          the rule in global.css: an unlayered shared class beats any layered
+          Tailwind utility on the same element. */}
+      <a href={links.blog} class="tnav-link link-underline text-sm">Zum Blog</a>
+      <a href={links.main} class="tnav-link link-underline text-sm">Zur Startseite</a>
+    </div>
   </div>
 </Layout>

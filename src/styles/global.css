@@ -1,32 +1,49 @@
 @import "tailwindcss/index.css";
 
-/* Shared design library — this site renders on the `panel` surface in its
-   FLAT variant (see `data-surface` + `data-flat` on <html> in Layout.astro):
-   the same 8px product-UI geometry, chip radius and navy accent axis as the
-   admin frontend and the customer portal, but with no self-outlines and no
-   card elevation at all. Tokens, dark theme, base resets, type primitives,
-   chips, cards, spinner/skeleton and status colours all live in tds-shared so
-   every TDS surface stays consistent. The @fontsource imports live in
-   Layout.astro (NOT here): @tailwindcss/postcss inlines CSS @imports without
-   rebasing the packages' relative url(./files/*.woff2) refs, so Vite would
-   never emit the woff2 and every font 404s.
+/* Shared design library — this site renders the **blog** surface
+   (`data-surface="blog"` on <html> in Layout.astro), the same layer
+   `blog.tracht-digital.de` renders: the flat "kantig" kit from the design-system
+   handoff — "keine Rundungen, kaum Borders — Abgrenzung über Farbflächen". Every
+   radius collapses to 0, nothing is elevated, the display voice runs at 800, and
+   separation comes from colour blocks (`--color-soft`, `--tds-flat-tint`,
+   `--tds-flat-hover`) plus 2px accent bars.
 
-   app.css is still imported — it is where the panel's `[data-flat]` opt-out of
-   the hover lift lives, alongside the canvas and page-title rules this site
-   reads. (It used to be imported for the OPPOSITE reason: to GET that lift.)
-   The dashboard chrome it also carries (.portal-sidebar, .nav-item*,
-   .stat-tile*) is simply never used here — this is a public catalog, not a
-   dashboard. */
+   It used to render the `panel` surface in its `data-flat` variant. That was
+   already flat, but it was the ADMIN dashboard's geometry and colour axis
+   (8px cards, 0.75rem chips, `--tds-panel-accent`) on a public site whose
+   sibling property is the journal. The two link to each other now, so they read
+   as one property.
+
+   WHAT THAT MEANS FOR THIS FILE: `--tds-panel-*` carries no panel value here —
+   surfaces/panel.css is not imported, and base.css's own declarations of that
+   family are deliberately inert (accent = `--color-primary`, rail = a flat
+   `--color-surface-navy`). A stale reference therefore neither errors nor goes
+   blank: it renders in the panel's fallback navy, a plausible wrong colour on
+   a surface whose accent is the bordeaux. `src/lib/surface.test.ts` fails the
+   build on one. Use `--color-accent` (the brand accent), `--color-primary`
+   and the fixed-dark `--color-surface-navy`.
+
+   The @fontsource imports live in Layout.astro (NOT here): @tailwindcss/postcss
+   inlines CSS @imports without rebasing the packages' relative
+   url(./files/*.woff2) refs, so Vite would never emit the woff2 and every font
+   404s.
+
+   NOT imported, deliberately:
+     app.css    dashboard + editorial chrome. The blog imports it for
+                `.editorial-grid`; this site renders neither that nor a rail,
+                and every generic rule in it is scoped `[data-surface="panel"]`
+                anyway, so on this surface it would be dead weight.
+     prose.css  `.tds-prose` long-form article typography. No page here renders
+                a body of markdown. */
 @import "@tracht-digital-solutions/tds-shared/styles/base.css";
 @import "@tracht-digital-solutions/tds-shared/styles/primitives.css";
-@import "@tracht-digital-solutions/tds-shared/styles/app.css";
-@import "@tracht-digital-solutions/tds-shared/styles/surfaces/panel.css";
+@import "@tracht-digital-solutions/tds-shared/styles/surfaces/blog.css";
 
 /* Scan the composed tool packages (in node_modules) for Tailwind utility
    classes. Tailwind ignores node_modules by default, so without this the
    flex/grid/gap utilities used inside the tool islands are never generated.
    MUST come AFTER the @imports (@source before @import errors). Mirrors the
-   panel host's global.css @source rule. */
+   frontend host's global.css @source rule. */
 @source "../../node_modules/@tracht-digital-solutions/tds-tool-qr/**/*.{astro,tsx}";
 @source "../../node_modules/@tracht-digital-solutions/tds-tool-textkit/**/*.{astro,tsx}";
 @source "../../node_modules/@tracht-digital-solutions/tds-tool-devkit/**/*.{astro,tsx}";
@@ -42,46 +59,6 @@
    diff. */
 @source "../../node_modules/@tracht-digital-solutions/tds-shared";
 
-/* --font-mono is no longer overridden here: base.css declares JetBrains Mono
-   as the canonical mono face for every surface, so this local copy was
-   redundant. (It existed because the shared token used to name Geist Mono,
-   which no app shipped.) */
-
-/* ---- Tool catalog + tool page chrome (site-local) ---- */
-/* The hero reuses the panel's RAIL gradient rather than a flat navy block, so
-   it descends the same way the products' sidebar does and follows
-   `--tds-panel-accent` instead of pinning its own colour. Both rail tokens are
-   fixed-dark, so this stays a dark band in light and dark alike. */
-.tools-hero {
-  background: linear-gradient(180deg, var(--tds-panel-rail-from), var(--tds-panel-rail-to));
-  color: #fff;
-}
-
-/* Page canvas — the same treatment `[data-surface="panel"] .panel-main`
-   applies in tds-shared's app.css: the 4% accent tint, plus two very soft
-   brand fields pinned to the outer edges so the page reads warm rather than
-   as a flat product sheet. Applied to <body> because this site has no
-   `.panel-main` wrapper (app.css scopes that rule to the class).
-
-   The gradients are RESTATED rather than shared because there is nothing to
-   share them through — a class would have to be put on <body> by the layout,
-   and the tokens (`--tds-decor-*`, base.css) are the part that actually has
-   to stay in sync. If the panel's canvas is retuned, retune this with it. */
-body {
-  background:
-    radial-gradient(
-      42rem 30rem at 0% 18%,
-      rgb(var(--tds-decor-navy) / calc(0.07 * var(--tds-decor-field-strength))) 0%,
-      transparent 68%
-    ),
-    radial-gradient(
-      38rem 26rem at 92% 82%,
-      rgb(var(--tds-decor-bordeaux) / calc(0.06 * var(--tds-decor-field-strength))) 0%,
-      transparent 66%
-    ),
-    var(--tds-panel-canvas);
-  background-attachment: fixed;
-}
 /* ---- Brand mark ---- */
 /* `.brand-logo` itself lives in tds-shared (primitives.css): a CSS mask over
    `--color-primary`, so the mark follows the theme instead of needing an
@@ -96,16 +73,68 @@ body {
   --tds-brand-logo-size: 1.6rem;
 }
 
+/* ---- Header nav ---- */
+/* The bordeaux square that separates the wordmark from the nav — the journal
+   header's one piece of punctuation, and the cheapest way for the two public
+   properties to read as siblings. 5px, square (this surface has no radii). */
+.nav-divider {
+  width: 5px;
+  height: 5px;
+  background: var(--color-accent);
+  flex-shrink: 0;
+}
+/* Nav links ride the SHARED `.link-underline` primitive rather than a copy of
+   the blog's `.jnav-item`: same affordance (an underline that scales in from
+   the left on hover AND focus-visible), already collapsing under reduced
+   motion, and duplicating a component's CSS into a second repo is precisely
+   the drift the surface split exists to end.
+
+   THE COLOUR HAS TO BE DECLARED HERE, NOT AS A UTILITY IN THE MARKUP, and the
+   reason generalises to every shared class in these apps: Tailwind emits its
+   utilities inside `@layer utilities`, and tds-shared's stylesheets are
+   UNLAYERED — unlayered CSS beats any cascade layer no matter what the
+   specificity or the source order says. So `.link-underline`'s own
+   `color: inherit` wins over `text-[color:var(--color-muted)]` on the same
+   element, and the nav rendered in the body ink with a dead hover. Verified in
+   a browser; nothing in the build says a word about it.
+   Corollary: `hidden sm:inline-flex` cannot hide a `.btn` either — the
+   component's own `display` wins. Wrap it, or don't hide it. */
+.tnav-link {
+  color: var(--color-muted);
+  transition: color var(--tds-dur-base) var(--tds-ease-out);
+}
+.tnav-link:hover,
+.tnav-link:focus-visible {
+  color: var(--color-ink);
+}
+.tnav-link[aria-current="page"] {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+.tnav-link[aria-current="page"]::after {
+  transform: scaleX(1);
+}
+
+/* ---- Hero band ---- */
+/* A flat navy block, the journal's hero treatment (see the blog's
+   /aktuelles). `--color-surface-navy` is a FIXED-dark token, so the band stays
+   dark in both themes and the white type on it never inverts.
+   It used to be a gradient over the panel's rail tokens, which do not exist on
+   this surface — and a gradient is elevation-adjacent anyway, which this kit
+   does not do. */
+.tools-hero {
+  background: var(--color-surface-navy);
+  color: #fff;
+}
+
 /* ---- Category sections ---- */
-/* The catalog was always grouped by category (each `ToolDef` carries one), but
-   with 7 tools over 6 categories the sections run 1-2 cards each and the page
-   read as one long list with headings in it. What separates them now is
-   RHYTHM plus an eyebrow, not a rule: this surface is flat, so a hairline
-   under each heading would be the one border on the page — and five of them
-   would be the heaviest thing on it.
+/* The catalog is grouped by category (each `ToolDef` carries one), and with 7
+   tools over 6 categories the sections run 1-2 cards each. What separates them
+   is RHYTHM plus a display heading and a 2px accent bar — the flat kit's own
+   device — never a hairline: this surface draws almost no borders, so five of
+   them would be the heaviest thing on the page.
    `.tds-brandbar` was the obvious candidate for the accent mark and is wrong
-   here: it is punctuation, and five per page is wallpaper. A plain accent
-   block is a fill, which is what a flat surface separates with. */
+   here: it is punctuation, and five per page is wallpaper. */
 .cat-section {
   margin-bottom: 4rem;
 }
@@ -120,14 +149,17 @@ body {
 }
 .cat-head__label {
   margin: 0;
-  font-family: var(--tds-eyebrow-family, var(--font-display));
-  font-weight: var(--tds-eyebrow-weight, 700);
-  font-size: 0.8125rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--tds-panel-accent, var(--color-primary));
+  font-family: var(--font-display);
+  font-weight: var(--tds-weight-display);
+  letter-spacing: var(--tds-tracking-display);
+  /* Fluid: at 800 with -0.03em a fixed 1.875rem heading runs to the edge of a
+     375px phone once the count chip sits beside it. */
+  font-size: clamp(1.5rem, 1.15rem + 1.5vw, 1.875rem);
+  line-height: 1.15;
+  color: var(--color-black);
 }
 .cat-head__count {
+  font-family: var(--font-mono);
   font-size: 0.8125rem;
   color: var(--color-muted);
   font-variant-numeric: tabular-nums;
@@ -135,9 +167,9 @@ body {
 .cat-head__mark {
   display: block;
   width: 2.5rem;
-  height: 3px;
-  margin: 0.5rem 0 1.25rem;
-  background: var(--tds-panel-accent, var(--color-primary));
+  height: 2px;
+  margin: 0.625rem 0 1.25rem;
+  background: var(--color-accent);
 }
 
 /* ---- Tool page ---- */
@@ -149,42 +181,76 @@ body {
   flex-direction: column;
   gap: 0.5rem;
 }
+/* The page title in the journal's display voice. `.tds-page__title` (base
+   primitives) is the panel's 1.5rem product heading; on the blog surface the
+   panel's fluid override in app.css is out of scope, so the tool name would
+   render barely larger than its own lede. */
+.tool-title {
+  font-size: clamp(1.875rem, 1.4rem + 2vw, 2.5rem);
+  font-weight: var(--tds-weight-display);
+  letter-spacing: var(--tds-tracking-display);
+  line-height: 1.1;
+}
 
 /* ---- Tool cards ---- */
-/* Card-as-link only. Surface, radius and elevation come from `.tds-card`
-   (tds-shared primitives.css + the panel block in app.css) — re-declaring any
-   of them here would pin this site to whatever the library looked like the day
-   it was written. */
+/* The journal's flat card: a colour block, no border, no radius, no shadow —
+   `--color-soft` against the paper page. Hover deepens the fill to
+   `--tds-flat-hover` and grows a 2px accent bar down the left edge, which is
+   the blog's `.post-card` affordance verbatim in intent (the tokens are shared;
+   only these rules are local, because the two sites' cards hold different
+   content).
+   It used to be `.tds-card` + a tint on hover, i.e. the panel's bordered,
+   softly-elevated dashboard card. */
 .tool-card {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
   height: 100%;
   padding: 1.25rem 1.375rem;
+  background: var(--color-soft);
   text-decoration: none;
   color: inherit;
   transition: background-color var(--tds-dur-base) var(--tds-ease-out);
 }
-/* Hover as a FILL, because on this surface there is no edge left to colour and
-   no shadow left to lift. The previous cue was `border-color: accent`, and the
-   flat variant would have deleted the card's only pointer feedback along with
-   its border — which is the documented half of "borderless" that goes wrong.
-   Deliberately on `.tool-card` and NOT on `.tds-card`: the tool page wraps its
-   (non-interactive) body in a `.tds-card` too, and tinting that on hover would
-   claim it does something.
-   `:focus-visible` keeps the library's global outline — never `outline: none`. */
+.tool-card::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--color-accent);
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform var(--tds-dur-slow) var(--tds-ease-out);
+}
+/* `:focus-within` beside `:hover` on purpose — the card IS the link, so a
+   keyboard user reaching it must get the same cue. Never `outline: none`; the
+   library's global focus ring still does the actual work. */
 .tool-card:hover,
-.tool-card:focus-visible {
-  background: color-mix(in srgb, var(--tds-panel-accent) 6%, var(--color-card));
+.tool-card:focus-within {
+  background: var(--tds-flat-hover);
+}
+.tool-card:hover::before,
+.tool-card:focus-within::before {
+  transform: scaleY(1);
 }
 .tool-card__title {
   font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 1.125rem;
-  color: var(--color-ink);
+  font-weight: var(--tds-weight-display-tight);
+  letter-spacing: var(--tds-tracking-display-tight);
+  font-size: 1.25rem;
+  line-height: 1.15;
+  color: var(--color-black);
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  transition: color var(--tds-dur-base) var(--tds-ease-out);
+}
+.tool-card:hover .tool-card__title,
+.tool-card:focus-within .tool-card__title {
+  color: var(--color-primary);
 }
 .tool-card__desc {
   font-size: 0.9rem;
@@ -193,7 +259,13 @@ body {
   margin: 0;
   text-wrap: pretty;
 }
-/* `.tool-badge*` is gone: it re-implemented `chip--warning` / `chip--info`
-   with a hand-authored 999px radius, which also meant the badges kept the
-   marketing pill shape after this site moved to the panel surface (where
-   chips round to 0.75rem). Use `.chip` + a shared variant. */
+
+@media (prefers-reduced-motion: reduce) {
+  /* Reset the END state rather than only shortening the duration — a
+     transform that still runs at 0.01ms is still motion. */
+  .tool-card,
+  .tool-card::before,
+  .tool-card__title {
+    transition: none;
+  }
+}

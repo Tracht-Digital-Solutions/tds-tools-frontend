@@ -7,15 +7,21 @@ interface Props {
 const { tool } = Astro.props;
 ---
 
-{/* `.tds-card` from tds-shared carries the surface, border, radius and the
-    panel's resting elevation + hover lift (app.css). The local `.tool-card`
-    modifier adds only what a card-as-LINK needs on top — nothing that the
-    shared primitive already decides. Badges are plain `.chip` variants for the
-    same reason: the bespoke `.tool-badge--premium/--login` pair re-implemented
-    `chip--warning` / `chip--info` with hand-authored geometry. */}
-<a href={`/tools/${tool.slug}`} class="tds-card tool-card">
+{/* The journal's flat card (`.tool-card`, this repo's global.css): a
+    `--color-soft` colour block with no border, no radius and no shadow, plus
+    the 2px accent bar that grows down its left edge on hover/focus.
+    NOT `.tds-card` any more — that is the bordered, filled card primitive, and
+    stacking it under a flat colour block gave the catalog a second fill and an
+    outline the surface does not want. It still wraps the tool BODY on
+    `/tools/[slug]`, where a bordered panel around an interactive form is
+    exactly right.
+    Badges are plain `.chip` variants: the bespoke `.tool-badge--premium/--login`
+    pair re-implemented `chip--warning` / `chip--info` with hand-authored
+    geometry, which then kept the marketing pill shape on a surface that rounds
+    nothing. */}
+<a href={`/tools/${tool.slug}`} class="tool-card">
   <span class="tool-card__title">
-    <Icon name={tool.icon} class="h-5 w-5 text-[color:var(--tds-panel-accent,var(--color-primary))]" />
+    <Icon name={tool.icon} class="h-5 w-5 text-[color:var(--color-accent)]" />
     {tool.name}
   </span>
   <p class="tool-card__desc">{tool.description}</p>

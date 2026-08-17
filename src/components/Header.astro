@@ -1,35 +1,79 @@
 ---
+/**
+ * Top bar in the journal's idiom: logomark + wordmark, the bordeaux divider
+ * square, flat underline nav, theme toggle. Same shape as
+ * `tds-blog-frontend`'s JournalHeader, minus what this site has no corpus for
+ * (search, the Entdecken disclosure, DE/EN — the tools site is German only).
+ *
+ * The nav carries the two SIBLING properties by name (Blog · Startseite), not
+ * just the bare domain the site used to show. This site is public and
+ * indexable and the blog links here from its own nav and footer; a one-way
+ * link is a dead end for a reader and an orphan for a crawler.
+ *
+ * Below `sm` the nav drops to its own full-width row under the wordmark
+ * instead of being squeezed beside it — three links plus the brand plus the
+ * toggle do not fit across a 375px phone, and `body { overflow-x: hidden }`
+ * would CLIP the overflow rather than reveal it: no scrollbar, no warning, the
+ * right-hand links simply are not there.
+ */
 import { ThemeToggle } from "@tracht-digital-solutions/tds-shared/components";
-import { site } from "~/lib/site";
+import { links, site } from "~/lib/site";
+
+const path = Astro.url.pathname;
+const onCatalog = path === "/" || path === "";
 ---
 
-{/* Fill, blur and bottom edge all come from `.brand-header` and its
-    `[data-flat]` variant in tds-shared — an opaque `--color-card` bar with no
-    blur and no border. This used to hand-author all three here (an 85% canvas
-    tint, `backdrop-blur`, a `border-b` ON TOP of the shared rule's own, and
-    `z-40` against the shared stacking ladder's 30). Those are shared-component
-    overrides, which is exactly the drift the geometry split exists to prevent —
-    and they cannot express "flat" anyway, because `.brand-header` draws its
-    border with a literal 1px that no local class can reach. */}
+{/* Fill, blur and the warm bottom hairline all come from `.brand-header`
+    (tds-shared). Never re-declare them here: the class draws its border with a
+    literal 1px that no local rule can reach, and hand-authoring the pair is
+    what the geometry split exists to prevent. */}
 <header class="brand-header">
-  <div class="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
+  <div class="mx-auto flex max-w-6xl flex-wrap items-center gap-x-3 gap-y-1 px-4 py-2.5 sm:gap-x-4 sm:px-6 min-h-15">
     {/* The TD mark as a mask (`.brand-logo`, tds-shared), so it follows
         `--color-primary` into dark mode instead of needing an inverted second
-        asset. The anchor was already `flex items-center gap-2` — the mark drops
-        into the slot the wordmark had left for it. */}
-    {/* `py-2` is a touch target, not spacing: the 64px bar leaves room, and
-        without it the home link is 28px tall on a phone. */}
-    <a href="/" class="flex items-center gap-2 py-2 no-underline" aria-label={`${site.name} — Startseite`}>
+        asset. `py-2` is a touch target, not spacing. */}
+    <a
+      href="/"
+      class="brand-wordmark inline-flex shrink-0 items-center gap-2 py-2 text-[1.0625rem] tracking-tight no-underline"
+      aria-label={`${site.name} — Startseite`}
+    >
       <span class="brand-logo" aria-hidden="true"></span>
-      <span class="font-[family-name:var(--font-display)] text-lg font-extrabold tracking-tight text-[color:var(--color-ink)]">
-        TDS <span class="text-[color:var(--tds-panel-accent)]">Tools</span>
-      </span>
+      <span>TDS <span class="accent-italic">Tools</span></span>
     </a>
-    <nav class="flex items-center gap-4 text-sm">
-      <a href="/" class="text-[color:var(--color-muted)] no-underline hover:text-[color:var(--color-ink)]">Alle Tools</a>
-      <a href="https://tracht-digital.de" class="hidden text-[color:var(--color-muted)] no-underline hover:text-[color:var(--color-ink)] sm:inline">{"tracht-digital.de"}</a>
-      <ThemeToggle client:idle />
+    <span class="nav-divider hidden sm:block" aria-hidden="true"></span>
+
+    {/* `order-last w-full` below sm = the second row; from sm it rejoins the
+        bar. The theme toggle stays on the first row either way. */}
+    <nav
+      class="order-last flex w-full flex-wrap items-center gap-x-1 gap-y-0.5 pb-1 text-sm sm:order-none sm:w-auto sm:flex-1 sm:pb-0"
+      aria-label="Navigation"
+    >
+      {/* Colour lives in `.tnav-link` (global.css), NOT in a `text-…` utility:
+          tds-shared is unlayered CSS and Tailwind's utilities sit in
+          `@layer utilities`, so `.link-underline`'s own `color: inherit` wins
+          over any colour utility written here. The utilities left on these
+          anchors are the padding — a touch target, and nothing shared claims
+          it. */}
+      <a href="/" class="tnav-link link-underline px-2 py-2" aria-current={onCatalog ? "page" : undefined}>
+        Alle Tools
+      </a>
+      <a href={links.blog} class="tnav-link link-underline px-2 py-2">Blog</a>
+      <a href={links.main} class="tnav-link link-underline px-2 py-2">Startseite</a>
     </nav>
+
+    <div class="ml-auto flex shrink-0 items-center gap-2 sm:ml-0">
+      <ThemeToggle client:idle />
+      {/* `.btn` carries the geometry (flat here — the surface collapses its
+          radius), `.btn-primary` only the colour. Both classes are required.
+          Shown at every width on purpose: `hidden sm:inline-flex` would be a
+          lie, because `.btn` is unlayered and its own `display` beats the
+          layered utility (verified at 375px, where the button rendered
+          regardless). It fits there anyway — the nav has already dropped to
+          its own row. */}
+      <a href={links.contact} class="btn btn-primary no-underline">
+        Termin vereinbaren
+      </a>
+    </div>
   </div>
 </header>
 <span class="sr-only" data-site-tagline>{site.tagline}</span>
