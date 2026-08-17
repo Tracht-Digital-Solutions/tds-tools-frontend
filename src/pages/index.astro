@@ -3,7 +3,7 @@ import Layout from "~/layouts/Layout.astro";
 import ToolCard from "~/components/ToolCard.astro";
 import AdSlot from "~/components/AdSlot.astro";
 import { enabledTools, adsConfig } from "~/lib/catalog";
-import { site, categoryLabels, categoryOrder } from "~/lib/site";
+import { site, categoryLabels, categoryOrder, toolCountLabel } from "~/lib/site";
 import type { ToolCategory } from "@tracht-digital-solutions/tds-tools-contract";
 
 const tools = await enabledTools();
@@ -21,6 +21,17 @@ const jsonLd = [
     name: site.name,
     url: site.origin,
     description: site.description,
+    /* The mark now renders in the header, so it is also a publisher signal —
+       an Organization node with a resolvable `logo` is what lets a search
+       engine associate this property with the same brand as
+       tracht-digital.de. The URL must be absolute; a search engine does not
+       resolve it against the page. */
+    publisher: {
+      "@type": "Organization",
+      name: "Tracht Digital Solutions",
+      url: "https://tracht-digital.de",
+      logo: `${site.origin}/brand/td-logomark.webp`,
+    },
   },
   {
     "@context": "https://schema.org",
@@ -63,10 +74,12 @@ const jsonLd = [
       <p class="text-[color:var(--color-muted)]">Zurzeit sind keine Tools verfügbar.</p>
     ) : (
       groups.map(({ cat, tools: catTools }) => (
-        <section class="mb-12">
-          <h2 class="mb-4 font-[family-name:var(--font-display)] text-xl font-bold text-[color:var(--color-ink)]">
-            {categoryLabels[cat as ToolCategory]}
-          </h2>
+        <section id={`kategorie-${cat}`} class="cat-section">
+          <div class="cat-head">
+            <h2 class="cat-head__label">{categoryLabels[cat as ToolCategory]}</h2>
+            <span class="cat-head__count">{toolCountLabel(catTools.length)}</span>
+          </div>
+          <span aria-hidden="true" class="cat-head__mark"></span>
           <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {catTools.map((tool) => <ToolCard tool={tool} />)}
           </div>

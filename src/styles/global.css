@@ -1,20 +1,22 @@
 @import "tailwindcss/index.css";
 
-/* Shared design library — this site renders on the `panel` surface (see
-   `data-surface` on <html> in Layout.astro): the same 8px product-UI
-   geometry, chip radius, elevation and navy accent axis as the admin
-   frontend and the customer portal. Tokens, dark theme, base resets, type
-   primitives, chips, cards, spinner/skeleton and status colours all live in
-   tds-shared so every TDS surface stays consistent. The @fontsource imports
-   live in Layout.astro (NOT here): @tailwindcss/postcss inlines CSS @imports
-   without rebasing the packages' relative url(./files/*.woff2) refs, so Vite
-   would never emit the woff2 and every font 404s.
+/* Shared design library — this site renders on the `panel` surface in its
+   FLAT variant (see `data-surface` + `data-flat` on <html> in Layout.astro):
+   the same 8px product-UI geometry, chip radius and navy accent axis as the
+   admin frontend and the customer portal, but with no self-outlines and no
+   card elevation at all. Tokens, dark theme, base resets, type primitives,
+   chips, cards, spinner/skeleton and status colours all live in tds-shared so
+   every TDS surface stays consistent. The @fontsource imports live in
+   Layout.astro (NOT here): @tailwindcss/postcss inlines CSS @imports without
+   rebasing the packages' relative url(./files/*.woff2) refs, so Vite would
+   never emit the woff2 and every font 404s.
 
-   app.css IS imported: the panel's card elevation and hover lift live there
-   (scoped to [data-surface="panel"]), and without it `.tds-card` renders flat
-   here while the panels lift. The dashboard chrome it also carries
-   (.portal-sidebar, .nav-item*, .stat-tile*) is simply never used on this
-   site — it is a public catalog, not a dashboard. */
+   app.css is still imported — it is where the panel's `[data-flat]` opt-out of
+   the hover lift lives, alongside the canvas and page-title rules this site
+   reads. (It used to be imported for the OPPOSITE reason: to GET that lift.)
+   The dashboard chrome it also carries (.portal-sidebar, .nav-item*,
+   .stat-tile*) is simply never used here — this is a public catalog, not a
+   dashboard. */
 @import "@tracht-digital-solutions/tds-shared/styles/base.css";
 @import "@tracht-digital-solutions/tds-shared/styles/primitives.css";
 @import "@tracht-digital-solutions/tds-shared/styles/app.css";
@@ -80,10 +82,79 @@ body {
     var(--tds-panel-canvas);
   background-attachment: fixed;
 }
-/* Card-as-link only. Surface, border, radius, elevation and the hover lift
-   all come from `.tds-card` (tds-shared primitives.css + the panel block in
-   app.css) — re-declaring any of them here would pin this site to whatever
-   the library looked like the day it was written. */
+/* ---- Brand mark ---- */
+/* `.brand-logo` itself lives in tds-shared (primitives.css): a CSS mask over
+   `--color-primary`, so the mark follows the theme instead of needing an
+   inverted second asset. Only the asset URL is app-local — a package cannot
+   serve a `public/`-rooted path. The size is set here rather than inline so
+   the header markup stays free of geometry.
+   The ratio is NOT overridden: the library's default (1.476) is the real
+   aspect of this exact asset (713x483), and a mismatched box letterboxes the
+   `contain`-fitted mask and silently renders it undersized. */
+:root {
+  --tds-brand-logo-mask: url("/brand/td-logomark.webp");
+  --tds-brand-logo-size: 1.6rem;
+}
+
+/* ---- Category sections ---- */
+/* The catalog was always grouped by category (each `ToolDef` carries one), but
+   with 7 tools over 6 categories the sections run 1-2 cards each and the page
+   read as one long list with headings in it. What separates them now is
+   RHYTHM plus an eyebrow, not a rule: this surface is flat, so a hairline
+   under each heading would be the one border on the page — and five of them
+   would be the heaviest thing on it.
+   `.tds-brandbar` was the obvious candidate for the accent mark and is wrong
+   here: it is punctuation, and five per page is wallpaper. A plain accent
+   block is a fill, which is what a flat surface separates with. */
+.cat-section {
+  margin-bottom: 4rem;
+}
+.cat-section:last-child {
+  margin-bottom: 0;
+}
+.cat-head {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.75rem;
+}
+.cat-head__label {
+  margin: 0;
+  font-family: var(--tds-eyebrow-family, var(--font-display));
+  font-weight: var(--tds-eyebrow-weight, 700);
+  font-size: 0.8125rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--tds-panel-accent, var(--color-primary));
+}
+.cat-head__count {
+  font-size: 0.8125rem;
+  color: var(--color-muted);
+  font-variant-numeric: tabular-nums;
+}
+.cat-head__mark {
+  display: block;
+  width: 2.5rem;
+  height: 3px;
+  margin: 0.5rem 0 1.25rem;
+  background: var(--tds-panel-accent, var(--color-primary));
+}
+
+/* ---- Tool page ---- */
+/* The title + lede pair, held closer together than `.tds-page`'s 1.5rem
+   column gap so the page reads as groups rather than as evenly-spaced blocks.
+   See the note at the call site in pages/tools/[slug].astro. */
+.tool-intro {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* ---- Tool cards ---- */
+/* Card-as-link only. Surface, radius and elevation come from `.tds-card`
+   (tds-shared primitives.css + the panel block in app.css) — re-declaring any
+   of them here would pin this site to whatever the library looked like the day
+   it was written. */
 .tool-card {
   display: flex;
   flex-direction: column;
@@ -92,10 +163,19 @@ body {
   padding: 1.25rem 1.375rem;
   text-decoration: none;
   color: inherit;
+  transition: background-color var(--tds-dur-base) var(--tds-ease-out);
 }
+/* Hover as a FILL, because on this surface there is no edge left to colour and
+   no shadow left to lift. The previous cue was `border-color: accent`, and the
+   flat variant would have deleted the card's only pointer feedback along with
+   its border — which is the documented half of "borderless" that goes wrong.
+   Deliberately on `.tool-card` and NOT on `.tds-card`: the tool page wraps its
+   (non-interactive) body in a `.tds-card` too, and tinting that on hover would
+   claim it does something.
+   `:focus-visible` keeps the library's global outline — never `outline: none`. */
 .tool-card:hover,
 .tool-card:focus-visible {
-  border-color: var(--tds-panel-accent, var(--color-primary));
+  background: color-mix(in srgb, var(--tds-panel-accent) 6%, var(--color-card));
 }
 .tool-card__title {
   font-family: var(--font-display);

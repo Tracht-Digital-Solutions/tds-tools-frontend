@@ -17,6 +17,12 @@ const paths: Record<string, string> = {
   braces: "M7 4a2 2 0 0 0-2 2v3a2 2 0 0 1-2 2 2 2 0 0 1 2 2v3a2 2 0 0 0 2 2M17 4a2 2 0 0 1 2 2v3a2 2 0 0 0 2 2 2 2 0 0 0-2 2v3a2 2 0 0 1-2 2",
   contrast: "M12 3a9 9 0 1 0 0 18zM12 3v18",
   image: "M3 5h18v14H3zM3 15l5-5 4 4 3-3 6 6",
+  /* `file-text` was the one manifest icon with no entry here, so the premium
+     PDF tool rendered the fallback square on its card AND on its page heading.
+     Nothing reports a miss — `paths[name] ?? …` is a silent default — so the
+     only check is looking at the page. Every icon a composed pack declares
+     needs a line here; there are 7 tools and 7 keys. */
+  "file-text": "M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8zM14 3v5h5M9 13h6M9 17h6",
 };
 const d = paths[name] ?? "M4 4h16v16H4z";
 ---

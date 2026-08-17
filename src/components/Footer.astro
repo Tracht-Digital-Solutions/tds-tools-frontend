@@ -2,11 +2,12 @@
 const year = new Date().getFullYear();
 ---
 
-{/* `.tds-tone-navy` carries the fill AND re-maps the page tokens inside
-    the footer, which is what lets the border below stay
-    `var(--color-line)` and still resolve to a low-opacity white here
-    instead of the light page's warm hairline. */}
-<footer class="mt-20 border-t border-[color:var(--color-line)] tds-tone-navy">
+{/* `.tds-tone-navy` carries the fill AND re-maps the page tokens inside the
+    footer. It used to also draw a `border-t` in the re-mapped `--color-line`;
+    on a flat surface that line is redundant, because a navy ground against the
+    light canvas already separates by fill alone — which is the only thing that
+    ever made the border invisible enough to look right. */}
+<footer class="mt-20 tds-tone-navy">
   <div class="mx-auto grid max-w-6xl gap-8 px-4 py-12 sm:px-6 md:grid-cols-3">
     <div>
       <p class="font-[family-name:var(--font-display)] text-lg font-extrabold">TDS Tools</p>
@@ -27,7 +28,10 @@ const year = new Date().getFullYear();
       </ul>
     </div>
   </div>
-  <div class="border-t border-white/10 px-4 py-4 text-center text-xs text-white/50 sm:px-6">
+  {/* The copyright bar was split off with a `border-t`. Flat trades the line
+      for a tone STEP — a slightly deeper navy plus the padding it already had.
+      A fill only separates against a different ground, and here it does. */}
+  <div class="bg-black/15 px-4 py-4 text-center text-xs text-white/50 sm:px-6">
     © {year} Tracht Digital Solutions · Digitalisierung für Unternehmen
   </div>
 </footer>

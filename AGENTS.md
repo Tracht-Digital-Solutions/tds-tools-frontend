@@ -55,11 +55,38 @@ A standalone Astro `output:"static"` product modelled on `tds-landingpage-fronte
   Lato / Plus Jakarta Sans / JetBrains Mono, matching tds-shared's tokens. (This
   site was on Geist and carried a local `--font-mono` override, which existed only
   because the shared token used to name a Geist Mono that no app shipped.)
-- **This site renders on the `panel` surface** — the same layer the admin frontend
-  and the customer portal use. `<html data-surface="panel">` in `Layout.astro`
-  selects `tds-shared/styles/surfaces/panel.css`: 8px product-UI geometry, 0.75rem
-  chips, softly elevated cards and the navy accent axis. `global.css` imports
-  `base.css` → `primitives.css` → `app.css` → `surfaces/panel.css`.
+- **This site renders on the `panel` surface, in its FLAT variant** — the same
+  layer the admin frontend and the customer portal use.
+  `<html data-surface="panel" data-flat>` in `Layout.astro` selects
+  `tds-shared/styles/surfaces/panel.css`: 8px product-UI geometry, 0.75rem chips
+  and the navy accent axis, with **no self-outlines and no card elevation**.
+  `global.css` imports `base.css` → `primitives.css` → `app.css` →
+  `surfaces/panel.css`.
+  - **`data-flat` (tds-shared 0.24.2) is what makes the site borderless**, and it
+    is an opt-in on the panel layer rather than a change to it: the admin
+    frontend and the customer portal render the same file and keep their
+    hairlines, where a dozen equal-weight dashboard cards need the edge to read
+    apart. Overlays (modal, dropdown) keep their depth on purpose — flat is
+    about the page, not about what floats above it.
+  - **Flat is not achieved by deleting borders here.** Four shared primitives
+    separate from their ground *only* by their edge and get a fill counterpart
+    in tds-shared's "FLAT variant" section: `.field-boxed` (whose `--color-card`
+    fill is the same fill as the `.tds-card` it sits in — a borderless boxed
+    input inside a card is an invisible input, and the tool islands use ten of
+    them), `.status-pill`, `.chip--neutral`, `.btn-ghost`. Read that section
+    before adding a control; the browser is the only thing that reports a miss.
+  - **The card hover cue is site-local and lives on `.tool-card`, not
+    `.tds-card`.** It used to be `border-color: accent` plus the panel's shadow
+    lift, and flat removes both — so the catalog card now changes its FILL on
+    hover (`global.css`). Deliberately not on `.tds-card`: the tool page wraps
+    its non-interactive body in one, and tinting that would claim it does
+    something.
+  - **The header owns none of its own chrome any more.** Fill, blur and bottom
+    edge come from `.brand-header` + its `[data-flat]` variant. It used to
+    hand-author an 85% canvas tint, `backdrop-blur`, a `border-b` *on top of* the
+    shared rule's own, and `z-40` against the shared stacking ladder's 30 — and
+    it could not have gone flat locally anyway, because `.brand-header` draws its
+    border with a literal 1px that no app-level class can reach.
   - It was the `marketing` surface until 2026-08-05. A tool site reads as a piece
     of software, not as a brochure, so it now matches the products it belongs to.
   - **Choosing the surface is not the same as USING it.** The surface layer only
@@ -77,11 +104,14 @@ A standalone Astro `output:"static"` product modelled on `tds-landingpage-fronte
     - The one deliberate exception is the password-strength meter's
       `rounded-full` — a 6px readout, not a control, and a capsule on every
       surface. It is commented as such at the call site.
-  - **`app.css` IS imported** (it was not, under `marketing`): the panel's card
-    elevation and hover lift live there, scoped to `[data-surface="panel"]`, so
-    without it `.tds-card` renders flat here while the panels lift. The dashboard
-    chrome it also carries (`.portal-sidebar`, `.nav-item*`, `.stat-tile*`) is
-    simply never used — this is a public catalog, not a dashboard.
+  - **`app.css` IS imported** (it was not, under `marketing`). It used to be
+    imported to GET the panel's card elevation and hover lift; since the flat
+    variant it is imported partly to switch that lift OFF — the overlay drawing
+    it is an `::after` in that file, and `--tds-elevation-card: none` only clears
+    the *resting* shadow. It also carries the canvas and page-head rules this
+    site reads. The dashboard chrome (`.portal-sidebar`, `.nav-item*`,
+    `.stat-tile*`) is simply never used — this is a public catalog, not a
+    dashboard.
   - **`data-frontend` is deliberately unset**, which resolves `--tds-panel-accent`
     to the base `--color-primary` (brand navy) — the same accent the customer
     portal renders. Setting it to `admin` would paint this **public** site in
@@ -112,6 +142,34 @@ A standalone Astro `output:"static"` product modelled on `tds-landingpage-fronte
     a live example: it re-implemented `chip--warning`/`chip--info` with a
     hand-authored 999px radius, so the badges kept marketing pill geometry after
     the surface moved. Deleted — use `.chip` + a shared variant.
+- **The brand mark is `.brand-logo` (tds-shared), not an `<img>`.** The asset is
+  `public/brand/td-logomark.webp` — byte-identical to the landingpage's and the
+  blog's copy — and it is used as a CSS *mask* over `--color-primary`, so the
+  mark follows the theme instead of needing an inverted second file. Only the
+  URL and size are local (`--tds-brand-logo-mask`, `--tds-brand-logo-size` in
+  `global.css`); never override `--tds-brand-logo-ratio`, whose default matches
+  this exact asset (713×483). A box with the wrong aspect letterboxes the
+  `contain`-fitted mask and renders the mark undersized with nothing to say so.
+  The site carried no mark at all until 2026-08-17 — header and footer were text
+  wordmarks — so a visitor arriving from `tracht-digital.de` saw no continuity.
+- **Category sections are strengthened typographically, not structurally.** Every
+  `ToolDef` has always carried a `category` and `index.astro` has always grouped
+  by it; with 7 tools over 6 categories those sections run 1–2 cards and the page
+  read as one long list with headings in it. The heading is now an eyebrow in the
+  accent colour + a tool counter (`toolCountLabel` in `lib/site.ts`, because
+  four of the six sections hold exactly one tool) over a short accent **fill**
+  bar, with a wider gap between sections. Deliberately no rule under the heading:
+  this surface is flat, so five hairlines would be the heaviest thing on the
+  page. `.tds-brandbar` is also wrong here — it is punctuation, and five per page
+  is wallpaper. The bar matches `.tds-page__head::before`, the panel's own 3px
+  accent mark.
+- **Every icon a manifest declares needs a path in `Icon.astro`.** The lookup is
+  `paths[name] ?? "M4 4h16v16H4z"`, so a missing key is completely silent: the
+  tool renders a blank square on its card *and* in its page heading, with nothing
+  logged. `file-text` (the premium PDF tool) shipped that way. `lib/site.test.ts`
+  now reads the component as text and asserts a path exists for every composed
+  tool's icon — an `.astro` file is compiled by neither vitest nor tsc, so the
+  test has to treat it as a string.
 - **`--color-border` is an accepted alias of `--color-line`.** The composed
   `tds-tool-*` packs write `border-[color:var(--color-border)]`; that token was
   defined nowhere for a long time, so every one of those borders silently fell

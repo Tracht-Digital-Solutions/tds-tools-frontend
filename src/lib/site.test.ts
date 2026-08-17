@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
 import devkit from "@tracht-digital-solutions/tds-tool-devkit";
@@ -5,7 +7,7 @@ import media from "@tracht-digital-solutions/tds-tool-media";
 import qr from "@tracht-digital-solutions/tds-tool-qr";
 import textkit from "@tracht-digital-solutions/tds-tool-textkit";
 
-import { site } from "./site";
+import { categoryLabels, categoryOrder, site, toolCountLabel } from "./site";
 
 /**
  * Meta-description budgets for the public tools site.
@@ -85,5 +87,58 @@ describe("every composed tool has a usable meta description", () => {
     // turns a build crash into a named test failure.
     const slugs = tools.map((t) => t.slug);
     expect(new Set(slugs).size).toBe(slugs.length);
+  });
+});
+
+describe("category section headings", () => {
+  it("pluralises the tool counter", () => {
+    // The catalog genuinely produces categories of one — four of the six
+    // sections hold a single tool — so the singular is the common case here,
+    // not the edge case.
+    expect(toolCountLabel(1)).toBe("1 Werkzeug");
+    expect(toolCountLabel(2)).toBe("2 Werkzeuge");
+    expect(toolCountLabel(0)).toBe("0 Werkzeuge");
+  });
+
+  it("labels and orders every category the contract can produce", () => {
+    // `ToolCategory` is a closed union in the contract, and a value with no
+    // label renders `undefined` as a section heading while a value missing from
+    // the order silently DROPS its whole section — the page just has fewer
+    // tools on it. Both are invisible to `astro check`.
+    for (const cat of categoryOrder) {
+      expect(categoryLabels[cat], `no label for category ${cat}`).toBeTruthy();
+    }
+    expect(new Set(categoryOrder).size).toBe(categoryOrder.length);
+    expect(Object.keys(categoryLabels).sort()).toEqual([...categoryOrder].sort());
+    // Every category the composed packs actually use must be orderable.
+    for (const tool of tools) {
+      expect(categoryOrder, `category ${tool.category} is not ordered`).toContain(
+        tool.category,
+      );
+    }
+  });
+});
+
+describe("tool icons", () => {
+  it("has an inline path for every icon the composed packs declare", () => {
+    // `Icon.astro` falls back to a generic square with `paths[name] ?? …`, so a
+    // missing key is completely silent: the tool renders a blank box on its card
+    // AND in its page heading, and nothing logs, throws or fails a build.
+    // `file-text` (the premium PDF tool) shipped exactly that way.
+    // Read as text because an .astro component is compiled by neither vitest
+    // nor tsc — the same reason the host's activeCompany header has its own test.
+    const icon = readFileSync(
+      join(__dirname, "..", "components", "Icon.astro"),
+      "utf8",
+    );
+    const declared = new Set(
+      [...icon.matchAll(/^\s*"?([a-z-]+)"?:\s*"M/gm)].map((m) => m[1]),
+    );
+    for (const tool of tools) {
+      if (!tool.icon) continue;
+      expect(declared, `Icon.astro has no path for "${tool.icon}"`).toContain(
+        tool.icon,
+      );
+    }
   });
 });

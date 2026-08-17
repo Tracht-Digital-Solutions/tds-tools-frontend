@@ -59,8 +59,22 @@ const adsActive = ads.enabled && !!ads.publisherId;
      It is still a PUBLIC, indexable site (the panel products are noindex), so
      the surface choice is about geometry and colour only: no rail, no drawer,
      no dashboard chrome. `data-frontend` is left unset, which resolves
-     `--tds-panel-accent` to `--color-primary` — management navy. -->
-<html lang="de" data-surface="panel">
+     `--tds-panel-accent` to `--color-primary` — management navy.
+
+     `data-flat` selects the panel layer's FLAT variant (tds-shared 0.24.2):
+     no self-outlines and no card elevation anywhere, so the page separates
+     through fill, tone and spacing alone. The panel's own base block is
+     untouched — the admin frontend and the customer portal keep their
+     hairlines, where a dozen equal-weight cards need the edge to read apart.
+     Overlays (modal, dropdown) deliberately KEEP their depth: flat is about
+     the page, not about what floats above it.
+
+     Read the "FLAT variant" section in tds-shared's primitives.css before
+     adding a control here. Every primitive that separated only by its edge
+     trades it for a fill there — a borderless `.field-boxed` inside a
+     `.tds-card` would otherwise be an invisible input, and nothing but a
+     browser would ever say so. -->
+<html lang="de" data-surface="panel" data-flat>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />

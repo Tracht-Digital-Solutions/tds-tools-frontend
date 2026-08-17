@@ -37,6 +37,17 @@ export const categoryLabels: Record<ToolCategory, string> = {
   other: "Weitere",
 };
 
+/**
+ * "1 Werkzeug" / "n Werkzeuge" for a category heading.
+ *
+ * A helper rather than an inline ternary in the template because German
+ * pluralisation is the kind of thing that reads as correct in a diff and wrong
+ * on the page — and because the catalog genuinely produces categories of one
+ * (five of the six sections hold one or two tools).
+ */
+export const toolCountLabel = (n: number): string =>
+  `${n} ${n === 1 ? "Werkzeug" : "Werkzeuge"}`;
+
 /** Stable display order of the category sections in the catalog. */
 export const categoryOrder: ToolCategory[] = [
   "marketing",

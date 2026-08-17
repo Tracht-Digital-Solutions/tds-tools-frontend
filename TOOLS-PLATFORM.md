@@ -313,6 +313,22 @@ dort den Schritt *Tool-Katalog übertragen* ausführen. Der Build macht das nich
   bricht den Build bei Kollision hart ab.
 - `component` ist ein **Paket-Subpfad** (über `exports`), nie ein relativer Pfad.
 - Version bleibt in der `0.1.x`-Linie.
+- **Die `category` entscheidet, in welchem Abschnitt das Tool auf der Startseite
+  landet** — sie ist Pflicht und stammt aus einer geschlossenen Union im Contract.
+  Die Website rendert je Kategorie einen eigenen Abschnitt mit Überschrift und
+  Werkzeug-Zähler; die Reihenfolge und die deutschen Labels stehen in
+  `src/lib/site.ts` (`categoryOrder`, `categoryLabels`), leere Kategorien fallen
+  raus. Eine **neue** Kategorie ist eine Drei-Zeilen-Änderung ohne Backend:
+  Union in `tds-tools-contract-pkg/src/types.ts`, Label und Reihenfolge in
+  `site.ts` (`site.test.ts` erzwingt, dass beide vollständig sind — eine Kategorie
+  ohne Label rendert `undefined` als Überschrift, eine ohne Reihenfolge-Eintrag
+  lässt ihren ganzen Abschnitt lautlos verschwinden). Die DB-Spalte
+  `tools_config.category` ist nur eine denormalisierte Kopie fürs Admin-Frontend
+  und nicht editierbar.
+- **`icon` braucht einen Pfad in `src/components/Icon.astro`.** Fehlt er, rendert
+  das Tool ein leeres Quadrat auf Kärtchen *und* Seitentitel — ohne Fehler, ohne
+  Warnung (`paths[name] ?? …`). `site.test.ts` prüft das inzwischen für jedes
+  komponierte Tool.
 - Nach jeder Änderung: `AGENTS.md`/`README.md` aktualisieren + Version bumpen.
 
 ---

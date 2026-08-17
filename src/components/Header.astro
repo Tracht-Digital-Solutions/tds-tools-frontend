@@ -3,11 +3,24 @@ import { ThemeToggle } from "@tracht-digital-solutions/tds-shared/components";
 import { site } from "~/lib/site";
 ---
 
-{/* Sits on the panel canvas, not on paper: the page is tinted, so a paper-
-    coloured bar would read as a separate sheet floating above it. */}
-<header class="brand-header sticky top-0 z-40 border-b border-[color:var(--color-line)] bg-[color:var(--tds-panel-canvas)]/85 backdrop-blur">
+{/* Fill, blur and bottom edge all come from `.brand-header` and its
+    `[data-flat]` variant in tds-shared — an opaque `--color-card` bar with no
+    blur and no border. This used to hand-author all three here (an 85% canvas
+    tint, `backdrop-blur`, a `border-b` ON TOP of the shared rule's own, and
+    `z-40` against the shared stacking ladder's 30). Those are shared-component
+    overrides, which is exactly the drift the geometry split exists to prevent —
+    and they cannot express "flat" anyway, because `.brand-header` draws its
+    border with a literal 1px that no local class can reach. */}
+<header class="brand-header">
   <div class="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
-    <a href="/" class="flex items-center gap-2 no-underline">
+    {/* The TD mark as a mask (`.brand-logo`, tds-shared), so it follows
+        `--color-primary` into dark mode instead of needing an inverted second
+        asset. The anchor was already `flex items-center gap-2` — the mark drops
+        into the slot the wordmark had left for it. */}
+    {/* `py-2` is a touch target, not spacing: the 64px bar leaves room, and
+        without it the home link is 28px tall on a phone. */}
+    <a href="/" class="flex items-center gap-2 py-2 no-underline" aria-label={`${site.name} — Startseite`}>
+      <span class="brand-logo" aria-hidden="true"></span>
       <span class="font-[family-name:var(--font-display)] text-lg font-extrabold tracking-tight text-[color:var(--color-ink)]">
         TDS <span class="text-[color:var(--tds-panel-accent)]">Tools</span>
       </span>
