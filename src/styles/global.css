@@ -33,8 +33,16 @@
                 `.editorial-grid`; this site renders neither that nor a rail,
                 and every generic rule in it is scoped `[data-surface="panel"]`
                 anyway, so on this surface it would be dead weight.
-     prose.css  `.tds-prose` long-form article typography. No page here renders
-                a body of markdown. */
+     prose.css  `.tds-prose` long-form article typography. Still not imported
+                even though the tool pages now carry a long-form GUIDE — and
+                that is a decision, not an oversight. `prose.css` styles the
+                DESCENDANTS of a markdown blob (`.tds-prose p`, `… ul`,
+                `… ol`), which is right for a rendered article and wrong here:
+                a guide is structured data whose parts each want their own
+                treatment — a two-column case list, a numbered step list, a
+                disclosure FAQ. Importing it would mean overriding it in three
+                places. The `.tool-guide*` block at the end of this file is
+                ~60 lines and fights nothing. */
 @import "@tracht-digital-solutions/tds-shared/styles/base.css";
 @import "@tracht-digital-solutions/tds-shared/styles/primitives.css";
 @import "@tracht-digital-solutions/tds-shared/styles/surfaces/blog.css";
@@ -268,4 +276,145 @@
   .tool-card__title {
     transition: none;
   }
+}
+
+/* ---- Tool guide ---- */
+/* The long-form section under each tool. Local rather than `.tds-prose` — see
+   the note at the top of this file and in ToolGuide.astro.
+   Everything here is spacing, measure and rhythm; every colour, face and
+   weight comes from a shared token, so the guide follows the surface the way
+   the rest of the page does. */
+.tool-guide,
+.tool-related {
+  margin-top: 3.5rem;
+}
+.tool-guide__h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: var(--tds-weight-display);
+  letter-spacing: var(--tds-tracking-display);
+  font-size: clamp(1.5rem, 1.15rem + 1.5vw, 1.875rem);
+  line-height: 1.15;
+  color: var(--color-black);
+}
+/* The same 2px accent bar the catalog's category headings use — this surface
+   draws almost no borders, so the bar is what marks a new zone. */
+.tool-guide__mark {
+  display: block;
+  width: 2.5rem;
+  height: 2px;
+  margin: 0.625rem 0 1.5rem;
+  background: var(--color-accent);
+}
+.tool-guide__h3 {
+  margin: 2.25rem 0 0.875rem;
+  font-family: var(--font-display);
+  font-weight: var(--tds-weight-display-tight);
+  letter-spacing: var(--tds-tracking-display-tight);
+  font-size: 1.125rem;
+  line-height: 1.25;
+  color: var(--color-black);
+}
+/* 68ch is the measure long-form body text stays readable at; without it the
+   intro runs the full 56rem of the page and the eye loses the line. */
+.tool-guide__intro p,
+.tool-guide__privacy {
+  max-width: 68ch;
+  margin: 0 0 0.875rem;
+  line-height: 1.7;
+  color: var(--color-ink);
+  text-wrap: pretty;
+}
+.tool-guide__privacy {
+  margin-bottom: 0;
+}
+.tool-guide__cases {
+  display: grid;
+  gap: 1.25rem 2rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 40rem) {
+  .tool-guide__cases {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.tool-guide__case-title {
+  margin: 0 0 0.25rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--color-black);
+}
+.tool-guide__case-text,
+.tool-guide__step-text {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--color-muted);
+  text-wrap: pretty;
+}
+/* The counter is drawn from the list, never typed into the copy — inserting a
+   step then cannot leave a wrong number behind. */
+.tool-guide__steps {
+  counter-reset: step;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  max-width: 68ch;
+}
+.tool-guide__steps > li {
+  counter-increment: step;
+  padding-left: 2.75rem;
+  position: relative;
+}
+.tool-guide__steps > li::before {
+  content: counter(step, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 0.0625rem;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--color-accent);
+  font-variant-numeric: tabular-nums;
+}
+.tool-guide__step-title {
+  margin: 0 0 0.25rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--color-black);
+}
+.tool-guide__faq {
+  display: flex;
+  flex-direction: column;
+  max-width: 68ch;
+}
+/* A line BETWEEN two things keeps its literal 1px on the flat kit — the
+   hairline a primitive draws around ITSELF is what the surface drops. */
+.tool-guide__faq details {
+  border-bottom: 1px solid var(--color-line);
+}
+.tool-guide__faq summary {
+  cursor: pointer;
+  padding: 0.875rem 0;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--color-black);
+  /* 44px touch target even for a one-line question. */
+  min-height: 2.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.tool-guide__faq summary:hover {
+  color: var(--color-primary);
+}
+.tool-guide__faq details p {
+  margin: 0 0 1rem;
+  line-height: 1.7;
+  color: var(--color-muted);
+  text-wrap: pretty;
 }

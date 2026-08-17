@@ -1,0 +1,83 @@
+---
+/**
+ * The long-form guide under a tool.
+ *
+ * Renders the same `ToolGuide` object that feeds the page's `HowTo` and
+ * `FAQPage` JSON-LD — one source, two outputs. That is not tidiness: Google
+ * drops a FAQ rich result when the structured answer differs from the visible
+ * one, and two hand-kept copies of a sentence diverge on the first edit.
+ *
+ * Styling is local (`.tool-guide*` in global.css) rather than `.tds-prose`,
+ * and that is deliberate. `prose.css` styles the DESCENDANTS of a markdown
+ * blob (`.tds-prose p`, `.tds-prose ul`); this guide is structured content
+ * whose parts each want their own treatment — a two-column case list, a
+ * numbered step list, a disclosure FAQ. Importing it here would mean fighting
+ * it in three places, so the site's `global.css` still does not import it.
+ */
+import type { ToolGuide } from "~/lib/guides";
+import { t } from "~/lib/i18n";
+import type { Lang } from "~/lib/seo";
+
+interface Props {
+  guide: ToolGuide;
+  toolName: string;
+  lang?: Lang;
+}
+
+const { guide, toolName, lang = "de" } = Astro.props;
+const s = t(lang);
+---
+
+{/* `aria-labelledby` rather than an aria-label: the visible heading already
+    names the section, and a second, differently worded name is what makes a
+    screen reader announce something the page does not say. */}
+<section class="tool-guide" aria-labelledby="guide-heading">
+  <h2 id="guide-heading" class="tool-guide__h2">
+    {s.guideHeading}: {toolName}
+  </h2>
+  <span aria-hidden="true" class="tool-guide__mark"></span>
+
+  <div class="tool-guide__intro">
+    {guide.intro.map((p) => <p>{p}</p>)}
+  </div>
+
+  <h3 class="tool-guide__h3">{s.guideUseCases}</h3>
+  <ul class="tool-guide__cases">
+    {guide.useCases.map((c) => (
+      <li>
+        <p class="tool-guide__case-title">{c.title}</p>
+        <p class="tool-guide__case-text">{c.text}</p>
+      </li>
+    ))}
+  </ul>
+
+  <h3 class="tool-guide__h3">{s.guideSteps}</h3>
+  {/* A real <ol>: the steps are ordered, and the counter is drawn from the
+      list rather than typed into the copy, so inserting a step cannot leave a
+      wrong number behind. */}
+  <ol class="tool-guide__steps">
+    {guide.steps.map((step) => (
+      <li>
+        <p class="tool-guide__step-title">{step.title}</p>
+        <p class="tool-guide__step-text">{step.description}</p>
+      </li>
+    ))}
+  </ol>
+
+  <h3 class="tool-guide__h3">{s.guidePrivacy}</h3>
+  <p class="tool-guide__privacy">{guide.privacy}</p>
+
+  <h3 class="tool-guide__h3">{s.guideFaq}</h3>
+  {/* <details> so the answers are in the DOM from the start — a FAQ built
+      from JavaScript is invisible to the crawler that the FAQPage node is
+      for. No `name` attribute: an exclusive accordion would collapse the
+      answer a reader just opened when they open the next one. */}
+  <div class="tool-guide__faq">
+    {guide.faq.map((item) => (
+      <details>
+        <summary>{item.q}</summary>
+        <p>{item.a}</p>
+      </details>
+    ))}
+  </div>
+</section>

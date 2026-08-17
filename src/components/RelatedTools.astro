@@ -1,0 +1,61 @@
+---
+/**
+ * "Passt dazu" — the internal linking this site had none of.
+ *
+ * Until now every tool page's only outbound link was "Alle Tools", so the
+ * seven pages formed a star around the catalog with no edges between them.
+ * That costs twice: a reader who came in from a search result for one tool
+ * never learns the other six exist, and a crawler has no path that suggests
+ * the pages are related.
+ *
+ * Related slugs come from the guide, not from the category: the pairings that
+ * make sense to a READER (a QR code beside a UTM link, a PDF tool beside an
+ * image compressor) cut across the catalog's categories.
+ *
+ * Slugs that are not in the enabled catalog are dropped rather than rendered
+ * dead — the admin catalog can switch a tool off at any time, and a link to a
+ * page that was not built is a 404 in the sitemap's own neighbourhood.
+ */
+import Icon from "~/components/Icon.astro";
+import { t } from "~/lib/i18n";
+import type { Lang } from "~/lib/seo";
+import type { ResolvedTool } from "~/lib/catalog";
+
+interface Props {
+  /** Slugs named by the current tool's guide. */
+  slugs: string[];
+  /** Every enabled tool, to resolve the slugs against. */
+  all: ResolvedTool[];
+  /** The current tool's slug, so it can never link to itself. */
+  current: string;
+  lang?: Lang;
+  /** URL prefix for the language tree ("" for German, "/en" for English). */
+  base?: string;
+}
+
+const { slugs, all, current, lang = "de", base = "" } = Astro.props;
+const s = t(lang);
+
+const related = slugs
+  .filter((slug) => slug !== current)
+  .map((slug) => all.find((tool) => tool.slug === slug))
+  .filter((tool): tool is ResolvedTool => Boolean(tool));
+---
+
+{related.length > 0 && (
+  <section class="tool-related" aria-labelledby="related-heading">
+    <h2 id="related-heading" class="tool-guide__h2">{s.relatedHeading}</h2>
+    <span aria-hidden="true" class="tool-guide__mark"></span>
+    <div class="grid gap-4 sm:grid-cols-2">
+      {related.map((tool) => (
+        <a href={`${base}/tools/${tool.slug}`} class="tool-card">
+          <span class="tool-card__title">
+            <Icon name={tool.icon} class="h-5 w-5 text-[color:var(--color-accent)]" />
+            {tool.name}
+          </span>
+          <p class="tool-card__desc">{tool.description}</p>
+        </a>
+      ))}
+    </div>
+  </section>
+)}

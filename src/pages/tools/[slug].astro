@@ -7,7 +7,16 @@ import { components } from "virtual:tools-components";
 import ToolGate from "~/components/ToolGate.tsx";
 import { enabledTools, adsConfig } from "~/lib/catalog";
 import { site } from "~/lib/site";
-import { asGraph, breadcrumbSchema, softwareApplicationSchema } from "~/lib/jsonld";
+import {
+  asGraph,
+  breadcrumbSchema,
+  faqPageSchema,
+  howToSchema,
+  softwareApplicationSchema,
+} from "~/lib/jsonld";
+import { guideFor } from "~/lib/guides";
+import ToolGuide from "~/components/ToolGuide.astro";
+import RelatedTools from "~/components/RelatedTools.astro";
 import type { ResolvedTool } from "~/lib/catalog";
 
 // One static page per enabled tool. The resolved tool (manifest + admin flags)
@@ -22,6 +31,9 @@ interface Props {
 }
 const { tool } = Astro.props;
 const ads = await adsConfig();
+// Memoised for the whole build (see lib/catalog.ts), so resolving the related
+// tools costs nothing per page.
+const allTools = await enabledTools();
 
 // The tool's UI component, statically imported by `toolHost` into the
 // components map keyed by tool id.
@@ -43,6 +55,12 @@ const toolUrl = `${site.origin}/tools/${tool.slug}`;
    node the hierarchy was visible to a reader and to nothing else — a search
    result showed the bare URL where it could have shown "Alle Tools ›
    QR-Code-Generator". */
+/* The guide feeds the visible section AND the HowTo/FAQPage nodes. One
+   source: Google drops a FAQ rich result when the structured answer differs
+   from the visible one, and two copies of a sentence diverge on the first
+   edit. A tool without a guide simply contributes neither node. */
+const guide = guideFor(tool.slug, "de");
+
 const jsonLd = asGraph(
   softwareApplicationSchema({
     name: tool.name,
@@ -58,6 +76,8 @@ const jsonLd = asGraph(
     { name: "Alle Tools", url: `${site.origin}/` },
     { name: tool.name, url: toolUrl },
   ]),
+  ...(guide ? [howToSchema(`${tool.name} verwenden`, guide.steps)] : []),
+  ...(guide ? [faqPageSchema(guide.faq)] : []),
 );
 ---
 
@@ -114,5 +134,15 @@ const jsonLd = asGraph(
     </section>
 
     {showAds && <AdSlot client={ads.publisherId} slot={ads.slotTool} />}
+
+    {/* The guide sits BELOW the tool, never above it: someone who searched
+        for "qr code generator" came to use one, and a wall of prose between
+        the heading and the input is the pattern that made recipe sites a
+        punchline. It is still on the page, in the DOM, ahead of the footer —
+        which is all the crawler needs. */}
+    {guide && <ToolGuide guide={guide} toolName={tool.name} />}
+    {guide && (
+      <RelatedTools slugs={guide.related} all={allTools} current={tool.slug} />
+    )}
   </div>
 </Layout>

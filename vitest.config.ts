@@ -22,6 +22,11 @@ export default defineConfig({
       "virtual:tools-catalog": fileURLToPath(
         new URL("./test/fixtures/tools-catalog.ts", import.meta.url),
       ),
+      // Astro resolves `~/…` from tsconfig's paths; vitest does not read
+      // those, so the alias has to be restated here or any module that
+      // imports through it fails to load under test rather than failing an
+      // assertion — which looks like a broken suite, not a broken import.
+      "~": fileURLToPath(new URL("./src", import.meta.url)),
     },
   },
 });

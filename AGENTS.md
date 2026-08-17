@@ -81,10 +81,11 @@ A standalone Astro `output:"static"` product modelled on `tds-landingpage-fronte
     editorial chrome and scopes every rule on a generic primitive to
     `[data-surface="panel"]`, so on this surface it is dead weight; the blog
     imports it only for `.editorial-grid`, which this site does not render.
-    `prose.css` is `.tds-prose` long-form typography and no page here renders a
-    body of markdown. (Under the panel surface `app.css` WAS required — it is
-    where the flat variant's hover-lift opt-out and the `.panel-main` canvas
-    live.)
+    `prose.css` is `.tds-prose` long-form typography; the tool pages DO carry
+    long-form guides now, and it is still not imported — for the sharper
+    reason given in the guide section below. (Under the panel surface
+    `app.css` WAS required — it is where the flat variant's hover-lift opt-out
+    and the `.panel-main` canvas live.)
   - **`<body>` no longer paints a canvas.** The tinted `--tds-panel-canvas` plus
     the two `background-attachment: fixed` brand fields were the panel's page
     surface, restated here because this site has no `.panel-main`. The journal
@@ -259,6 +260,48 @@ A standalone Astro `output:"static"` product modelled on `tds-landingpage-fronte
   chars, distinct, and never leading with the brand — a site that ranks on
   tool queries must not spend the rendered budget on a word nobody searched
   for).
+- **Every tool page carries a long-form guide (`src/content/guides/<slug>.ts`).**
+  A tool page used to be a heading, a one-line lede and the tool — about forty
+  words. That is thin content, and this site's whole ranking case rests on tool
+  queries, where the competition is a hundred identical
+  "free-online-converter" pages. What this site can say that they cannot is why
+  the tool behaves as it does and that nothing is uploaded, so every guide
+  carries a `privacy` paragraph and it is never boilerplate (`guides.test.ts`
+  fails on two identical ones — the claim is the same everywhere, but a WLAN
+  password is not a JSON blob is not a personnel file).
+  - **One object feeds the visible section AND the `HowTo` + `FAQPage`
+    nodes.** Google drops a FAQ rich result when the structured answer differs
+    from the visible one, and two hand-kept copies of a sentence diverge on
+    the first edit.
+  - **The guide sits BELOW the tool.** Someone who searched for "qr code
+    generator" came to use one; prose between the heading and the input is the
+    pattern that made recipe sites a punchline. It is still in the DOM ahead of
+    the footer, which is all a crawler needs.
+  - **`related` is authored per guide, not derived from the category.** The
+    pairings that help a reader (a QR code beside a UTM link) cut across the
+    catalog's categories. `RelatedTools.astro` drops a slug that is not in the
+    enabled catalog rather than rendering a dead link — the admin can switch a
+    tool off at any time.
+  - **`guides.test.ts` measures depth, not presence**: ≥ 300 words (the seven
+    run 557–683), ≥ 4 use cases, ≥ 3 steps whose description outweighs its
+    title, ≥ 3 FAQ with answers over 80 characters, every `related` slug real
+    and never self-referential, and every tool linked to from somewhere. A
+    guide that decays into four bullet points still renders perfectly, which is
+    exactly why it is measured.
+  - **It also pins the two positioning rules**, because nothing else can see
+    them: no free or time-limited initial consultation is offered on any web
+    property (the call is "Unverbindlich anfragen"), no customer is named even
+    anonymously, and the copy stays in the "Sie" form the money pages use.
+  - **`prose.css` is still not imported**, and now for a sharper reason than
+    "no page renders markdown": it styles the DESCENDANTS of a markdown blob
+    (`.tds-prose p`, `… ul`), while a guide is structured content whose parts
+    each want their own treatment — a two-column case list, a numbered step
+    list, a disclosure FAQ. The local `.tool-guide*` block is ~60 lines and
+    fights nothing.
+- **`vitest.config.ts` has to restate the `~` alias.** Astro resolves it from
+  `tsconfig`'s `paths`; vitest does not read those. Without it any module
+  importing through `~/…` fails to LOAD under test, which reads as a broken
+  suite rather than a failed assertion.
 - **Every meta description has ONE budget: 80 < n ≤ 160**, asserted in
   `lib/site.test.ts` for `site.description` AND for every composed tool.
   `site.description` shipped at **201** characters until 2026-08-16, so the
@@ -277,7 +320,7 @@ A standalone Astro `output:"static"` product modelled on `tds-landingpage-fronte
 
 ## Tests
 
-`npm run test:run` (vitest). 102 tests over `lib/catalog.ts`, `lib/site.ts`,
+`npm run test:run` (vitest). 168 tests over `lib/catalog.ts`, `lib/site.ts`,
 `ToolGate.tsx` and — as plain text — the layout/CSS surface contract
 (`lib/surface.test.ts`). The `.astro` pages otherwise stay on `astro check` +
 the real build.
