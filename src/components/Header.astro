@@ -1,9 +1,9 @@
 ---
 /**
  * Top bar in the journal's idiom: logomark + wordmark, the bordeaux divider
- * square, flat underline nav, theme toggle. Same shape as
- * `tds-blog-frontend`'s JournalHeader, minus what this site has no corpus for
- * (search, the Entdecken disclosure, DE/EN — the tools site is German only).
+ * square, flat underline nav, theme toggle, language switch, contact CTA.
+ * Same shape as `tds-blog-frontend`'s JournalHeader, minus what this site has
+ * no corpus for (search, the Entdecken disclosure).
  *
  * The nav carries the two SIBLING properties by name (Blog · Startseite), not
  * just the bare domain the site used to show. This site is public and
@@ -11,16 +11,30 @@
  * link is a dead end for a reader and an orphan for a crawler.
  *
  * Below `sm` the nav drops to its own full-width row under the wordmark
- * instead of being squeezed beside it — three links plus the brand plus the
+ * instead of being squeezed beside it — the links plus the brand plus the
  * toggle do not fit across a 375px phone, and `body { overflow-x: hidden }`
  * would CLIP the overflow rather than reveal it: no scrollbar, no warning, the
  * right-hand links simply are not there.
  */
 import { ThemeToggle } from "@tracht-digital-solutions/tds-shared/components";
 import { links, site } from "~/lib/site";
+import { t } from "~/lib/i18n";
+import { EN_ENABLED, localizedPath, neutralPath, type Lang } from "~/lib/seo";
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = "de" } = Astro.props;
+const s = t(lang);
+const base = lang === "de" ? "" : "/en";
 
 const path = Astro.url.pathname;
-const onCatalog = path === "/" || path === "";
+const onCatalog = neutralPath(path) === "/";
+
+/** The same page in the other language — never a bare link to the other home. */
+const otherLang: Lang = lang === "de" ? "en" : "de";
+const otherHref = localizedPath(path, otherLang);
 ---
 
 {/* Fill, blur and the warm bottom hairline all come from `.brand-header`
@@ -33,9 +47,9 @@ const onCatalog = path === "/" || path === "";
         `--color-primary` into dark mode instead of needing an inverted second
         asset. `py-2` is a touch target, not spacing. */}
     <a
-      href="/"
+      href={`${base}/`}
       class="brand-wordmark inline-flex shrink-0 items-center gap-2 py-2 text-[1.0625rem] tracking-tight no-underline"
-      aria-label={`${site.name} — Startseite`}
+      aria-label={`${site.name} — ${s.navAllTools}`}
     >
       <span class="brand-logo" aria-hidden="true"></span>
       <span>TDS <span class="accent-italic">Tools</span></span>
@@ -54,11 +68,30 @@ const onCatalog = path === "/" || path === "";
           over any colour utility written here. The utilities left on these
           anchors are the padding — a touch target, and nothing shared claims
           it. */}
-      <a href="/" class="tnav-link link-underline px-2 py-2" aria-current={onCatalog ? "page" : undefined}>
-        Alle Tools
+      <a
+        href={`${base}/`}
+        class="tnav-link link-underline px-2 py-2"
+        aria-current={onCatalog ? "page" : undefined}
+      >
+        {s.navAllTools}
       </a>
-      <a href={links.blog} class="tnav-link link-underline px-2 py-2">Blog</a>
-      <a href={links.main} class="tnav-link link-underline px-2 py-2">Startseite</a>
+      <a href={links.blog} class="tnav-link link-underline px-2 py-2">{s.navBlog}</a>
+      <a href={links.main} class="tnav-link link-underline px-2 py-2">{s.navHome}</a>
+      {/* The language switch is a link to THIS page in the other language, not
+          to the other home page: a reader who followed a search result to one
+          tool wants that tool, and a switch that drops them at the catalog is
+          the reason people stop using them. `hreflang` tells assistive tech
+          and crawlers what is on the other end. */}
+      {EN_ENABLED && (
+        <a
+          href={otherHref}
+          hreflang={otherLang}
+          lang={otherLang}
+          class="tnav-link link-underline px-2 py-2"
+        >
+          {s.languageOther}
+        </a>
+      )}
     </nav>
 
     <div class="ml-auto flex shrink-0 items-center gap-2 sm:ml-0">
@@ -71,9 +104,9 @@ const onCatalog = path === "/" || path === "";
           regardless). It fits there anyway — the nav has already dropped to
           its own row. */}
       <a href={links.contact} class="btn btn-primary no-underline">
-        Termin vereinbaren
+        {s.cta}
       </a>
     </div>
   </div>
 </header>
-<span class="sr-only" data-site-tagline>{site.tagline}</span>
+<span class="sr-only" data-site-tagline>{s.tagline}</span>

@@ -278,6 +278,39 @@
   }
 }
 
+/* ---- Service note ---- */
+/* The site's one marketing line. A `--color-soft` block, no outline, no
+   radius — the flat kit's own device, the same one `.tool-card` uses. It is
+   deliberately NOT a `.tds-card`: a bordered, filled panel would read as an
+   advert after every tool, which on a free-tools site is exactly the tone to
+   avoid. Nothing here competes with the header CTA for attention. */
+.service-note {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 1rem;
+  margin-top: 3.5rem;
+  padding: 1.125rem 1.375rem;
+  background: var(--color-soft);
+}
+.service-note__text {
+  margin: 0;
+  flex: 1 1 24ch;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--color-muted);
+  text-wrap: pretty;
+}
+/* `.link-underline` (tds-shared) declares `color: inherit`, and being
+   unlayered it beats any Tailwind colour utility on the same element — so the
+   accent is set here, on the app's own unlayered rule. */
+.service-note__cta {
+  flex: none;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-accent);
+}
+
 /* ---- Tool guide ---- */
 /* The long-form section under each tool. Local rather than `.tds-prose` — see
    the note at the top of this file and in ToolGuide.astro.

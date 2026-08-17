@@ -77,6 +77,82 @@ const guide: ToolGuideSet = {
     ],
     related: ["bild-komprimieren", "json-formatter"],
   },
+  en: {
+    intro: [
+      "PDF is the format in which quotes, invoices, delivery notes and certificates travel through a business. That is exactly why small jobs come up constantly: combining three scans into one document, pulling the two relevant pages out of a twenty-page contract, straightening a page that went through the feeder sideways.",
+      "These tools do precisely that — merge, split and rotate. Merging lets you set the order, splitting takes a page range such as 1-3,5, and rotating applies to the pages you choose. You download the result immediately as a new file.",
+      "The usual route for these jobs runs through one of the large online services, and therefore through an upload. With a quote carrying prices, an invoice carrying bank details or a personnel file, that is the point where it stops being a question of convenience. Here the file stays on your device.",
+    ],
+    useCases: [
+      {
+        title: "Bundling scans into one document",
+        text: "The feeder produces a separate file per page. Merged, they become a document you can send and file.",
+      },
+      {
+        title: "Passing on only the relevant pages",
+        text: "Pull the extract that actually concerns the recipient out of a lengthy contract or inspection report.",
+      },
+      {
+        title: "Straightening sideways pages",
+        text: "A rotated page makes a document unreadable and useless in print. Rotate, save, done.",
+      },
+      {
+        title: "Quote and attachments as one file",
+        text: "Put the cover letter, the specification and the data sheets in the right order instead of sending five attachments.",
+      },
+      {
+        title: "Paperwork for the bookkeeping",
+        text: "Combine the receipts for one matter into a single file before it goes into the archive or to the accountant.",
+      },
+    ],
+    steps: [
+      {
+        title: "Choose a tool",
+        description:
+          "Decide between merging, splitting and rotating. The input fields follow that choice.",
+      },
+      {
+        title: "Select the files",
+        description:
+          "For merging, choose at least two PDFs; the order you select them in is the order in the result. Splitting and rotating need a single file.",
+      },
+      {
+        title: "Give the page range",
+        description:
+          "For splitting, enter the pages you want, such as 1-3,5 for the first three pages plus the fifth. For rotating, choose the angle for the affected pages.",
+      },
+      {
+        title: "Run it and download",
+        description:
+          "The result is produced in the browser and offered straight away as a new file. Your source files are left untouched.",
+      },
+    ],
+    privacy:
+      "The PDFs are not uploaded. They are read in the browser and written out again there; no page and no file leaves your device. With documents from a business that is the real reason to prefer this tool to one of the large online services: uploading a quote, an invoice or a personnel file to somebody else's server means processing personal or confidential data outside your own house, with everything that entails.",
+    faq: [
+      {
+        q: "Are my documents uploaded?",
+        a: "No. Processing runs entirely in the browser; there is no server that receives the file. That holds for all three functions equally.",
+      },
+      {
+        q: "How do I write a page range?",
+        a: "Separate individual pages with commas and continuous ranges with a hyphen. So 1-3,5 means pages one to three plus page five. The order in the result follows the order in the original.",
+      },
+      {
+        q: "Is quality preserved?",
+        a: "Yes. Pages are carried over rather than re-rendered — text stays text, embedded fonts and resolution are unchanged. No compression takes place.",
+      },
+      {
+        q: "Do password-protected PDFs work?",
+        a: "Encrypted files cannot be processed. Remove the protection beforehand in the program the file was created with, or save an unprotected copy.",
+      },
+      {
+        q: "Why does this tool cost money?",
+        a: "The freely available tools on this site are funded by advertising. The PDF tools carry no advertising and are unlocked once instead — with documents from a business, ad-free and purely local processing is the more honest trade.",
+      },
+    ],
+    related: ["bild-komprimieren", "json-formatter"],
+  },
 };
 
 export default guide;

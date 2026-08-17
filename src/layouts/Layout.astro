@@ -15,6 +15,7 @@ import { themeBootstrapScript } from "@tracht-digital-solutions/tds-shared/astro
 import Header from "~/components/Header.astro";
 import Footer from "~/components/Footer.astro";
 import { site } from "~/lib/site";
+import { t } from "~/lib/i18n";
 import { seoConfig, ogLocale, localizedPath, EN_ENABLED, type Lang } from "~/lib/seo";
 import { adsConfig } from "~/lib/catalog";
 
@@ -176,17 +177,17 @@ const adsActive = ads.enabled && !!ads.publisherId;
   </head>
   <body>
     <a href="#main" class="absolute -top-full left-0 z-50 px-6 py-3 bg-[var(--color-surface-navy)] text-white text-sm font-semibold focus:top-0 transition-all">
-      Zum Inhalt springen
+      {t(lang).skipToContent}
     </a>
-    <Header />
+    <Header lang={lang} />
     <main id="main">
       <slot />
     </main>
-    <Footer />
+    <Footer lang={lang} />
 
     {/* AdSense consent gate — a real Accept/Decline opt-in; the loader below
         only runs after "granted". */}
-    {adsActive && <CookieNotice client:idle lang="de" consent />}
+    {adsActive && <CookieNotice client:idle lang={lang} consent />}
 
     {/* Consent-gated AdSense loader. Injects adsbygoogle.js only after the
         visitor grants ad consent (now or via the banner event) — nothing loads

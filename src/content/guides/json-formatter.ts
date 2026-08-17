@@ -77,6 +77,82 @@ const guide: ToolGuideSet = {
     ],
     related: ["kontrast-checker", "passwort-generator"],
   },
+  en: {
+    intro: [
+      "JSON is the format programs use to send each other data today: interfaces answer in it, configuration files are written in it, and exports from inventory, shop or accounting systems often arrive in this shape. As long as everything works, you never see it. You see it precisely when something jams — and then usually as one endless line with no breaks in it.",
+      "This tool turns that into readable text: it indents the structure, checks that it is valid, and on an error names the spot with a line and a column instead of merely claiming something is wrong somewhere. It also does the reverse — stripping every unnecessary space when the data needs to go back out compactly.",
+      "In practice that means you can inspect an interface response yourself before passing it on, and check a rejected configuration file without guessing. The most common causes are a comma after the last entry, single instead of double quotes, and a bracket that was never closed.",
+    ],
+    useCases: [
+      {
+        title: "Making an API response readable",
+        text: "An API response as a single line is useless to a human. Indented, you can see in seconds which fields are actually being delivered.",
+      },
+      {
+        title: "Checking a rejected configuration",
+        text: "When a program refuses a file, the validation shows the exact position of the syntax error rather than a generic complaint.",
+      },
+      {
+        title: "Inspecting an export before importing it",
+        text: "Before loading data into another system, check whether the structure and field names match what the target expects.",
+      },
+      {
+        title: "Passing data on compactly",
+        text: "Minified JSON saves space and transfer time — worth doing wherever the file is not read by people.",
+      },
+      {
+        title: "Reporting an error usefully",
+        text: "An indented excerpt with the failing position marked turns a vague fault report into one somebody can work with.",
+      },
+    ],
+    steps: [
+      {
+        title: "Paste the JSON",
+        description:
+          "Drop the content into the input field — a whole file, an interface response, or just the excerpt you are asking about.",
+      },
+      {
+        title: "Format or validate",
+        description:
+          "Formatting indents the structure and makes the nesting visible. If the content is invalid, the error message appears instead, with the position, line and column.",
+      },
+      {
+        title: "Fix the failing spot",
+        description:
+          "Jump to the position named and check the usual suspects first: a comma after the last element, single quotes, a missing pair of brackets, or a line break in the middle of a string.",
+      },
+      {
+        title: "Take the result",
+        description:
+          "Copy the indented output for onward use — or minify it first if it is going to be processed by a machine.",
+      },
+    ],
+    privacy:
+      "Processing happens entirely in your browser; the content you paste is not transmitted, not stored and not logged. With this tool that is more than a formality: JSON data regularly contains customer records, orders, access keys or prices. Pasting that into an arbitrary online form gives it away — here it never leaves your device.",
+    faq: [
+      {
+        q: "Is my data uploaded?",
+        a: "No. Formatting and validation run as JavaScript in your browser. There is no server that receives the content — you can disconnect from the network after the page loads and keep working.",
+      },
+      {
+        q: "What does the error position mean?",
+        a: "The position is the character count from the start of the text, and the line and column translate that into a spot you can find. The fault is almost always immediately before it: a character that was not expected there is usually the consequence of a forgotten comma or an open bracket further up.",
+      },
+      {
+        q: "Why is my JSON invalid when it looks fine?",
+        a: "The three most common causes are a comma after the last element of a list, single instead of double quotes, and comments. All three are legal in JavaScript and none of them are in JSON.",
+      },
+      {
+        q: "Can I process very large files?",
+        a: "Up to the low megabytes the tool handles it comfortably. Because everything runs in the browser, the limit is your device's memory — with very large exports the page slows down rather than showing an error.",
+      },
+      {
+        q: "Does formatting change my data?",
+        a: "No, only the presentation. Indentation and line breaks carry no meaning in JSON; values, order and structure are left untouched.",
+      },
+    ],
+    related: ["kontrast-checker", "passwort-generator"],
+  },
 };
 
 export default guide;

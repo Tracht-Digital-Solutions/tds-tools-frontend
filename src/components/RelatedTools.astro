@@ -17,7 +17,8 @@
  * page that was not built is a 404 in the sitemap's own neighbourhood.
  */
 import Icon from "~/components/Icon.astro";
-import { t } from "~/lib/i18n";
+import { t, toolCopyFor } from "~/lib/i18n";
+import { site } from "~/lib/site";
 import type { Lang } from "~/lib/seo";
 import type { ResolvedTool } from "~/lib/catalog";
 
@@ -47,15 +48,21 @@ const related = slugs
     <h2 id="related-heading" class="tool-guide__h2">{s.relatedHeading}</h2>
     <span aria-hidden="true" class="tool-guide__mark"></span>
     <div class="grid gap-4 sm:grid-cols-2">
-      {related.map((tool) => (
-        <a href={`${base}/tools/${tool.slug}`} class="tool-card">
-          <span class="tool-card__title">
-            <Icon name={tool.icon} class="h-5 w-5 text-[color:var(--color-accent)]" />
-            {tool.name}
-          </span>
-          <p class="tool-card__desc">{tool.description}</p>
-        </a>
-      ))}
+      {related.map((tool) => {
+        // The card must speak the PAGE's language, not the manifest's — an
+        // English guide followed by two German cards is the kind of half-
+        // translation that reads as neglect.
+        const copy = toolCopyFor(lang, tool, site.name);
+        return (
+          <a href={`${base}/tools/${tool.slug}`} class="tool-card">
+            <span class="tool-card__title">
+              <Icon name={tool.icon} class="h-5 w-5 text-[color:var(--color-accent)]" />
+              {copy.name}
+            </span>
+            <p class="tool-card__desc">{copy.description}</p>
+          </a>
+        );
+      })}
     </div>
   </section>
 )}

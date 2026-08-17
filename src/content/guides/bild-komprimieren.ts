@@ -77,6 +77,82 @@ const guide: ToolGuideSet = {
     ],
     related: ["pdf-werkzeuge", "qr-code-generator"],
   },
+  en: {
+    intro: [
+      "Photos out of a phone or system camera are needlessly large for the web: four to twelve megabytes, several thousand pixels wide. A website usually displays a thousand-pixel crop of that — the rest is transferred, paid for and then discarded. On a phone over mobile data, that is the difference between a page appearing in one second and in eight.",
+      "This tool scales images down to a target width and compresses them at an adjustable quality. It shows the new file size next to the old one and outputs the result as JPEG or WebP. WebP is usually the better choice: the same apparent quality at a noticeably smaller file, and every current browser understands it.",
+      "A workable rule of thumb: a target width of 1600 pixels for full-width images, 800 for images inside text, and quality around 80 per cent. That puts most photos between 60 and 200 kilobytes — instead of eight megabytes — without any visible difference.",
+    ],
+    useCases: [
+      {
+        title: "Images for your own website",
+        text: "Shrink product, reference and team photos before uploading. The single fastest lever for a faster site.",
+      },
+      {
+        title: "Attachments that fit through a mailbox",
+        text: "Many mailboxes only accept attachments up to a certain size. Five compressed photos fit where two originals fail.",
+      },
+      {
+        title: "Photos for classifieds and portals",
+        text: "Selling portals downscale images anyway — often worse than necessary. Doing it yourself keeps control of the result.",
+      },
+      {
+        title: "Documentation from the field",
+        text: "Measurement, damage and progress photos add up to gigabytes quickly. Compressed they stay legible and the archive stays manageable.",
+      },
+      {
+        title: "Images for a newsletter",
+        text: "Large images in email are not even loaded by some clients and noticeably lengthen the load on a phone.",
+      },
+    ],
+    steps: [
+      {
+        title: "Choose an image",
+        description:
+          "Pick a file in JPG, PNG or WebP format. The preview and the original file size appear immediately.",
+      },
+      {
+        title: "Set the target width",
+        description:
+          "State how wide the image should be at most. The height follows the aspect ratio. For display on the web, 1600 pixels for large images and 800 pixels within text are good values.",
+      },
+      {
+        title: "Set the quality",
+        description:
+          "Between 70 and 85 per cent is the usable range; below that edges and flat areas become visibly restless. You can see the effect immediately in the new file size.",
+      },
+      {
+        title: "Download",
+        description:
+          "Save the result as JPEG or WebP. For photographs WebP is almost always smaller; for graphics with hard edges or transparency it is the better choice too.",
+      },
+    ],
+    privacy:
+      "The image is not uploaded. It is redrawn and compressed in your browser through a canvas element — the file never leaves your device at any point. That is the real difference from the widespread compression services: there your photos land on somebody else's server, which for site, damage or personal photographs is not a matter of taste but of data protection law.",
+    faq: [
+      {
+        q: "Does the image visibly lose quality?",
+        a: "At 80 per cent quality very few viewers see any difference from the original, while the file becomes several times smaller. Compression usually only becomes clearly visible below 60 per cent, first in soft gradients such as a sky.",
+      },
+      {
+        q: "JPEG or WebP?",
+        a: "WebP, provided the target system accepts it: the same perceived quality at roughly 25 to 35 per cent fewer bytes, plus transparency. JPEG remains the safe choice for older software and for portals that only accept that format.",
+      },
+      {
+        q: "Are my images uploaded to a server?",
+        a: "No. All processing happens in your browser; there is no counterpart that could receive the file. You can disconnect from the network after the page loads and keep working.",
+      },
+      {
+        q: "Are the capture date and location preserved?",
+        a: "No. Redrawing in the browser discards the EXIF data, including GPS coordinates and camera model. For images destined for the internet that is an advantage — if you need the values, keep the original.",
+      },
+      {
+        q: "Can I process several images at once?",
+        a: "The tool works one image at a time. If whole folders regularly come up for you — from site documentation, say — that can be automated rather than repeated by hand.",
+      },
+    ],
+    related: ["pdf-werkzeuge", "qr-code-generator"],
+  },
 };
 
 export default guide;

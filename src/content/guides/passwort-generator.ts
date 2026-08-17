@@ -77,6 +77,82 @@ const guide: ToolGuideSet = {
     ],
     related: ["qr-code-generator", "json-formatter"],
   },
+  en: {
+    intro: [
+      "Most passwords in a small business have grown rather than been chosen: the company name with a year, the town with an exclamation mark, a pattern that feels good on the keyboard. Attacks today do not guess character by character, though — they work through lists of leaked passwords and their obvious variations. There is only one defence against those lists: a password nobody chose, but chance produced.",
+      "This generator produces exactly that kind of password. You set the length and the character sets — upper case, lower case, digits, symbols — and a meter estimates the strength of the result. Optionally, easily confused characters such as capital i, lower-case L, zero and capital O are left out: worth doing wherever a password will be read aloud or copied by hand.",
+      "For perspective: length does more than symbols do. A twenty-character password of letters and digits is considerably harder to break than an eight-character one with three symbols — and you need to memorise neither of them if you use a password manager.",
+    ],
+    useCases: [
+      {
+        title: "Accounts for new staff",
+        text: "A random first password that gets changed at first sign-in, instead of a scheme everyone recognises after the third time.",
+      },
+      {
+        title: "Router, till, network printer",
+        text: "Devices whose factory password is printed in the manual and findable online. Generate these without ambiguous characters — they get typed by hand.",
+      },
+      {
+        title: "Guest Wi-Fi with its own password",
+        text: "A long random password for the guest network, separate from the business one. Paired with a QR code, nobody has to enter it at all.",
+      },
+      {
+        title: "Database and service accounts",
+        text: "Credentials only software ever uses should be as long and as random as possible — they are never typed by a person anyway.",
+      },
+      {
+        title: "Encrypted archives and backups",
+        text: "A strong password on a backup is the last line of defence when a drive or a stick goes missing.",
+      },
+    ],
+    steps: [
+      {
+        title: "Set the length",
+        description:
+          "Use the slider to choose the length. For accounts a human types, sixteen characters is a good starting point; for anything living in a password manager, considerably more is fine.",
+      },
+      {
+        title: "Pick the character sets",
+        description:
+          "Enable upper case, lower case, digits and symbols as needed. Some systems forbid particular symbols — switch them off here rather than editing the result by hand afterwards.",
+      },
+      {
+        title: "Exclude ambiguous characters",
+        description:
+          "If the password will be read aloud, copied down or printed, hide capital i, lower-case L, zero and capital O. It costs a little strength and saves the question of whether that was a one or an L.",
+      },
+      {
+        title: "Generate, check, store",
+        description:
+          "Generate a password, watch the strength meter, and copy it straight into your password manager. Store it there before you close the page — the tool keeps nothing.",
+      },
+    ],
+    privacy:
+      "The password is created in your browser using the operating system's cryptographic random generator, and it does not leave your device. It is not transmitted, not logged and not cached anywhere; once you close the page it is gone. With a password generator that is the decisive point — a service that generates the password on its server knows it, and you have no way to check what it does with it.",
+    faq: [
+      {
+        q: "How long should a password be?",
+        a: "For accounts a person types, sixteen random characters is a sensible floor. For accounts only software uses, there is nothing against thirty or more. Length buys more security than exotic symbols do.",
+      },
+      {
+        q: "Is the randomness here genuinely random?",
+        a: "The tool uses the browser's crypto.getRandomValues interface, which is the operating system's cryptographically secure random generator. That is the same mechanism your encrypted connections are built on — not the simple randomness of Math.random.",
+      },
+      {
+        q: "Should I change passwords regularly?",
+        a: "By current guidance, not as a routine. A strong, unique password stays valid until there is a reason for concern — after a known breach, for instance. Forced rotation reliably produces weaker passwords with an incremented digit on the end.",
+      },
+      {
+        q: "How am I supposed to remember these?",
+        a: "You are not. Use a password manager and memorise exactly one strong master password. Everything else lives encrypted in the manager and is filled in for you at sign-in.",
+      },
+      {
+        q: "Can I use this at work?",
+        a: "Yes. It is free, needs no sign-up and runs locally, so there is no transmission that could breach a company policy. If you need to manage accounts for several people in a structured way, a password manager is the next step.",
+      },
+    ],
+    related: ["qr-code-generator", "json-formatter"],
+  },
 };
 
 export default guide;

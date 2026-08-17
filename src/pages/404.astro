@@ -1,6 +1,15 @@
 ---
 import Layout from "~/layouts/Layout.astro";
 import { links } from "~/lib/site";
+import { t } from "~/lib/i18n";
+
+/**
+ * One 404 for both trees. The host serves this file for any unmatched path,
+ * German or English, so it cannot know the visitor's language — and it stays
+ * German, matching `x-default`. It is `noindex`, so it emits no hreflang pair
+ * either and nothing about it can invalidate the German↔English sets.
+ */
+const s = t("de");
 ---
 
 <Layout title="Seite nicht gefunden — TDS Tools" noindex>
@@ -11,14 +20,16 @@ import { links } from "~/lib/site";
         the brand accent. Wrong, plausible, and silent. */}
     <p class="display text-6xl" style="color: var(--color-accent);">404</p>
     <h1 class="tds-page__title tool-title mt-4">Diese Seite gibt es nicht.</h1>
-    <p class="tds-page__lede mt-3">Vielleicht findest du das passende Werkzeug in der Übersicht.</p>
+    <p class="tds-page__lede mt-3">
+      Vielleicht finden Sie das passende Werkzeug in der Übersicht.
+    </p>
     <div class="mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-3">
       <a href="/" class="btn btn-primary no-underline">Zu allen Tools</a>
       {/* `.tnav-link` for the colour, not a `text-…` utility — see the note on
           the rule in global.css: an unlayered shared class beats any layered
           Tailwind utility on the same element. */}
-      <a href={links.blog} class="tnav-link link-underline text-sm">Zum Blog</a>
-      <a href={links.main} class="tnav-link link-underline text-sm">Zur Startseite</a>
+      <a href={links.blog} class="tnav-link link-underline text-sm">{s.toBlog}</a>
+      <a href={links.main} class="tnav-link link-underline text-sm">{s.toHome}</a>
     </div>
   </div>
 </Layout>

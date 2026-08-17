@@ -1,0 +1,40 @@
+---
+/**
+ * The site's one piece of marketing copy: a single line at the foot of the
+ * catalog and of each tool page, naming what the business does and linking
+ * once to the contact form.
+ *
+ * Deliberately restrained. This is a free-tools site whose visitors arrived
+ * from a search for "qr code generator"; a boxed call-to-action after every
+ * tool would read as bait. One sentence, in the flow, on the page's own
+ * ground — no card, no second accent colour, no second CTA competing with the
+ * one in the header.
+ *
+ * Two copy rules apply to every word here and are pinned by
+ * `marketing.test.ts`, because nothing else can see them:
+ *  - **No free or time-limited initial consultation.** The classifieds ads
+ *    offer one; the web properties deliberately do not. The call is
+ *    "Unverbindlich anfragen".
+ *  - **No customer is ever named**, not even anonymised as a case study.
+ */
+import { links } from "~/lib/site";
+import { t } from "~/lib/i18n";
+import type { Lang } from "~/lib/seo";
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = "de" } = Astro.props;
+const s = t(lang);
+---
+
+{/* A `--color-soft` block separates it from the page without an outline —
+    the flat kit's own device, the same one `.tool-card` uses. */}
+<aside class="service-note">
+  <p class="service-note__text">{s.serviceNote}</p>
+  {/* `.link-underline` (tds-shared) inherits its colour, so the accent is set
+      by the class in global.css rather than by a utility here: tds-shared is
+      unlayered CSS and beats anything in `@layer utilities`. */}
+  <a href={links.contact} class="service-note__cta link-underline">{s.serviceNoteCta}</a>
+</aside>

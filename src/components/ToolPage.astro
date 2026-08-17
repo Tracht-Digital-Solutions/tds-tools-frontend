@@ -1,0 +1,181 @@
+---
+/**
+ * The whole tool page, in one language.
+ *
+ * Both `pages/tools/[slug].astro` and `pages/en/tools/[slug].astro` render
+ * this with a different `lang`. Keeping the body here rather than in the two
+ * route files is not just DRY: a page template that exists twice drifts, and
+ * the half that drifts is always the one nobody looks at — which, on this
+ * site, is the English one.
+ */
+import Layout from "~/layouts/Layout.astro";
+import AdSlot from "~/components/AdSlot.astro";
+import Icon from "~/components/Icon.astro";
+import ToolGate from "~/components/ToolGate.tsx";
+import ToolGuide from "~/components/ToolGuide.astro";
+import RelatedTools from "~/components/RelatedTools.astro";
+import ServiceNote from "~/components/ServiceNote.astro";
+import { components } from "virtual:tools-components";
+import { adsConfig } from "~/lib/catalog";
+import { site } from "~/lib/site";
+import { t, toolCopyFor } from "~/lib/i18n";
+import { localizedPath, type Lang } from "~/lib/seo";
+import {
+  asGraph,
+  breadcrumbSchema,
+  faqPageSchema,
+  howToSchema,
+  softwareApplicationSchema,
+} from "~/lib/jsonld";
+import { guideFor } from "~/lib/guides";
+import type { ResolvedTool } from "~/lib/catalog";
+
+interface Props {
+  tool: ResolvedTool;
+  allTools: ResolvedTool[];
+  lang: Lang;
+}
+
+const { tool, allTools, lang } = Astro.props;
+const s = t(lang);
+const ads = await adsConfig();
+
+/** "" for German, "/en" for English — every in-site link is built from it. */
+const base = lang === "de" ? "" : "/en";
+
+// The tool's UI component, statically imported by `toolHost` into the
+// components map keyed by tool id.
+const Tool = components[tool.id] as unknown as (props: Record<string, unknown>) => unknown;
+
+// Premium tools suppress ads (paid experience); free tools show them if enabled.
+const showAds = ads.enabled && !!ads.slotTool && !tool.isPremium;
+
+// Login-required or premium tools render behind a client-side gate: the tool
+// body is hidden until the gate confirms the shared session (and, for premium,
+// the entitlement). Free tools render directly.
+const gated = tool.requiresLogin || tool.isPremium;
+
+// German copy comes from the pack manifest, English from `lib/i18n`.
+const copy = toolCopyFor(lang, tool, site.name);
+const toolUrl = `${site.origin}${localizedPath(`/tools/${tool.slug}`, lang)}`;
+
+/* The guide feeds the visible section AND the HowTo/FAQPage nodes. One
+   source: Google drops a FAQ rich result when the structured answer differs
+   from the visible one, and two copies of a sentence diverge on the first
+   edit. A tool without a guide simply contributes neither node. */
+const guide = guideFor(tool.slug, lang);
+
+/* The breadcrumb this page has always DRAWN, now also declared. Without the
+   node the hierarchy was visible to a reader and to nothing else — a search
+   result showed the bare URL where it could have shown
+   "Alle Tools › QR-Code-Generator". */
+const jsonLd = asGraph(
+  softwareApplicationSchema({
+    name: copy.name,
+    url: toolUrl,
+    description: copy.description,
+    type: tool.seo?.jsonLdType ?? "WebApplication",
+    lang,
+    isFree: !tool.isPremium,
+    priceCents: tool.priceCents,
+    keywords: tool.keywords,
+  }),
+  breadcrumbSchema([
+    { name: s.breadcrumbAll, url: `${site.origin}${base}/` },
+    { name: copy.name, url: toolUrl },
+  ]),
+  ...(guide
+    ? [
+        howToSchema(
+          lang === "de" ? `${copy.name} verwenden` : `How to use ${copy.name}`,
+          guide.steps,
+        ),
+        faqPageSchema(guide.faq),
+      ]
+    : []),
+);
+---
+
+<Layout
+  title={copy.seoTitle}
+  description={copy.description}
+  lang={lang}
+  ogImage={`/og/tools/${tool.slug}.png`}
+  jsonLd={jsonLd}
+>
+  <div class="tds-page mx-auto max-w-4xl px-4 py-10 sm:px-6">
+    <nav class="text-sm text-[color:var(--color-muted)]">
+      {/* `.tnav-link` carries the muted→ink hover. A `hover:text-…` utility
+          would not: tds-shared is unlayered and `.link-underline` declares
+          `color: inherit`, which beats anything in `@layer utilities`. */}
+      <a href={`${base}/`} class="tnav-link link-underline">{s.breadcrumbAll}</a>
+      <span class="mx-2">/</span>
+      <span class="text-[color:var(--color-ink)]">{copy.name}</span>
+    </nav>
+
+    {/* The page head is the journal's display voice (`.tool-title`, this
+        repo's global.css), not the panel's product heading: `.tds-page__title`
+        alone is the 1.5rem base size, because the fluid, heavier override the
+        products get lives in app.css behind `[data-surface="panel"]` — which
+        this site no longer is. */}
+    {/* Head and lede are ONE group. `.tds-page` is a flex column with a
+        uniform 1.5rem gap, which spaced a title from its own subtitle exactly
+        as far as from the tool below it — on a surface with no edges left to
+        mark the zones, equal gaps read as four unrelated blocks. */}
+    <div class="tool-intro">
+      <div class="tds-page__head">
+        <h1 class="tds-page__title tool-title flex items-center gap-3">
+          <Icon name={tool.icon} class="h-7 w-7 text-[color:var(--color-accent)]" />
+          {copy.name}
+        </h1>
+      </div>
+      <p class="tds-page__lede max-w-2xl">{copy.description}</p>
+    </div>
+
+    {gated && (
+      <ToolGate
+        client:load
+        toolId={tool.id}
+        requiresLogin={tool.requiresLogin}
+        isPremium={tool.isPremium}
+        priceCents={tool.priceCents}
+        bodySelector="#tool-body"
+      />
+    )}
+
+    {/* `lang` reaches the island through the pack's shell, so an English page
+        renders an English tool rather than a half-translated one. Packs
+        default the prop to German, so an older pinned pack still works. */}
+    <section id="tool-body" hidden={gated} class="tds-card p-5 sm:p-7">
+      {Tool ? (
+        <Tool lang={lang} />
+      ) : (
+        <p class="text-[color:var(--color-danger)]">
+          {lang === "de"
+            ? "Dieses Tool konnte nicht geladen werden."
+            : "This tool could not be loaded."}
+        </p>
+      )}
+    </section>
+
+    {showAds && <AdSlot client={ads.publisherId} slot={ads.slotTool} />}
+
+    {/* The guide sits BELOW the tool, never above it: someone who searched
+        for "qr code generator" came to use one, and a wall of prose between
+        the heading and the input is the pattern that made recipe sites a
+        punchline. It is still on the page, in the DOM, ahead of the footer —
+        which is all the crawler needs. */}
+    {guide && <ToolGuide guide={guide} toolName={copy.name} lang={lang} />}
+    {guide && (
+      <RelatedTools
+        slugs={guide.related}
+        all={allTools}
+        current={tool.slug}
+        lang={lang}
+        base={base}
+      />
+    )}
+
+    <ServiceNote lang={lang} />
+  </div>
+</Layout>

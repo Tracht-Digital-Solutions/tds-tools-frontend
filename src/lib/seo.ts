@@ -99,7 +99,7 @@ export type Lang = "de" | "en";
  *
  * Flip to `true` in the same change that adds `src/pages/en/**`.
  */
-export const EN_ENABLED = false;
+export const EN_ENABLED = true;
 
 /**
  * hreflang/OG locale pairs. `x-default` points at the German page: the

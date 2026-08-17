@@ -1,10 +1,24 @@
 ---
 import Icon from "~/components/Icon.astro";
+import { toolCopyFor } from "~/lib/i18n";
+import { site } from "~/lib/site";
+import type { Lang } from "~/lib/seo";
 import type { ResolvedTool } from "~/lib/catalog";
+
 interface Props {
   tool: ResolvedTool;
+  lang?: Lang;
+  /** URL prefix for the language tree ("" for German, "/en" for English). */
+  base?: string;
 }
-const { tool } = Astro.props;
+
+const { tool, lang = "de", base = "" } = Astro.props;
+// German comes from the pack manifest, English from `lib/i18n` — a catalog
+// card must speak the page's language, not the manifest's.
+const copy = toolCopyFor(lang, tool, site.name);
+const badges = lang === "de"
+  ? { premium: "Premium", login: "Login" }
+  : { premium: "Premium", login: "Sign-in" };
 ---
 
 {/* The journal's flat card (`.tool-card`, this repo's global.css): a
@@ -19,16 +33,16 @@ const { tool } = Astro.props;
     pair re-implemented `chip--warning` / `chip--info` with hand-authored
     geometry, which then kept the marketing pill shape on a surface that rounds
     nothing. */}
-<a href={`/tools/${tool.slug}`} class="tool-card">
+<a href={`${base}/tools/${tool.slug}`} class="tool-card">
   <span class="tool-card__title">
     <Icon name={tool.icon} class="h-5 w-5 text-[color:var(--color-accent)]" />
-    {tool.name}
+    {copy.name}
   </span>
-  <p class="tool-card__desc">{tool.description}</p>
+  <p class="tool-card__desc">{copy.description}</p>
   {(tool.isPremium || tool.requiresLogin) && (
     <span class="mt-auto flex flex-wrap gap-1.5 pt-1">
-      {tool.isPremium && <span class="chip chip--warning">Premium</span>}
-      {tool.requiresLogin && <span class="chip chip--info">Login</span>}
+      {tool.isPremium && <span class="chip chip--warning">{badges.premium}</span>}
+      {tool.requiresLogin && <span class="chip chip--info">{badges.login}</span>}
     </span>
   )}
 </a>

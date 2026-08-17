@@ -1,0 +1,127 @@
+---
+/**
+ * The catalog, in one language. Rendered by `pages/index.astro` and
+ * `pages/en/index.astro` — see the note in ToolPage.astro on why the body
+ * lives in a component rather than in two route files.
+ */
+import Layout from "~/layouts/Layout.astro";
+import ToolCard from "~/components/ToolCard.astro";
+import AdSlot from "~/components/AdSlot.astro";
+import ServiceNote from "~/components/ServiceNote.astro";
+import { enabledTools, adsConfig } from "~/lib/catalog";
+import { site, links, categoryOrder } from "~/lib/site";
+import { categoryLabels, t, toolCopyFor } from "~/lib/i18n";
+import { localizedPath, type Lang } from "~/lib/seo";
+import {
+  asGraph,
+  itemListSchema,
+  organizationSchema,
+  personSchema,
+  websiteSchema,
+} from "~/lib/jsonld";
+import type { ToolCategory } from "@tracht-digital-solutions/tds-tools-contract";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const s = t(lang);
+const labels = categoryLabels[lang];
+const base = lang === "de" ? "" : "/en";
+
+const tools = await enabledTools();
+const ads = await adsConfig();
+
+// Group enabled tools by category, in the site's stable category order.
+const groups = categoryOrder
+  .map((cat) => ({ cat, tools: tools.filter((tool) => tool.category === cat) }))
+  .filter((group) => group.tools.length > 0);
+
+/* One `@graph`, not four sibling script blocks: inside a graph the nodes
+   reference each other by `@id`, so the organization is DESCRIBED once here
+   and merely POINTED AT from every tool page. Emitting a second, differently
+   shaped Organization per page is how a site ends up looking like several
+   businesses that share a logo.
+   The organization node is anchored on the main site's origin for the same
+   reason — see `lib/jsonld.ts`. */
+const jsonLd = asGraph(
+  organizationSchema(),
+  personSchema(),
+  websiteSchema(s.description),
+  itemListSchema(
+    // The listed NAMES follow the page language too. They used to come
+    // straight off the manifest, so the English catalog advertised
+    // "PDF-Werkzeuge" to a crawler while the card beside it said "PDF Tools".
+    tools.map((tool) => ({
+      name: toolCopyFor(lang, tool, site.name).name,
+      url: `${site.origin}${localizedPath(`/tools/${tool.slug}`, lang)}`,
+    })),
+  ),
+);
+---
+
+<Layout
+  title={`${site.name} — ${s.tagline}`}
+  description={s.description}
+  lang={lang}
+  jsonLd={jsonLd}
+>
+  {/* Flat navy hero band, the journal's own hero treatment: an `.eyebrow` in
+      coral, a `.display` headline with one accent word, the brand accent bar.
+      `.display` and `.eyebrow` are shared type primitives — the blog surface
+      is what makes them read at weight 800 with the display face, so neither
+      the weight nor the family belongs in this markup. */}
+  <section class="tools-hero">
+    <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
+      <p class="eyebrow" style="color: var(--color-accent-pink);">{s.heroEyebrow}</p>
+      <h1 class="display mt-3 max-w-3xl text-4xl leading-tight sm:text-5xl">
+        {s.heroHeadlineLead}{" "}
+        <span class="accent-italic" style="color: var(--color-accent-pink);">
+          {s.heroHeadlineAccent}
+        </span>{" "}
+        {s.heroHeadlineTail}
+      </h1>
+      {/* The three-part brand accent, on its lifted run because the hero
+          band is a fixed dark surface in both themes. */}
+      <span aria-hidden="true" class="tds-brandbar tds-brandbar--on-dark mt-5"></span>
+      <p class="mt-4 max-w-2xl text-lg" style="color: rgb(255 255 255 / 0.75); line-height: 1.6;">
+        {s.heroBody}
+      </p>
+      {/* The sibling properties, named in the hero as well as the nav: this
+          band is the one thing every visitor sees, including the ones who
+          arrived on a deep link from a search result. */}
+      {/* No colour utility on these: `.link-underline` is unlayered tds-shared
+          CSS and declares `color: inherit`, which beats a layered
+          `text-white/80`. Inheriting is right here anyway — the band's own
+          white — and the underline follows as `currentColor`. */}
+      <p class="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
+        <a href={links.blog} class="link-underline">{s.toBlog}</a>
+        <a href={links.main} class="link-underline">{s.toHome}</a>
+      </p>
+    </div>
+  </section>
+
+  <div class="mx-auto max-w-6xl px-4 py-12 sm:px-6">
+    {ads.enabled && ads.slotCatalog && <AdSlot client={ads.publisherId} slot={ads.slotCatalog} />}
+
+    {groups.length === 0 ? (
+      <p class="text-[color:var(--color-muted)]">{s.emptyCatalog}</p>
+    ) : (
+      groups.map(({ cat, tools: catTools }) => (
+        <section id={`kategorie-${cat}`} class="cat-section">
+          <div class="cat-head">
+            <h2 class="cat-head__label">{labels[cat as ToolCategory]}</h2>
+            <span class="cat-head__count">{s.toolCount(catTools.length)}</span>
+          </div>
+          <span aria-hidden="true" class="cat-head__mark"></span>
+          <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {catTools.map((tool) => <ToolCard tool={tool} lang={lang} base={base} />)}
+          </div>
+        </section>
+      ))
+    )}
+
+    <ServiceNote lang={lang} />
+  </div>
+</Layout>

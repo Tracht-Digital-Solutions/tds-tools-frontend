@@ -4,8 +4,13 @@ import ToolPage from "~/components/ToolPage.astro";
 import { enabledTools } from "~/lib/catalog";
 import type { ResolvedTool } from "~/lib/catalog";
 
-// One static page per enabled tool. The resolved tool (manifest + admin flags)
-// rides along as a prop so the body doesn't re-resolve the catalog per page.
+/**
+ * The English tool pages. Deliberately the SAME slugs as the German tree:
+ * `/tools/qr-code-generator` and `/en/tools/qr-code-generator`. That makes an
+ * hreflang pair a pure prefix operation (`localizedPath`), so the two URLs
+ * always name each other — the single most common way an hreflang set goes
+ * wrong is one side pointing at a URL that does not point back.
+ */
 export const getStaticPaths = (async () => {
   const tools = await enabledTools();
   return tools.map((tool) => ({ params: { slug: tool.slug }, props: { tool } }));
@@ -15,9 +20,7 @@ interface Props {
   tool: ResolvedTool;
 }
 const { tool } = Astro.props;
-// Memoised for the whole build (see lib/catalog.ts), so resolving the related
-// tools costs nothing per page.
 const allTools = await enabledTools();
 ---
 
-<ToolPage tool={tool} allTools={allTools} lang="de" />
+<ToolPage tool={tool} allTools={allTools} lang="en" />

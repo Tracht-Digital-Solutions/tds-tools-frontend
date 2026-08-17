@@ -77,6 +77,82 @@ const guide: ToolGuideSet = {
     ],
     related: ["qr-code-generator", "kontrast-checker"],
   },
+  en: {
+    intro: [
+      "If you run ads, send a newsletter or hand out flyers, your website statistics afterwards usually tell you one thing: visitors arrived. Exactly where from stays open — and with it the question of which effort paid off. UTM parameters solve that by attaching the origin to the link itself. Your analytics reads them and files the visit under the right source.",
+      "Such a link looks like your normal address, extended with values like utm_source, utm_medium and utm_campaign. This tool assembles it correctly: it encodes special characters, turns your input into clean lower case without spaces, and shows the finished link ready to copy.",
+      "The value of all this stands or falls with consistency. Newsletter, newsletter and Newsletter-May are three different sources to a report, and nobody notices until it splits into five rows that all mean the same thing. Decide on one spelling and stick to it.",
+    ],
+    useCases: [
+      {
+        title: "Measuring a newsletter",
+        text: "A separate link per send shows which subject actually produced clicks — not merely who opened the mail.",
+      },
+      {
+        title: "Separating paid ads",
+        text: "Distinct tagging per platform and creative makes it visible which one brings visitors and which one only spends budget.",
+      },
+      {
+        title: "Making print measurable",
+        text: "The link behind a QR code on a flyer, poster or vehicle turns printed advertising into something with a traceable result.",
+      },
+      {
+        title: "Directory listings",
+        text: "Trade directories, classifieds and map services each get their own link — so you can see which listing is worth its price.",
+      },
+      {
+        title: "Social media profiles",
+        text: "The link in a profile gets its own tagging, kept separate from links inside individual posts.",
+      },
+    ],
+    steps: [
+      {
+        title: "Enter the destination",
+        description:
+          "Start with the page visitors should land on — complete with https://, and ideally the precise sub-page rather than the home page by default.",
+      },
+      {
+        title: "Give a source and a medium",
+        description:
+          "The source is where the link sits: newsletter, instagram, flyer. The medium is the kind: email, social, print, cpc. Both are the minimum for a report to separate anything at all.",
+      },
+      {
+        title: "Name the campaign",
+        description:
+          "The campaign groups one effort together, such as spring-2026 or open-day. Use the same name across every channel of one activity, or it cannot be evaluated as a whole later.",
+      },
+      {
+        title: "Copy the link and use it",
+        description:
+          "Copy the finished link and use it everywhere that source links to you. Try it once in a browser: the page must load normally, with the parameters visible in the address bar.",
+      },
+    ],
+    privacy:
+      "The link is assembled entirely in your browser; neither the destination nor the campaign name is transmitted or stored. A note about the thing itself: UTM parameters are visible to your visitors, sitting in plain view in the address bar. So do not put anything in them that should not be public — internal codes, budget figures or client names have no place there.",
+    faq: [
+      {
+        q: "Which parameters do I actually need?",
+        a: "utm_source and utm_medium are the minimum; utm_campaign joins them as soon as you want to tell several activities apart. utm_term and utm_content are refinements for search ads and A/B tests and can stay empty in most cases.",
+      },
+      {
+        q: "Do UTM links hurt my SEO?",
+        a: "For links pointing at your own site from ads, newsletters or printed material this is not a concern. Do not use UTM parameters for internal links within your website, though — there they create several addresses for one page and muddle the reporting.",
+      },
+      {
+        q: "Why is my input converted to lower case?",
+        a: "Because analytics tools distinguish upper and lower case. Newsletter and newsletter appear as two separate sources in the report. The tool therefore normalises automatically and replaces spaces with hyphens.",
+      },
+      {
+        q: "Does this work without Google Analytics?",
+        a: "Yes. UTM parameters are a convention in the address, not a Google product. Matomo, Plausible, Fathom and practically any server log analysis understand them too.",
+      },
+      {
+        q: "Can I shorten the link?",
+        a: "Yes — a link shortener or a redirect of your own preserves the parameters when forwarding. For printed advertising that makes sense; there a QR code usually carries the link anyway, at which point its length stops mattering.",
+      },
+    ],
+    related: ["qr-code-generator", "kontrast-checker"],
+  },
 };
 
 export default guide;

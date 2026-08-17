@@ -77,6 +77,82 @@ const guide: ToolGuideSet = {
     ],
     related: ["utm-link-generator", "bild-komprimieren"],
   },
+  en: {
+    intro: [
+      "A QR code is nothing more than an address in the shape of a picture. Point a phone camera at it and the person lands directly on your website, on your business Wi-Fi, or with your contact details in their address book — without anyone having to type. That is where the practical value sits: every character a customer is asked to enter themselves is an opportunity to mistype it and give up.",
+      "This generator produces four kinds of code: plain URLs and text, Wi-Fi credentials, and contact details as a vCard. You can match the foreground and background colours to your own look, and download the result as a PNG for print or an SVG for scalable use.",
+      "One thing worth knowing: the code contains its destination directly — it is not a redirect through someone else's service. That means it keeps working indefinitely, but it also means the destination cannot be changed afterwards. If you expect the address to move, point the code at a page of your own whose content you can edit instead.",
+    ],
+    useCases: [
+      {
+        title: "Guest Wi-Fi without a printed note",
+        text: "The Wi-Fi code carries the network name and password. Guests connect with one scan instead of copying a 20-character password off a sign.",
+      },
+      {
+        title: "Menu, price list, instructions",
+        text: "A code on the table, the shelf or the machine leads to the current version — and from then on you replace the page, not the stand.",
+      },
+      {
+        title: "A business card that lands in the address book",
+        text: "The vCard code transfers name, company, phone and email in one go. Considerably more reliable than typing a card up later.",
+      },
+      {
+        title: "Making print measurable",
+        text: "Point the code at a link carrying UTM parameters and your analytics will show how many visitors genuinely came from the printed piece.",
+      },
+      {
+        title: "Forms on a vehicle or a building site",
+        text: "A sticker with a code leads straight to the damage, handover or contact form, without anyone needing to know the address.",
+      },
+    ],
+    steps: [
+      {
+        title: "Choose the kind of code",
+        description:
+          "Decide between a URL or free text, Wi-Fi access, and contact details. The input fields below change to match that choice.",
+      },
+      {
+        title: "Enter the content",
+        description:
+          "Fill in the destination — for a website, complete with https://. Wi-Fi adds the network name and password; a vCard adds name, company, phone and email.",
+      },
+      {
+        title: "Adjust the colours",
+        description:
+          "Foreground and background can be matched to your own look. Keep a clear difference between the two: a code that is too light will not be recognised by many cameras.",
+      },
+      {
+        title: "Test it, then download",
+        description:
+          "Scan the code once with your own phone before sending it to print. Then save it as a PNG for paper, or as an SVG for layouts that scale.",
+      },
+    ],
+    privacy:
+      "The code is created entirely in your browser. Neither the destination address nor your Wi-Fi password or contact details are sent to a server or stored anywhere — the tool has no counterpart to send anything to. You can disconnect from the network after the page has loaded and carry on working. With a Wi-Fi password that is not an academic distinction: many online generators send exactly that input to their server to produce the image.",
+    faq: [
+      {
+        q: "Does the QR code expire?",
+        a: "No. The code contains its destination directly and is not tied to a service that has to resolve it. It works for as long as the destination is reachable. That is also precisely why the destination cannot be changed afterwards.",
+      },
+      {
+        q: "PNG or SVG — which should I use?",
+        a: "PNG for anything printed or placed at a fixed size. SVG when the code will be enlarged, for a poster or vehicle lettering: an SVG stays sharp at any size, while a PNG becomes ragged when scaled up.",
+      },
+      {
+        q: "How big does a printed QR code need to be?",
+        a: "A rule of thumb is one tenth of the reading distance: scanning from one metre away needs roughly ten centimetres of edge length. Also leave a white margin several modules wide — without that quiet zone many cameras will not find the code at all.",
+      },
+      {
+        q: "Why is my code not being recognised?",
+        a: "Usually it is the contrast or the missing margin. The foreground has to be clearly darker than the background; many cameras will not read an inverted code. Very long content also makes the pattern finer and harder to read — shorten the address where you can.",
+      },
+      {
+        q: "Can I create codes for clients with this?",
+        a: "Yes, the tool is free and needs no sign-up, commercial use included. If you regularly need many codes, or want to generate them from your own data, that can be automated — get in touch.",
+      },
+    ],
+    related: ["utm-link-generator", "bild-komprimieren"],
+  },
 };
 
 export default guide;

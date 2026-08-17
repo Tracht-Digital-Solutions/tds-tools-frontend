@@ -5,7 +5,7 @@ non-trivial changes.
 
 ## What this is
 
-The public, indexable static site at `tools.tracht-digital.de`. Composes
+The public, indexable static site at `tools.tracht-digital.de`, in German at `/` and English at `/en/`. Composes
 `tds-tool-*` packages (via `tds-tools-contract-pkg`'s `toolHost`) into a tool catalog;
 consent-gated AdSense; admin-controlled catalog + premium from `tds-ext-tools-pkg`.
 A standalone Astro `output:"static"` product modelled on `tds-landingpage-frontend` /
@@ -302,6 +302,66 @@ A standalone Astro `output:"static"` product modelled on `tds-landingpage-fronte
   `tsconfig`'s `paths`; vitest does not read those. Without it any module
   importing through `~/…` fails to LOAD under test, which reads as a broken
   suite rather than a failed assertion.
+- **The site publishes DE at `/` and EN at `/en/`, with the SAME slugs.**
+  `/tools/qr-code-generator` and `/en/tools/qr-code-generator`. That is what
+  makes an hreflang pair a pure prefix operation (`localizedPath` /
+  `neutralPath` in `lib/seo.ts`) and guarantees the two URLs always name each
+  other — the commonest way an hreflang set goes wrong is one side pointing
+  at a URL that does not point back. Both sides emit an identical
+  de/en/x-default block, and `@astrojs/sitemap`'s `i18n` option puts the same
+  pairs in the sitemap (Search Console only calls a set valid when both
+  agree).
+  - **Where each string lives, and why the split is not arbitrary:** a tool's
+    GERMAN name/description/SEO title belongs to its pack manifest, its island
+    labels to the pack's own `STRINGS` table, the site chrome AND the ENGLISH
+    tool copy to `lib/i18n.ts`, and the long-form guide (both languages) to
+    `content/guides`. The English tool copy sits in the site rather than in
+    four manifests for the same reason the description BUDGET test already
+    did: the packs publish independently, and this is the surface that renders
+    those strings into `<title>` and `<meta>`.
+  - **A page template exists ONCE.** `components/CatalogPage.astro` and
+    `components/ToolPage.astro` hold the bodies; the four route files under
+    `pages/` are three lines each. A template that exists twice drifts, and
+    the half that drifts is always the one nobody looks at — here, the English
+    one.
+  - **`lang` reaches the tool ISLANDS through the pack shells** (`<Tool
+    lang={lang} />` → `tools/*.astro` → island). Packs default it to German,
+    so an older pinned pack keeps working; but until the packs are published
+    the local build renders German islands under `<html lang="en">`. Verify
+    the wiring with `npm install --install-links ../tds-tool-*-pkg`, build,
+    and grep the EN page for an English label — then restore the committed
+    `^` ranges (`git checkout -- package.json`), which `--install-links`
+    rewrites to `file:` paths.
+  - **`EN_ENABLED` in `lib/seo.ts` gates the hreflang block** and must agree
+    with the existence of `src/pages/en/` — `seo.test.ts` asserts exactly that.
+    An `hreflang="en"` pointing at a 404 invalidates the whole set, the German
+    side included.
+  - **The language switch links to THIS page in the other language**, never to
+    the other home page: a reader who followed a search result to one tool
+    wants that tool, and a switch that dumps them on the catalog is why people
+    stop using them.
+  - **The budgets are properties of the search engine, not of a language.**
+    `i18n.test.ts` applies the same 80–160 description and ≤ 60 title bounds to
+    the English copy, requires the two languages to differ (an English page
+    carrying the German description is indexed as a duplicate of it), and
+    requires an English guide for every composed tool — a German article under
+    `<html lang="en">` is the exact signal that gets a page classified as thin.
+- **Marketing on this site is ONE line (`components/ServiceNote.astro`) plus
+  the footer's services column.** Visitors arrived from a search for a tool;
+  a boxed call-to-action after every one of them reads as bait, so the note is
+  a `--color-soft` block with no card, no second accent and no second CTA.
+  The footer column exists as internal linking: before it, this property
+  linked to the main domain's home page and nothing else, so no page that
+  actually sells anything was ever pointed at from here.
+  - **`marketing.test.ts` pins the two positioning rules across BOTH languages
+    and every surface that carries copy**: no free or time-limited initial
+    consultation is promised anywhere (the classifieds ads offer one, the web
+    properties deliberately do not), and no customer is ever named. It also
+    pins the canonical CTA — "Unverbindlich anfragen" / "Get in touch". The
+    header used to say "Termin vereinbaren", which promises a scheduled
+    appointment nobody offered. None of this has a visible failure mode: the
+    page renders perfectly and simply makes a commitment the business did not
+    intend to make.
 - **Every meta description has ONE budget: 80 < n ≤ 160**, asserted in
   `lib/site.test.ts` for `site.description` AND for every composed tool.
   `site.description` shipped at **201** characters until 2026-08-16, so the
@@ -320,7 +380,7 @@ A standalone Astro `output:"static"` product modelled on `tds-landingpage-fronte
 
 ## Tests
 
-`npm run test:run` (vitest). 168 tests over `lib/catalog.ts`, `lib/site.ts`,
+`npm run test:run` (vitest). 210 tests over `lib/catalog.ts`, `lib/site.ts`,
 `ToolGate.tsx` and — as plain text — the layout/CSS surface contract
 (`lib/surface.test.ts`). The `.astro` pages otherwise stay on `astro check` +
 the real build.

@@ -7,9 +7,25 @@
  * The columns carry the sibling properties by name — Blog and Startseite are
  * in the header too, deliberately: a reader who has scrolled a catalog to its
  * end is exactly the reader looking for what else exists.
+ *
+ * The third column names the five services and deep-links into the
+ * landingpage's own sections. That is the site's only other piece of
+ * marketing besides the one-line `ServiceNote`, and it earns its place as
+ * internal linking: before it, this property linked to the main domain's home
+ * page and nothing else, so no page that actually sells anything was ever
+ * pointed at from here.
  */
 import { adsConfig } from "~/lib/catalog";
 import { links } from "~/lib/site";
+import { t } from "~/lib/i18n";
+import type { Lang } from "~/lib/seo";
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = "de" } = Astro.props;
+const s = t(lang);
 
 const year = new Date().getFullYear();
 // Ad-consent revoke control — only meaningful when AdSense actually runs, in
@@ -18,21 +34,35 @@ const year = new Date().getFullYear();
 const ads = await adsConfig();
 const adsEnabled = ads.enabled && !!ads.publisherId;
 
+/* The five services, in the landingpage's own order (Digitalisierung leads —
+   it is the primary search target). The anchors are the landingpage's
+   section ids; the labels stay German in both trees because they name the
+   services as that page titles them, and a visitor following the link lands
+   on a German page either way. */
+const services = [
+  { label: "Digitalisierung für Unternehmen", href: `${links.main}/#services` },
+  { label: "Digitale Konzepte", href: `${links.main}/#services` },
+  { label: "Auftragsentwicklung", href: `${links.main}/#services` },
+  { label: "Webauftritt", href: `${links.main}/#services` },
+  { label: "Webshop", href: `${links.main}/#services` },
+];
+
 const groups = [
   {
-    head: "Tracht Digital",
+    head: s.footerGroupBrand,
     items: [
-      { label: "Startseite", href: links.main },
-      { label: "Blog", href: links.blog },
-      { label: "Kundenportal", href: links.portal },
-      { label: "Kontakt", href: links.contact },
+      { label: s.footerHome, href: links.main },
+      { label: s.footerBlog, href: links.blog },
+      { label: s.footerPortal, href: links.portal },
+      { label: s.footerContact, href: links.contact },
     ],
   },
+  { head: s.footerGroupServices, items: services },
   {
-    head: "Rechtliches",
+    head: s.footerGroupLegal,
     items: [
-      { label: "Impressum", href: links.impressum },
-      { label: "Datenschutz", href: links.datenschutz },
+      { label: s.footerImprint, href: links.impressum },
+      { label: s.footerPrivacy, href: links.datenschutz },
     ],
   },
 ];
@@ -42,7 +72,7 @@ const groups = [
     inside the footer, so any shared primitive rendered here reads on the dark
     ground instead of keeping the light page's warm line. */}
 <footer class="mt-20 tds-tone-navy">
-  <div class="mx-auto grid max-w-6xl gap-9 px-4 py-12 sm:px-6 md:grid-cols-[1.4fr_repeat(2,1fr)]">
+  <div class="mx-auto grid max-w-6xl gap-9 px-4 py-12 sm:px-6 md:grid-cols-[1.4fr_repeat(3,1fr)]">
     <div>
       <p class="brand-wordmark mb-3 inline-flex items-center gap-2 text-lg" style="color: #fff;">
         <span class="brand-logo brand-logo--inverse" aria-hidden="true"></span>
@@ -53,8 +83,7 @@ const groups = [
           the properties read as one brand. `--on-dark` is the lifted run. */}
       <span aria-hidden="true" class="tds-brandbar tds-brandbar--sm tds-brandbar--on-dark mb-4"></span>
       <p class="text-sm leading-relaxed" style="color: rgb(255 255 255 / 0.65); max-width: 34ch;">
-        Kostenlose digitale Werkzeuge für die Digitalisierung — direkt im Browser,
-        ohne Anmeldung und ohne Installation.
+        {s.footerBlurb}
       </p>
       <p class="mt-5 text-[0.8125rem]" style="font-family: var(--font-mono); color: rgb(255 255 255 / 0.5);">
         Julian Tracht · 21493 Schwarzenbek bei Hamburg
@@ -82,7 +111,7 @@ const groups = [
     class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 pt-4 pb-8 text-xs sm:px-6"
     style="border-top: 1px solid rgb(255 255 255 / 0.1); font-family: var(--font-mono); color: rgb(255 255 255 / 0.5);"
   >
-    <p>© {year} Tracht Digital Solutions · Digitalisierung für Unternehmen</p>
+    <p>© {year} Tracht Digital Solutions · {s.footerTagline}</p>
     {adsEnabled && (
       <button
         type="button"
@@ -90,7 +119,7 @@ const groups = [
         class="btn btn-ghost"
         style="font-family: var(--font-mono); font-size: inherit;"
       >
-        Werbe-Einwilligung ändern
+        {s.footerAdConsent}
       </button>
     )}
   </div>

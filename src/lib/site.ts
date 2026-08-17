@@ -1,11 +1,18 @@
 import type { ToolCategory } from "@tracht-digital-solutions/tds-tools-contract";
+import { categoryLabels as labels, copy } from "./i18n";
 
 /** Site-wide constants + copy. Keep the NAP in sync with the Impressum + seo.ts
- *  of the other TDS properties (SEO convention). */
+ *  of the other TDS properties (SEO convention).
+ *
+ *  The German copy is DERIVED from `lib/i18n` rather than restated here: the
+ *  site publishes two languages now, and a second copy of the German strings
+ *  is how the two would drift. This module keeps the language-independent
+ *  identity (name, origin) and re-exports the German defaults that predate the
+ *  English tree, so nothing that already imported them had to change. */
 export const site = {
   name: "TDS Tools",
   origin: "https://tools.tracht-digital.de",
-  tagline: "Kostenlose digitale Werkzeuge für Unternehmen",
+  tagline: copy.de.tagline,
   /**
    * Site-level meta description. Google renders roughly the first 155–160
    * characters and truncates the rest — `site.test.ts` fails the build past
@@ -21,8 +28,7 @@ export const site = {
    * on tool queries), and the brand + town ride in the tail where they still
    * fit inside the cut.
    */
-  description:
-    "Kostenlose Online-Tools ohne Anmeldung: QR-Codes, Passwörter, UTM-Links, JSON und Bildkomprimierung — im Browser, von TDS aus Schwarzenbek bei Hamburg.",
+  description: copy.de.description,
 } as const;
 
 /**
@@ -47,16 +53,7 @@ export const links = {
 } as const;
 
 /** German labels for the tool categories (catalog section headings). */
-export const categoryLabels: Record<ToolCategory, string> = {
-  content: "Inhalte",
-  developer: "Entwickler",
-  design: "Design",
-  marketing: "Marketing",
-  media: "Medien",
-  security: "Sicherheit",
-  business: "Business",
-  other: "Weitere",
-};
+export const categoryLabels: Record<ToolCategory, string> = labels.de;
 
 /**
  * "1 Werkzeug" / "n Werkzeuge" for a category heading.
@@ -66,8 +63,7 @@ export const categoryLabels: Record<ToolCategory, string> = {
  * on the page — and because the catalog genuinely produces categories of one
  * (five of the six sections hold one or two tools).
  */
-export const toolCountLabel = (n: number): string =>
-  `${n} ${n === 1 ? "Werkzeug" : "Werkzeuge"}`;
+export const toolCountLabel = (n: number): string => copy.de.toolCount(n);
 
 /** Stable display order of the category sections in the catalog. */
 export const categoryOrder: ToolCategory[] = [

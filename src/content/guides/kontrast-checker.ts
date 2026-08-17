@@ -77,6 +77,82 @@ const guide: ToolGuideSet = {
     ],
     related: ["json-formatter", "bild-komprimieren"],
   },
+  en: {
+    intro: [
+      "Whether text is readable is not decided by taste but by the difference in brightness between the type and its background. The web accessibility guidelines express that as a ratio: 1:1 means identical colours, 21:1 is black on white. From 4.5:1 normal text counts as sufficiently readable, large type from 3:1 — that is level AA. If you want to be stricter, aim for AAA at 7:1.",
+      "This tool calculates the ratio for a pair of colours and tells you straight away which levels pass: AA and AAA, each for normal and for large text. Enter the two colours as hex values or pick them from the colour fields.",
+      "The practical value lies less in the grade than in the correction: almost every corporate grey on white fails narrowly, and almost always it is enough to pull the type a shade darker rather than rework the design. What is often forgotten matters too — every combination that actually occurs needs checking: light text on a coloured button, text over an image, the hint text inside a form field.",
+    ],
+    useCases: [
+      {
+        title: "Checking a new website before launch",
+        text: "Walk through body text, headings, links and buttons once before the site goes live — afterwards every change costs more.",
+      },
+      {
+        title: "Reusing colours from the logo",
+        text: "A brand colour that looks right in a logo is often too light as type. The check shows whether a darker variant is needed.",
+      },
+      {
+        title: "Testing buttons and notices",
+        text: "White type on an action button is the most common silent failure — the button stands out, the text on it is still hard to read.",
+      },
+      {
+        title: "Preparing for public-sector work",
+        text: "Accessibility is binding for public bodies' websites. A contrast check is one of the first items in any acceptance review.",
+      },
+      {
+        title: "Verifying a dark design",
+        text: "Light type on a dark ground behaves differently from the reverse. Both variants of a page deserve to be checked separately.",
+      },
+    ],
+    steps: [
+      {
+        title: "Enter the text colour",
+        description:
+          "Give the type colour as a hex value or pick it from the colour field. Short forms such as #fff are understood as well as the long notation.",
+      },
+      {
+        title: "Enter the background colour",
+        description:
+          "What matters is the colour that genuinely sits behind the text in the finished layout — the surface of the card or the button, not the page colour behind that.",
+      },
+      {
+        title: "Read the result",
+        description:
+          "The ratio appears together with four verdicts: AA and AAA, each for normal and large text. Large means from 18.66 pixels bold or from 24 pixels regular.",
+      },
+      {
+        title: "Adjust",
+        description:
+          "If it falls short, change the brightness of the type colour first and leave the hue alone — the brand impression survives and the text becomes readable anyway.",
+      },
+    ],
+    privacy:
+      "The calculation runs entirely in your browser; no colour values are transmitted or stored. The tool checks the contrast ratio under WCAG 2.1 and nothing else — it is one building block of accessibility, not a certificate of it. Keyboard operability, meaningful alternative texts, labelled form fields and a coherent heading structure all belong to it as well.",
+    faq: [
+      {
+        q: "What is the difference between AA and AAA?",
+        a: "AA requires 4.5:1 for normal and 3:1 for large text, and is the level aimed at in practice. AAA requires 7:1 and 4.5:1 respectively. AAA is demanding for longer body text and is usually only required where a particularly broad readership must be reached.",
+      },
+      {
+        q: "When does type count as large?",
+        a: "From 18.66 pixels in bold or from 24 pixels at normal weight — roughly 14 and 18 point. Below that the stricter requirement for normal text applies.",
+      },
+      {
+        q: "Does this apply to logos and images?",
+        a: "Not to logos as such, which are exempt. Text set as part of an image does have to meet the requirement — and interface controls and graphics that carry information need at least 3:1 against their surroundings.",
+      },
+      {
+        q: "My grey fails narrowly. What now?",
+        a: "Reduce the brightness of the type colour and leave the hue unchanged. In most cases a few per cent is enough to move from 4.1:1 to over 4.5:1 without the overall impression visibly changing.",
+      },
+      {
+        q: "Does my website have to be accessible?",
+        a: "For public bodies in Germany it is binding. Since June 2025 the Barrierefreiheitsstärkungsgesetz has also imposed requirements on many private online offerings, in online retail for instance; micro-enterprises are partly exempt. Regardless of obligation: readable text helps everyone, including in sunlight on a phone.",
+      },
+    ],
+    related: ["json-formatter", "bild-komprimieren"],
+  },
 };
 
 export default guide;
