@@ -125,6 +125,22 @@ describe("session probe", () => {
       "https://tools.tracht-digital.de/tools/pdf-werkzeuge",
     );
   });
+
+  it("points at the CENTRAL login site, not at the customer portal", async () => {
+    // The fallback used to be `https://app.tracht-digital.de/login` — the
+    // portal, which is not the login UI and no longer serves that route. It
+    // survived because production supplies `loginUrl` through
+    // `tds-runtime.json`, so the wrong default was invisible everywhere except
+    // on a fresh host. The test above parses the href as a URL and therefore
+    // never looked at the origin; this one does.
+    fetchMock.mockResolvedValue(res(401));
+    renderGate();
+
+    const link = await screen.findByRole("link", { name: "Anmelden" });
+    const href = new URL(link.getAttribute("href")!);
+    expect(href.origin).toBe("https://auth.tracht-digital.de");
+    expect(link.getAttribute("href")).not.toContain("app.tracht-digital.de");
+  });
 });
 
 describe("free tool behind a login", () => {

@@ -16,7 +16,22 @@ interface Props {
  * the same-origin proxy (`/api/auth/me` instead of the API domain).
  */
 const API = import.meta.env.PUBLIC_API_URL ?? "https://api.tracht-digital.de";
-const LOGIN = import.meta.env.PUBLIC_LOGIN_URL ?? "https://app.tracht-digital.de/login";
+/**
+ * The CENTRAL login site, and the same default `tds-core-frontend-pkg` uses.
+ *
+ * This used to fall back to `https://app.tracht-digital.de/login` — the customer
+ * PORTAL, which is not the login UI and no longer even serves that route (the
+ * host's in-app `/login` was deleted when login moved to the central site). It
+ * only ever worked because the production host happens to supply `loginUrl`
+ * through `tds-runtime.json`; on a fresh host, or if that file were lost, the
+ * gate would have sent people to the wrong domain with nothing to explain it.
+ *
+ * No path: the login form is the index route of `tds-auth-frontend`, and the
+ * `?next=` is appended directly, exactly as `lib/auth.ts` does in the frontend
+ * host. The login site validates that value against a `*.tracht-digital.de`
+ * allow-list, which this origin satisfies.
+ */
+const LOGIN = import.meta.env.PUBLIC_LOGIN_URL ?? "https://auth.tracht-digital.de";
 
 type State = "checking" | "login" | "buy" | "granted" | "error";
 

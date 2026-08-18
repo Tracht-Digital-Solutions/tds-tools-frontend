@@ -486,12 +486,29 @@ A standalone Astro `output:"static"` product modelled on `tds-landingpage-fronte
     crawled, and it now links every premium tool by name.
   - Its copy is scanned by `marketing.test.ts` like all other site copy: no free
     or time-limited initial consultation, no customer ever named, no du-form.
-- **Open question, deliberately not decided here:** the hero headline, the
-  tagline and the meta description still say *"Kostenlose digitale Werkzeuge"* /
-  *"Free digital tools"*, while 8 of the 14 composed tools are now premium. The
-  description only *names* free tools, so it is not false — but the H1 is a claim
-  about the site as a whole. Changing it is an SEO/positioning decision (the site
-  ranks on that keyword), so it is flagged rather than quietly rewritten.
+- **The site no longer calls itself free (2026-08-18).** The hero, the tagline
+  and the meta description said *"Kostenlose digitale Werkzeuge"* / *"Free
+  digital tools"* while 8 of the 14 composed tools are premium. The description
+  only ever *named* free tools, so it was not false — but the H1 and the
+  `<title>` were claims about the whole site, and the `<title>` is the one users
+  read in a search result before deciding to trust it.
+  - **The keyword is kept, its scope is corrected.** "kostenlos" now attaches to
+    the tools it is true of ("vieles kostenlos" / "much of it free") instead of
+    to the property. Dropping the stem entirely would have surrendered the query
+    the free tools actually rank on.
+  - The descriptions now also name **PDF and Texterkennung**, which are real
+    search terms the site had no claim on while its copy listed only the
+    original five free tools.
+  - Budgets after the change: both titles 54/60, descriptions 155 and 151 of
+    160. `seo.test.ts`, `site.test.ts` and `i18n.test.ts` measure all of it.
+- **`ToolGate`'s login fallback is the CENTRAL login**
+  (`https://auth.tracht-digital.de`), the same default `tds-core-frontend-pkg`
+  uses. It used to be `https://app.tracht-digital.de/login` — the customer
+  portal, which is not the login UI and no longer serves that route at all. That
+  survived only because production supplies `loginUrl` via `tds-runtime.json`,
+  so the wrong default was invisible except on a fresh host. The older test
+  parsed the href as a `URL` and asserted only the `next` parameter, which is
+  why it never looked at the origin; `ToolGate.test.tsx` now pins the origin too.
 
 ## The OCR assets are served by this site, and that is the whole privacy claim
 

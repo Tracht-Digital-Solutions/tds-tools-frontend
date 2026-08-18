@@ -75,20 +75,20 @@ export interface SiteCopy {
 
 export const copy = {
   de: {
-    tagline: "Kostenlose digitale Werkzeuge für Unternehmen",
+    tagline: "Werkzeuge für Unternehmen, vieles kostenlos",
     /**
      * Order is deliberate: the concrete tool names come first (this site
      * ranks on tool queries), brand and town ride in the tail where they
      * still fit inside the ~160 characters a SERP renders.
      */
     description:
-      "Kostenlose Online-Tools ohne Anmeldung: QR-Codes, Passwörter, UTM-Links, JSON und Bildkomprimierung — im Browser, von TDS aus Schwarzenbek bei Hamburg.",
+      "Werkzeuge direkt im Browser: QR-Codes, Passwörter, JSON, PDF und Texterkennung — vieles kostenlos und ohne Anmeldung. Von TDS aus Schwarzenbek bei Hamburg.",
     heroEyebrow: "Digitalisierung für Unternehmen",
-    heroHeadlineLead: "Kostenlose digitale",
+    heroHeadlineLead: "Digitale",
     heroHeadlineAccent: "Werkzeuge",
     heroHeadlineTail: "— direkt im Browser.",
     heroBody:
-      "QR-Codes, Passwörter, JSON, Kontrast und mehr. Ohne Anmeldung, ohne Installation. Von Tracht Digital Solutions aus Schwarzenbek bei Hamburg.",
+      "QR-Codes, Passwörter, JSON, PDF-Werkzeuge und Texterkennung. Vieles kostenlos und ohne Anmeldung, alles ohne Installation. Von Tracht Digital Solutions aus Schwarzenbek bei Hamburg.",
     navAllTools: "Alle Tools",
     navBlog: "Blog",
     navHome: "Startseite",
@@ -107,7 +107,7 @@ export const copy = {
     relatedHeading: "Passt dazu",
     breadcrumbAll: "Alle Tools",
     footerBlurb:
-      "Kostenlose digitale Werkzeuge für die Digitalisierung — direkt im Browser, ohne Anmeldung und ohne Installation.",
+      "Digitale Werkzeuge direkt im Browser — ohne Installation, vieles davon kostenlos und ohne Anmeldung.",
     footerGroupBrand: "Tracht Digital",
     footerGroupLegal: "Rechtliches",
     footerGroupServices: "Leistungen",
@@ -136,15 +136,15 @@ export const copy = {
     premiumLead: "Einmalig freischalten:",
   },
   en: {
-    tagline: "Free digital tools for small businesses",
+    tagline: "Digital tools for business, much of it free",
     description:
-      "Free online tools, no sign-up: QR codes, passwords, UTM links, JSON and image compression — in your browser, from TDS in Schwarzenbek near Hamburg.",
+      "Tools straight in your browser: QR codes, passwords, JSON, PDF and text recognition — much of it free, no sign-up. By TDS in Schwarzenbek near Hamburg.",
     heroEyebrow: "Digitalisation for businesses",
-    heroHeadlineLead: "Free digital",
+    heroHeadlineLead: "Digital",
     heroHeadlineAccent: "tools",
     heroHeadlineTail: "— right in your browser.",
     heroBody:
-      "QR codes, passwords, JSON, contrast and more. No sign-up, no installation. By Tracht Digital Solutions in Schwarzenbek near Hamburg.",
+      "QR codes, passwords, JSON, PDF tools and text recognition. Much of it free and without sign-up, all of it without installing anything. By Tracht Digital Solutions in Schwarzenbek near Hamburg.",
     navAllTools: "All tools",
     navBlog: "Blog",
     navHome: "Main site",
@@ -163,7 +163,7 @@ export const copy = {
     relatedHeading: "Related tools",
     breadcrumbAll: "All tools",
     footerBlurb:
-      "Free digital tools — right in your browser, with no sign-up and nothing to install.",
+      "Digital tools right in your browser — nothing to install, much of it free and without a sign-up.",
     footerGroupBrand: "Tracht Digital",
     footerGroupLegal: "Legal",
     footerGroupServices: "Services",
