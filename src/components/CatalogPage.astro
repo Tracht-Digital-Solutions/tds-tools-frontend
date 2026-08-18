@@ -6,6 +6,7 @@
  */
 import Layout from "~/layouts/Layout.astro";
 import ToolCard from "~/components/ToolCard.astro";
+import PremiumNote from "~/components/PremiumNote.astro";
 import AdSlot from "~/components/AdSlot.astro";
 import ServiceNote from "~/components/ServiceNote.astro";
 import { enabledTools, adsConfig } from "~/lib/catalog";
@@ -121,6 +122,8 @@ const jsonLd = asGraph(
         </section>
       ))
     )}
+
+    <PremiumNote tools={tools} lang={lang} base={base} />
 
     <ServiceNote lang={lang} />
   </div>

@@ -35,9 +35,20 @@ const base = lang === "de" ? "" : "/en";
 const path = Astro.url.pathname;
 const onCatalog = neutralPath(path) === "/";
 
-/** The same page in the other language — never a bare link to the other home. */
-const otherLang: Lang = lang === "de" ? "en" : "de";
-const otherHref = localizedPath(path, otherLang);
+/**
+ * Both halves of the DE|EN switch (`.tds-lang-toggle`, tds-shared). This used to
+ * be a single text link showing only the language you were NOT on, which reads
+ * as another nav item and never says which language you are currently reading.
+ *
+ * Both hrefs stay page-equivalent rather than pointing at the two home pages the
+ * way the blog's copy does: somebody who followed a search result to one tool
+ * wants that tool, and a switch that drops them at the catalog is the reason
+ * people stop using switches.
+ */
+const langHrefs: { code: Lang; href: string; label: string }[] = [
+  { code: "de", href: localizedPath(path, "de"), label: "DE" },
+  { code: "en", href: localizedPath(path, "en"), label: "EN" },
+];
 ---
 
 {/* Fill, blur and the warm bottom hairline all come from `.brand-header`
@@ -87,20 +98,24 @@ const otherHref = localizedPath(path, otherLang);
       </a>
       <a href={links.blog} class="tnav-link link-underline px-2 py-2">{s.navBlog}</a>
       <a href={links.main} class="tnav-link link-underline px-2 py-2">{s.navHome}</a>
-      {/* The language switch is a link to THIS page in the other language, not
-          to the other home page: a reader who followed a search result to one
-          tool wants that tool, and a switch that drops them at the catalog is
-          the reason people stop using them. `hreflang` tells assistive tech
-          and crawlers what is on the other end. */}
+      {/* The DE|EN switch — the same `.tds-lang-toggle` the blog carries, so the
+          two public properties behave alike. `aria-current` is what states the
+          active language to assistive tech; `.on` is only paint. `hreflang`
+          tells crawlers what is on the other end. */}
       {EN_ENABLED && (
-        <a
-          href={otherHref}
-          hreflang={otherLang}
-          lang={otherLang}
-          class="tnav-link link-underline px-2 py-2"
-        >
-          {s.languageOther}
-        </a>
+        <div class="tds-lang-toggle ml-1" role="group" aria-label="Sprache / Language">
+          {langHrefs.map((l) => (
+            <a
+              href={l.href}
+              hreflang={l.code}
+              lang={l.code}
+              class={l.code === lang ? "on" : ""}
+              aria-current={l.code === lang ? "true" : undefined}
+            >
+              {l.label}
+            </a>
+          ))}
+        </div>
       )}
     </nav>
 
@@ -161,21 +176,31 @@ const otherHref = localizedPath(path, otherLang);
       </a>
       <a href={links.blog} data-menu-link class="tds-mobile-menu__link">{s.navBlog}</a>
       <a href={links.main} data-menu-link class="tds-mobile-menu__link">{s.navHome}</a>
-      {EN_ENABLED && (
-        <a
-          href={otherHref}
-          hreflang={otherLang}
-          lang={otherLang}
-          data-menu-link
-          class="tds-mobile-menu__link"
-        >
-          {s.languageOther}
-        </a>
-      )}
     </nav>
 
     <div class="mt-3 flex flex-wrap items-center justify-between gap-2 border-t border-[color:var(--color-line)] pt-3">
-      <ThemeToggle client:idle />
+      <div class="flex items-center gap-2">
+        <ThemeToggle client:idle />
+        {/* The switch rides the drawer's control row rather than the link list:
+            it is a setting, not a destination, and the same pairing the blog's
+            drawer uses. */}
+        {EN_ENABLED && (
+          <div class="tds-lang-toggle" role="group" aria-label="Sprache / Language">
+            {langHrefs.map((l) => (
+              <a
+                href={l.href}
+                hreflang={l.code}
+                lang={l.code}
+                data-menu-link
+                class={l.code === lang ? "on" : ""}
+                aria-current={l.code === lang ? "true" : undefined}
+              >
+                {l.label}
+              </a>
+            ))}
+          </div>
+        )}
+      </div>
       <a href={links.contact} data-menu-link class="btn btn-primary no-underline">
         {s.cta}
       </a>

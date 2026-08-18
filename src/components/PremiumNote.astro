@@ -1,0 +1,65 @@
+---
+/**
+ * The block that explains the paid tier and links to every tool in it.
+ *
+ * Why it exists: the premium tools were reachable only by scrolling the catalog
+ * and noticing a badge on a card. The paywall, the entitlement and the checkout
+ * were all built and nothing on the site ever said what unlocking gets you or
+ * that it is a one-off rather than a subscription — the two questions a visitor
+ * actually has.
+ *
+ * It is deliberately NOT a boxed advert with its own accent colour. This is a
+ * site whose visitors arrived from a search for "qr code generator"; the block
+ * sits on the page's own ground like `.service-note`, states the terms plainly
+ * and gets out of the way. The honest framing is also the persuasive one here:
+ * the free tools stay free, and the paid ones run in the same browser with the
+ * same no-upload promise.
+ *
+ * The tool list is derived from the catalog rather than typed out, so a tool
+ * that becomes free in `/tools-verwaltung` leaves this block by itself. It also
+ * gives every premium tool an internal link from the catalog page, which is the
+ * one page that actually gets crawled.
+ *
+ * The same copy rules as `ServiceNote` apply and are pinned by
+ * `marketing.test.ts`: no free or time-limited initial consultation anywhere on
+ * the web properties, and no customer is ever named.
+ */
+import { t } from "~/lib/i18n";
+import { toolCopyFor } from "~/lib/i18n";
+import { site } from "~/lib/site";
+import type { Lang } from "~/lib/seo";
+import type { ResolvedTool } from "~/lib/catalog";
+
+interface Props {
+  tools: ResolvedTool[];
+  lang?: Lang;
+  /** "" for German, "/en" for English — the catalog page already computes it. */
+  base: string;
+}
+
+const { tools, lang = "de", base } = Astro.props;
+const s = t(lang);
+
+const premium = tools.filter((tool) => tool.isPremium);
+---
+
+{/* Renders nothing at all when the catalog has no paid tool. An empty heading
+    promising a tier that does not exist is worse than silence, and the admin
+    can switch every tool to free without this page needing an edit. */}
+{premium.length > 0 && (
+  <section class="premium-note" aria-labelledby="premium-heading">
+    <h2 id="premium-heading" class="premium-note__title">{s.premiumHeading}</h2>
+    <span aria-hidden="true" class="cat-head__mark"></span>
+    <p class="premium-note__text">{s.premiumBody}</p>
+    <p class="premium-note__lead">{s.premiumLead}</p>
+    <ul class="premium-note__list">
+      {premium.map((tool) => (
+        <li>
+          <a href={`${base}/tools/${tool.slug}`} class="link-underline premium-note__link">
+            {toolCopyFor(lang, tool, site.name).name}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+)}

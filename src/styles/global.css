@@ -453,3 +453,54 @@
   color: var(--color-muted);
   text-wrap: pretty;
 }
+
+/* ---- Premium block ---- */
+/* Sits on the page's own ground, not in a card: a boxed advert with its own
+   accent after a free-tools catalog reads as bait, which is the same reason
+   `.service-note` is a plain block. Separation comes from spacing and the 2px
+   accent bar the category headings already use — this surface draws almost no
+   borders, so one more hairline would be the heaviest thing on the page. */
+.premium-note {
+  margin-top: 4rem;
+  padding-top: 0.5rem;
+}
+.premium-note__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: var(--tds-weight-display);
+  letter-spacing: var(--tds-tracking-display);
+  font-size: clamp(1.5rem, 1.15rem + 1.5vw, 1.875rem);
+  line-height: 1.15;
+  color: var(--color-black);
+}
+/* 68ch is the measure body text stays readable at; without it the paragraph
+   runs the full width of the catalog and the eye loses the line. */
+.premium-note__text {
+  max-width: 68ch;
+  margin: 0;
+  line-height: 1.7;
+  color: var(--color-ink);
+  text-wrap: pretty;
+}
+.premium-note__lead {
+  margin: 1.5rem 0 0.625rem;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--color-muted);
+}
+.premium-note__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+/* `.link-underline` (tds-shared) declares `color: inherit`, and being unlayered
+   it beats any Tailwind colour utility on the same element — so the accent is
+   set here, on the app's own unlayered rule. Same reason as `.service-note__cta`
+   and `.tnav-link` above. */
+.premium-note__link {
+  font-weight: 600;
+  color: var(--color-accent);
+}

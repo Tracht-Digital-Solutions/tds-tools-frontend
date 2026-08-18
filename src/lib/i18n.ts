@@ -67,6 +67,10 @@ export interface SiteCopy {
   serviceNoteCta: string;
   languageSwitch: string;
   languageOther: string;
+  /** The premium block under the catalog. */
+  premiumHeading: string;
+  premiumBody: string;
+  premiumLead: string;
 }
 
 export const copy = {
@@ -126,6 +130,10 @@ export const copy = {
     serviceNoteCta: "Unverbindlich anfragen",
     languageSwitch: "Sprache",
     languageOther: "English",
+    premiumHeading: "Freischaltbare Werkzeuge",
+    premiumBody:
+      "Die meisten Werkzeuge hier sind frei nutzbar. Ein paar aufwendigere schaltet man einmalig frei — danach laufen sie genauso im Browser wie alle anderen: ohne Upload, ohne Abo, ohne Konto beim Anbieter der Datei.",
+    premiumLead: "Einmalig freischalten:",
   },
   en: {
     tagline: "Free digital tools for small businesses",
@@ -172,6 +180,10 @@ export const copy = {
     serviceNoteCta: "Get in touch",
     languageSwitch: "Language",
     languageOther: "Deutsch",
+    premiumHeading: "Tools you unlock",
+    premiumBody:
+      "Most tools here are free to use. A few of the heavier ones are unlocked once — after that they run in your browser exactly like the rest: no upload, no subscription, no account with whoever made the file.",
+    premiumLead: "Unlock once:",
   },
 } satisfies Record<Lang, SiteCopy>;
 

@@ -448,6 +448,51 @@ A standalone Astro `output:"static"` product modelled on `tds-landingpage-fronte
   (The two newest packs assert the same budgets on their own side as well, so
   the failure also lands in the repo that owns the sentence.)
 
+## The language switch and the premium block
+
+- **The DE|EN control is `.tds-lang-toggle` from tds-shared (0.25.3), not a local
+  link.** It used to be a single anchor rendering `s.languageOther` — the
+  language you are *not* reading — which looks like another nav item and never
+  states the current language. The blog had a real segmented switch; the class
+  was promoted into the library rather than copied, because a second copy is
+  exactly the drift the surface split exists to end.
+  - `aria-current="true"` on the active half is what carries the state; `.on` is
+    only paint. Setting one without the other renders correctly and lies to a
+    screen reader.
+  - **Both halves point at the equivalent page** (`localizedPath(path, …)`),
+    where the blog's copy points at the two home pages. Deliberate: somebody who
+    followed a search result to one tool wants that tool.
+  - It renders **twice** — the desktop bar and the mobile drawer's control row,
+    beside the theme toggle, because it is a setting and not a destination.
+  - `header.test.ts` pins all of the above, including that the class resolves in
+    the **installed** tds-shared. That last assertion is the lesson from the
+    `data-flat` variant: a 0.x caret can resolve a version predating the
+    primitive, and the class then selects nothing — invisible to `astro check`,
+    to the build, and to any test that reads only this repo.
+  - Known trade-off: the control is 26px tall (24px on phones), matching the
+    blog exactly. That is below the 44px touch target the rest of the kit keeps.
+    Raising it means changing the shared primitive and therefore the blog too.
+- **`PremiumNote.astro` is the only place the paid tier is explained.** The
+  paywall, the entitlement and the checkout were all built while nothing on the
+  site said what unlocking gets you or that it is a one-off rather than a
+  subscription. It derives its list from the catalog, so a tool switched to free
+  in `/tools-verwaltung` leaves the block on the next build with no edit here,
+  and it renders **nothing at all** when no tool is premium — an empty heading
+  promising a tier that does not exist is worse than silence.
+  - It is a plain block on the page's own ground, not a card, for the same
+    reason `ServiceNote` is: visitors arrived from a search for "qr code
+    generator", and a boxed advert after a free-tools catalog reads as bait.
+  - It doubles as internal linking — the catalog is the page that actually gets
+    crawled, and it now links every premium tool by name.
+  - Its copy is scanned by `marketing.test.ts` like all other site copy: no free
+    or time-limited initial consultation, no customer ever named, no du-form.
+- **Open question, deliberately not decided here:** the hero headline, the
+  tagline and the meta description still say *"Kostenlose digitale Werkzeuge"* /
+  *"Free digital tools"*, while 8 of the 14 composed tools are now premium. The
+  description only *names* free tools, so it is not false — but the H1 is a claim
+  about the site as a whole. Changing it is an SEO/positioning decision (the site
+  ranks on that keyword), so it is flagged rather than quietly rewritten.
+
 ## The OCR assets are served by this site, and that is the whole privacy claim
 
 `texterkennung` (from `tds-tool-office`) runs tesseract.js, which by default

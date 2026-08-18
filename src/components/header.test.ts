@@ -126,3 +126,62 @@ describe("mobile navigation", () => {
     expect(raw).not.toMatch(/<script[^>]*\bis:inline\b/);
   });
 });
+
+describe("the DE|EN language switch", () => {
+  it("is the shared segmented control, not a private text link", () => {
+    // It used to be one anchor showing `s.languageOther` — the language you are
+    // NOT reading — which renders as another nav item and never states the
+    // current language. The blog had a real switch; this is the same one.
+    expect(source).toContain("tds-lang-toggle");
+    expect(source).not.toContain("{s.languageOther}");
+  });
+
+  it("offers both languages rather than only the other one", () => {
+    expect(source).toMatch(/label:\s*"DE"/);
+    expect(source).toMatch(/label:\s*"EN"/);
+  });
+
+  it("states the active language to assistive tech, not only in paint", () => {
+    // `.on` is colour. A consumer that paints the active half without setting
+    // aria-current is lying to a screen reader, and nothing renders wrong.
+    expect(source).toContain('aria-current={l.code === lang ? "true" : undefined}');
+    expect(source).toContain('class={l.code === lang ? "on" : ""}');
+  });
+
+  it("labels the group in both languages", () => {
+    // The control names languages in their own tongue, so a single-language
+    // label is wrong for half the people who hear it.
+    expect(source).toContain('aria-label="Sprache / Language"');
+  });
+
+  it("keeps both halves on the equivalent page, never the two home pages", () => {
+    // Somebody who followed a search result to one tool wants that tool; a
+    // switch that drops them at the catalog is why people stop using switches.
+    expect(source).toContain('href: localizedPath(path, "de")');
+    expect(source).toContain('href: localizedPath(path, "en")');
+  });
+
+  it("renders in the mobile drawer as well as the desktop bar", () => {
+    expect(source.match(/tds-lang-toggle/g)?.length).toBe(2);
+  });
+
+  it("resolves the class in the INSTALLED tds-shared", () => {
+    // The lesson from the data-flat variant: a 0.x caret can resolve a version
+    // that predates the primitive, and the attribute then selects nothing —
+    // invisible to astro check, to the build and to any test reading only this
+    // repo. Assert against what node_modules actually holds.
+    const primitives = readFileSync(
+      join(
+        process.cwd(),
+        "node_modules",
+        "@tracht-digital-solutions",
+        "tds-shared",
+        "styles",
+        "primitives.css",
+      ),
+      "utf8",
+    );
+    expect(primitives).toContain(".tds-lang-toggle");
+    expect(primitives).toContain(".tds-lang-toggle a.on");
+  });
+});
