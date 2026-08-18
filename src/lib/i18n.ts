@@ -35,6 +35,8 @@ export interface SiteCopy {
   navAllTools: string;
   navBlog: string;
   navHome: string;
+  /** Accessible name of the mobile navigation toggle. */
+  navMenu: string;
   toBlog: string;
   toHome: string;
   cta: string;
@@ -86,6 +88,7 @@ export const copy = {
     navAllTools: "Alle Tools",
     navBlog: "Blog",
     navHome: "Startseite",
+    navMenu: "Menü",
     toBlog: "Zum Blog",
     toHome: "Zur Startseite",
     cta: "Unverbindlich anfragen",
@@ -137,6 +140,7 @@ export const copy = {
     navAllTools: "All tools",
     navBlog: "Blog",
     navHome: "Main site",
+    navMenu: "Menu",
     toBlog: "To the blog",
     toHome: "To the main site",
     cta: "Get in touch",

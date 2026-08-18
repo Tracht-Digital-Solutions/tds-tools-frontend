@@ -31,6 +31,26 @@ A standalone Astro `output:"static"` product modelled on `tds-landingpage-fronte
 
 ## Gotchas (repo-wide conventions apply — see root CLAUDE.md)
 
+- **The mobile navigation is shared, and it did not exist here at all until
+  2026-08-18 (tds-shared 0.25.0).** The nav used to reflow onto a second
+  full-width row below `sm`; there was no hamburger, no panel, nothing to open.
+  That is worth remembering as a *class* of defect: it was not a bug anyone
+  could see in a diff, and this is a public, indexable property. `Header.astro`
+  now hides its desktop cluster at `lg` and opens the shared `.tds-mobile-menu`
+  sheet via `mountMobileNav` (`@tracht-digital-solutions/tds-shared/nav`);
+  `src/components/header.test.ts` fails if the menu disappears again or if any
+  mechanic gets hand-rolled back into this repo.
+  - **Hide the desktop cluster on a WRAPPER, never on the `.btn` itself.** This
+    file already documented the reason for the CTA: tds-shared is unlayered and
+    `.btn`'s own `display` beats a layered `hidden` utility, so
+    `hidden lg:inline-flex` on a button does nothing whatsoever. Same for the
+    hamburger — its breakpoint belongs to `.tds-menu-toggle`.
+  - **The toggle carries `btn btn-ghost tds-menu-toggle`, all three.**
+    `lint:primitives` accepts only `btn` / `chip` / `tds-dropdown__*`, so the
+    shared geometry class alone would be reported as a bare control.
+  - **The panel's labels are bilingual.** `navMenu` exists in both copy tables;
+    an `aria-label` is exactly the sort of string that gets left in German, and
+    a half-translated surface is the documented failure mode for this site.
 - **`postcss.config.mjs` is REQUIRED.** Tailwind v4 runs through
   `@tailwindcss/postcss` (never `@tailwindcss/vite` — Astro 6/rolldown breaks it).
   Without the postcss config Tailwind never runs — no utilities are generated at
