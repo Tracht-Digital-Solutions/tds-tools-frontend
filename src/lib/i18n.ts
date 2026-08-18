@@ -266,6 +266,52 @@ export const toolCopyEn: Record<string, ToolCopy> = {
       "PDF tools: merge several PDFs, split out a page range and rotate pages. Straight in your browser, with no upload of your documents.",
     seoTitle: "PDF Tools — merge, split, rotate",
   },
+
+  // tds-tool-pdf
+  "pdf-komprimieren": {
+    name: "Compress PDF",
+    description:
+      "Shrink a PDF without an upload: the embedded images are recomputed in your browser while the text is left untouched. For attachments too big to send.",
+    seoTitle: "Compress PDF — reduce the file size",
+  },
+  "pdf-wasserzeichen": {
+    name: "PDF Watermark",
+    description:
+      "Put a watermark on a PDF: “Draft”, “Confidential” or a wording of your own, with an adjustable angle and opacity. Runs locally in your browser.",
+    seoTitle: "Add a PDF watermark — text stamp",
+  },
+  "bilder-zu-pdf": {
+    name: "Images to PDF",
+    description:
+      "Turn photographed receipts and scans into one clean PDF: set the order, choose a page size, done. No upload, straight in your browser.",
+    seoTitle: "Images to PDF — combine JPG and PNG",
+  },
+  "pdf-zu-bildern": {
+    name: "PDF to Images",
+    description:
+      "Convert PDF pages into images: choose the resolution and the format, single pages or all of them. The file never leaves your machine.",
+    seoTitle: "PDF to Images — pages as PNG or JPG",
+  },
+
+  // tds-tool-office
+  "etiketten-drucken": {
+    name: "Print Labels",
+    description:
+      "Make your own label sheet: pick the grid, paste the addresses, print the PDF. Fits the common sheets and needs no installation at all.",
+    seoTitle: "Print labels — address stickers as a PDF",
+  },
+  stundenzettel: {
+    name: "Timesheet",
+    description:
+      "Create a monthly timesheet as a PDF: enter the hours, deduct the breaks, the totals are worked out. Ready to print and sign.",
+    seoTitle: "Create a timesheet — record of working time",
+  },
+  texterkennung: {
+    name: "Text Recognition (OCR)",
+    description:
+      "No more retyping: text recognition for photos and scanned images, German and English. It runs on your device and the picture stays there.",
+    seoTitle: "Text recognition (OCR) — read text from an image",
+  },
 };
 
 /**

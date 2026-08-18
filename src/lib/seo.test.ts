@@ -4,6 +4,8 @@ import { describe, expect, it } from "vitest";
 
 import devkit from "@tracht-digital-solutions/tds-tool-devkit";
 import media from "@tracht-digital-solutions/tds-tool-media";
+import pdf from "@tracht-digital-solutions/tds-tool-pdf";
+import office from "@tracht-digital-solutions/tds-tool-office";
 import qr from "@tracht-digital-solutions/tds-tool-qr";
 import textkit from "@tracht-digital-solutions/tds-tool-textkit";
 
@@ -34,7 +36,7 @@ import { site } from "./site";
  * title budget, the identity data and the structured data.
  */
 
-const tools = [qr, textkit, devkit, media].flatMap((p) => p.tools);
+const tools = [qr, textkit, devkit, media, pdf, office].flatMap((p) => p.tools);
 
 /** Google renders roughly 60 characters of a title before it truncates. */
 const TITLE_RENDERED = 60;

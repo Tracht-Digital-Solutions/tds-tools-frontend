@@ -441,10 +441,43 @@ A standalone Astro `output:"static"` product modelled on `tds-landingpage-fronte
   looking at. That is why it is measured rather than reviewed.
   Order matters: concrete tool names first (this site ranks on tool queries),
   brand + town in the tail where they still fit inside the cut.
-- **The per-tool descriptions are asserted HERE, not in the four
+- **The per-tool descriptions are asserted HERE, not in the six
   `tds-tool-*` repos.** Those publish independently, and this is the surface
   that renders them into `<meta>` — so a pack shipping an over-long or
   duplicate description fails the site build that would have deployed it.
+  (The two newest packs assert the same budgets on their own side as well, so
+  the failure also lands in the repo that owns the sentence.)
+
+## The OCR assets are served by this site, and that is the whole privacy claim
+
+`texterkennung` (from `tds-tool-office`) runs tesseract.js, which by default
+fetches its worker, its WebAssembly core and its language data from a
+third-party CDN. That would make *opening* a tool whose promise is "the image
+never leaves your device" contact somebody else, and it drags a foreign host
+into the consent story. So the island pins `/ocr/worker.min.js`, `/ocr` and
+`/ocr/lang`, and `scripts/sync-ocr.mjs` (a `prebuild` step) fills `public/ocr/`
+out of `node_modules`.
+
+- **The language data is COMMITTED** under `public/ocr/lang/` (~2.7 MB, German
+  and English, `tessdata_fast`); everything else in `public/ocr/` is generated
+  and gitignored. A build that downloaded it would fail whenever that host does,
+  and the failure mode is a premium tool that silently stops recognising
+  anything. `npm run ocr:fetch-lang` re-fetches when a language is added.
+- **The three `-lstm` core builds are all copied.** tesseract.js chooses between
+  a plain, a `simd` and a `relaxedsimd` build at runtime; shipping only the one
+  your machine picks works locally and 404s on somebody else's. It also wants the
+  **single-file** core (`tesseract-core-*.wasm.js`, wasm inlined), not the small
+  loader plus a separate `.wasm`.
+- **The resolver probes paths and deliberately avoids `require.resolve`.** A
+  package with an `exports` map — which both new tool packs have — refuses
+  `require.resolve("<pkg>/package.json")` with `ERR_PACKAGE_PATH_NOT_EXPORTED`,
+  and that throw is indistinguishable from "not installed". It cost one debugging
+  round: the script reported a missing dependency for a package sitting right
+  there, and the only symptom downstream was an empty `dist/ocr/`.
+- The step fails **soft** (a warning, like `sync-installer.mjs`) so a missing
+  optional dependency cannot take the whole site build down.
+- This adds roughly 14 MB to `dist/`. That is the price of not calling a CDN;
+  it is served static and gzipped by the host.
 
 ## Tests
 

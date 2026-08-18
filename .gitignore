@@ -31,3 +31,10 @@ package-lock.json
 # Host-side setup wizard, copied out of tds-shared by the prebuild step.
 # Generated, never edited here — see scripts/sync-installer.mjs.
 public/_setup/
+
+# OCR engine, copied out of node_modules at prebuild (scripts/sync-ocr.mjs).
+# The language data under public/ocr/lang/ IS committed on purpose: a build that
+# downloads it from a third-party host fails whenever that host does, and the
+# failure mode is a premium tool that silently stops recognising anything.
+public/ocr/*
+!public/ocr/lang/

@@ -16,7 +16,7 @@ Tool-Paketen zusammengesetzt.
 | Repo | Typ | Rolle |
 |---|---|---|
 | `tds-tools-contract-pkg` | npm-SDK | `defineTool` / `defineToolPack` / `composeToolPacks` / `toolHost()` |
-| `tds-tool-qr-pkg` `-textkit` `-devkit` `-media` | Tool-Pakete | je 1–n Tools (Manifest + `.astro`/`.tsx`) |
+| `tds-tool-qr-pkg` `-textkit` `-devkit` `-media` `-pdf` `-office` | Tool-Pakete | je 1–n Tools (Manifest + `.astro`/`.tsx`); zusammen 14 Tools, davon 8 premium |
 | `tds-tools-frontend` | Static-Site | die Website; komponiert die Pakete via `toolHost` |
 | `tds-ext-tools-pkg` | Frontend-Extension | Admin-Verwaltung + Backend (Katalog, AdSense, Stripe-Premium) |
 
@@ -83,7 +83,8 @@ bauen (die Geschwister-Repos liegen daneben):
 cd tds-tools-frontend
 npm install ../tds-shared ../tds-tools-contract \
   ../tds-tool-qr ../tds-tool-textkit ../tds-tool-devkit ../tds-tool-media \
-  qrcode pdf-lib --no-save --no-package-lock --install-links
+  ../tds-tool-pdf ../tds-tool-office \
+  qrcode pdf-lib pdfjs-dist tesseract.js --no-save --no-package-lock --install-links
 npm run build
 ```
 
@@ -330,6 +331,43 @@ dort den Schritt *Tool-Katalog übertragen* ausführen. Der Build macht das nich
   Warnung (`paths[name] ?? …`). `site.test.ts` prüft das inzwischen für jedes
   komponierte Tool.
 - Nach jeder Änderung: `AGENTS.md`/`README.md` aktualisieren + Version bumpen.
+
+**f) Und drei Schritte, die diese Anleitung jahrelang verschwiegen hat.** Sie
+stehen hier, weil je eine Testdatei ohne sie rot wird — die Schritte oben allein
+ergeben also gar keinen grünen Build:
+
+1. **Englische Fassung** in `src/lib/i18n.ts` → `toolCopyEn[slug]`
+   (`name`, `description`, `seoTitle`). `i18n.test.ts` scheitert an einem
+   komponierten Tool ohne Eintrag *und* an einem Eintrag ohne Tool.
+2. **Ratgeber** unter `src/content/guides/<slug>.ts`, **deutsch UND englisch**,
+   plus die Registrierung in `src/lib/guides.ts` (Schlüssel ist der **Slug**).
+   `guides.test.ts` misst die Tiefe, nicht die Existenz: ≥ 300 Wörter, ≥ 2
+   Intro-Absätze über 120 Zeichen, ≥ 4 Anwendungsfälle, ≥ 3 Schritte über 80
+   Zeichen, ein Datenschutz-Absatz über 150 Zeichen, ≥ 3 FAQ mit `?` und
+   Antworten über 80 Zeichen. Die englische Fassung braucht **strukturelle
+   Parität** (gleiche Anzahl Schritte, FAQ und Anwendungsfälle, identisches
+   `related`).
+3. **Irgendein anderer Ratgeber muss auf den neuen Slug verlinken.**
+   `guides.test.ts` verlangt, dass jeder Slug aus mindestens einem fremden
+   `related` erreichbar ist — ein neues Tool, auf das niemand zeigt, lässt den
+   Build fallen. Achtung: `related` steht in jeder Datei **zweimal** (`de` und
+   `en`) und wird deep-equal verglichen, also immer beide ändern.
+
+**Copy-Budgets, die gemessen und nicht begutachtet werden** — sie haben kein
+sichtbares Fehlerbild, eine zu lange Description fehlt einfach im Suchergebnis:
+
+| Feld | Grenze | Test |
+|---|---|---|
+| `description` bzw. `seo.description` (DE) | > 80 und ≤ 160, paarweise verschieden | `site.test.ts` |
+| `toolCopyEn[].description` | > 80 und ≤ 160, verschieden, ≠ DE | `i18n.test.ts` |
+| `seo.title` bzw. `${name} — TD Tools` | ≤ 60, verschieden, **nicht** markenführend | `seo.test.ts` |
+| `toolCopyEn[].seoTitle` | ≤ 60, verschieden, nicht markenführend | `i18n.test.ts` |
+
+**Was der Build nicht prüft und ein Browser sofort zeigt:** Schreiben Sie eine
+Tailwind-Arbitrary-Value-Klasse (`rounded-[…]`) niemals als Beispiel in eine
+Doku **innerhalb** eines Tool-Pakets. Die Site scannt das Paket nach
+Utility-Klassen, extrahiert das Beispiel und erzeugt daraus eine ungültige
+CSS-Regel — sichtbar nur als „Found 1 warning while optimizing generated CSS".
 
 ---
 

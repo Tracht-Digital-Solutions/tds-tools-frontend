@@ -7,6 +7,13 @@ import jsonFormatter from "~/content/guides/json-formatter";
 import kontrastChecker from "~/content/guides/kontrast-checker";
 import bildKomprimieren from "~/content/guides/bild-komprimieren";
 import pdfWerkzeuge from "~/content/guides/pdf-werkzeuge";
+import pdfKomprimieren from "~/content/guides/pdf-komprimieren";
+import pdfWasserzeichen from "~/content/guides/pdf-wasserzeichen";
+import bilderZuPdf from "~/content/guides/bilder-zu-pdf";
+import pdfZuBildern from "~/content/guides/pdf-zu-bildern";
+import etikettenDrucken from "~/content/guides/etiketten-drucken";
+import stundenzettel from "~/content/guides/stundenzettel";
+import texterkennung from "~/content/guides/texterkennung";
 
 /**
  * The long-form guide rendered under each tool.
@@ -56,6 +63,13 @@ export const guides: Record<string, ToolGuideSet> = {
   "kontrast-checker": kontrastChecker,
   "bild-komprimieren": bildKomprimieren,
   "pdf-werkzeuge": pdfWerkzeuge,
+  "pdf-komprimieren": pdfKomprimieren,
+  "pdf-wasserzeichen": pdfWasserzeichen,
+  "bilder-zu-pdf": bilderZuPdf,
+  "pdf-zu-bildern": pdfZuBildern,
+  "etiketten-drucken": etikettenDrucken,
+  stundenzettel,
+  texterkennung,
 };
 
 /**

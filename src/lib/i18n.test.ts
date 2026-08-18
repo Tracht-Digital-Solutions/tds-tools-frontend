@@ -2,6 +2,8 @@ import { describe, expect, it } from "vitest";
 
 import devkit from "@tracht-digital-solutions/tds-tool-devkit";
 import media from "@tracht-digital-solutions/tds-tool-media";
+import pdf from "@tracht-digital-solutions/tds-tool-pdf";
+import office from "@tracht-digital-solutions/tds-tool-office";
 import qr from "@tracht-digital-solutions/tds-tool-qr";
 import textkit from "@tracht-digital-solutions/tds-tool-textkit";
 
@@ -22,7 +24,7 @@ import { site, categoryOrder } from "./site";
  * are properties of the search engine, not of a language.
  */
 
-const tools = [qr, textkit, devkit, media].flatMap((p) => p.tools);
+const tools = [qr, textkit, devkit, media, pdf, office].flatMap((p) => p.tools);
 const RENDERED = 160;
 const MIN_USEFUL = 80;
 const TITLE_RENDERED = 60;

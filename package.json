@@ -1,18 +1,19 @@
 {
   "name": "tds-tools-frontend",
-  "version": "0.13.1",
+  "version": "0.14.0",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "astro dev",
-    "prebuild": "node scripts/sync-installer.mjs tools",
+    "prebuild": "node scripts/sync-installer.mjs tools && node scripts/sync-ocr.mjs",
     "build": "astro build",
     "preview": "astro preview",
     "lint:primitives": "node scripts/lint-primitives.mjs src",
     "og:smoke": "tsx scripts/og-smoke.ts",
     "type-check": "astro check",
     "test": "vitest",
-    "test:run": "vitest run"
+    "test:run": "vitest run",
+    "ocr:fetch-lang": "node scripts/fetch-ocr-lang.mjs"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.9",
@@ -26,6 +27,8 @@
     "@tracht-digital-solutions/tds-shared": "^0.25.2",
     "@tracht-digital-solutions/tds-tool-devkit": "^0.1.0",
     "@tracht-digital-solutions/tds-tool-media": "^0.1.0",
+    "@tracht-digital-solutions/tds-tool-office": "^0.1.0",
+    "@tracht-digital-solutions/tds-tool-pdf": "^0.1.0",
     "@tracht-digital-solutions/tds-tool-qr": "^0.1.0",
     "@tracht-digital-solutions/tds-tool-textkit": "^0.1.0",
     "@tracht-digital-solutions/tds-tools-contract": "^1.0.0",

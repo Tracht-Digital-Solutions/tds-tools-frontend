@@ -91,7 +91,7 @@ aren't on GitHub Packages yet. To build against the local copies:
 
 ```bash
 npm install ../tds-shared ../tds-tools-contract \
-  ../tds-tool-qr ../tds-tool-textkit ../tds-tool-devkit \
+  ../tds-tool-qr ../tds-tool-textkit ../tds-tool-devkit ../tds-tool-pdf ../tds-tool-office \
   --no-save --no-package-lock --install-links
 ```
 

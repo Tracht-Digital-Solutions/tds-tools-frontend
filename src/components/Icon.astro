@@ -21,8 +21,20 @@ const paths: Record<string, string> = {
      PDF tool rendered the fallback square on its card AND on its page heading.
      Nothing reports a miss — `paths[name] ?? …` is a silent default — so the
      only check is looking at the page. Every icon a composed pack declares
-     needs a line here; there are 7 tools and 7 keys. */
+     needs a line here; `site.test.ts` now asserts that for every composed tool,
+     which is what turns a silent fallback square into a red build. */
   "file-text": "M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8zM14 3v5h5M9 13h6M9 17h6",
+
+  /* tds-tool-pdf */
+  shrink: "M4 14h6v6M20 10h-6V4M14 10l7-7M3 21l7-7",
+  stamp: "M5 21h14M8 17v-2a5 5 0 0 1-1.5-3.5V9a3 3 0 0 1 3-3h5a3 3 0 0 1 3 3v2.5A5 5 0 0 1 16 15v2zM6 17h12v4H6z",
+  images: "M8 3h13v13H8zM3 8v13h13M12 11l2-2 3 3 2-2",
+  "file-image": "M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8zM14 3v5h5M8 18l3-3 2 2 2-2 2 3z",
+
+  /* tds-tool-office */
+  tags: "M3 7v5l8 8 6-6-8-8H5a2 2 0 0 0-2 2zM7 11h.01M13 3h4a2 2 0 0 1 2 2v4",
+  clock: "M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 7v5l3 2",
+  "scan-text": "M3 8V6a2 2 0 0 1 2-2h2M17 4h2a2 2 0 0 1 2 2v2M21 16v2a2 2 0 0 1-2 2h-2M7 20H5a2 2 0 0 1-2-2v-2M7 9h10M7 13h7M7 17h4",
 };
 const d = paths[name] ?? "M4 4h16v16H4z";
 ---

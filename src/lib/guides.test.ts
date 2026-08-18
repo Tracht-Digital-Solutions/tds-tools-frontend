@@ -2,6 +2,8 @@ import { describe, expect, it } from "vitest";
 
 import devkit from "@tracht-digital-solutions/tds-tool-devkit";
 import media from "@tracht-digital-solutions/tds-tool-media";
+import pdf from "@tracht-digital-solutions/tds-tool-pdf";
+import office from "@tracht-digital-solutions/tds-tool-office";
 import qr from "@tracht-digital-solutions/tds-tool-qr";
 import textkit from "@tracht-digital-solutions/tds-tool-textkit";
 
@@ -23,7 +25,7 @@ import { guideFor, guideWordCount, guides, type ToolGuide } from "./guides";
  * even anonymised as a "case study".
  */
 
-const tools = [qr, textkit, devkit, media].flatMap((p) => p.tools);
+const tools = [qr, textkit, devkit, media, pdf, office].flatMap((p) => p.tools);
 const entries = Object.entries(guides);
 const allDe = entries.map(([slug, set]) => [slug, set.de] as const);
 

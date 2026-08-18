@@ -75,7 +75,7 @@ const guide: ToolGuideSet = {
         a: "Die frei zugänglichen Werkzeuge auf dieser Seite finanzieren sich über Werbung. Die PDF-Werkzeuge kommen ohne Werbung aus und sind stattdessen einmalig freizuschalten — bei Dokumenten aus dem Geschäftsbetrieb ist eine werbefreie, rein lokale Verarbeitung der ehrlichere Handel.",
       },
     ],
-    related: ["bild-komprimieren", "json-formatter"],
+    related: ["pdf-wasserzeichen", "bild-komprimieren"],
   },
   en: {
     intro: [
@@ -151,7 +151,7 @@ const guide: ToolGuideSet = {
         a: "The freely available tools on this site are funded by advertising. The PDF tools carry no advertising and are unlocked once instead — with documents from a business, ad-free and purely local processing is the more honest trade.",
       },
     ],
-    related: ["bild-komprimieren", "json-formatter"],
+    related: ["pdf-wasserzeichen", "bild-komprimieren"],
   },
 };
 

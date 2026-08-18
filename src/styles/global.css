@@ -56,6 +56,8 @@
 @source "../../node_modules/@tracht-digital-solutions/tds-tool-textkit/**/*.{astro,tsx}";
 @source "../../node_modules/@tracht-digital-solutions/tds-tool-devkit/**/*.{astro,tsx}";
 @source "../../node_modules/@tracht-digital-solutions/tds-tool-media/**/*.{astro,tsx}";
+@source "../../node_modules/@tracht-digital-solutions/tds-tool-pdf/**/*.{astro,tsx}";
+@source "../../node_modules/@tracht-digital-solutions/tds-tool-office/**/*.{astro,tsx}";
 /* …and tds-shared itself, for exactly the same reason. Its React islands are
    built out of utilities too (`ThemeToggle` is `inline-flex w-9 h-9
    rounded-full … hover:bg-black/5`), and this was the ONE app of the six

@@ -4,6 +4,8 @@ import { describe, expect, it } from "vitest";
 
 import devkit from "@tracht-digital-solutions/tds-tool-devkit";
 import media from "@tracht-digital-solutions/tds-tool-media";
+import pdf from "@tracht-digital-solutions/tds-tool-pdf";
+import office from "@tracht-digital-solutions/tds-tool-office";
 import qr from "@tracht-digital-solutions/tds-tool-qr";
 import textkit from "@tracht-digital-solutions/tds-tool-textkit";
 
@@ -32,7 +34,7 @@ import { categoryLabels, categoryOrder, site, toolCountLabel } from "./site";
 const RENDERED = 160;
 const MIN_USEFUL = 80;
 
-const packs = [qr, textkit, devkit, media];
+const packs = [qr, textkit, devkit, media, pdf, office];
 const tools = packs.flatMap((p) => p.tools);
 
 describe("the site-level description", () => {
@@ -132,7 +134,10 @@ describe("tool icons", () => {
       "utf8",
     );
     const declared = new Set(
-      [...icon.matchAll(/^\s*"?([a-z-]+)"?:\s*"M/gm)].map((m) => m[1]),
+      // Digits belong in the character class: lucide names several icons that
+      // way (`minimize-2`, `columns-3`), and a key this pattern cannot see reads
+      // as an undeclared icon — a red build over a path sitting right there.
+      [...icon.matchAll(/^\s*"?([a-z0-9-]+)"?:\s*"M/gm)].map((m) => m[1]),
     );
     for (const tool of tools) {
       if (!tool.icon) continue;

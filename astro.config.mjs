@@ -14,8 +14,10 @@ import qr from "@tracht-digital-solutions/tds-tool-qr";
 import textkit from "@tracht-digital-solutions/tds-tool-textkit";
 import devkit from "@tracht-digital-solutions/tds-tool-devkit";
 import media from "@tracht-digital-solutions/tds-tool-media";
+import pdf from "@tracht-digital-solutions/tds-tool-pdf";
+import office from "@tracht-digital-solutions/tds-tool-office";
 
-const packs = [qr, textkit, devkit, media];
+const packs = [qr, textkit, devkit, media, pdf, office];
 
 export default defineConfig({
   site: "https://tools.tracht-digital.de",
