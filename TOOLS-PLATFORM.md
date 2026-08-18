@@ -1,4 +1,4 @@
-# TDS Tools-Plattform — Handbuch (Installation, Betrieb, Erweiterung)
+# TD Tools — Plattform-Handbuch (Installation, Betrieb, Erweiterung)
 
 Praxis-Anleitung für die öffentliche Tools-Plattform `tools.tracht-digital.de`:
 lokal entwickeln, veröffentlichen, ausrollen, im Admin-Frontend konfigurieren und

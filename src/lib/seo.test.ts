@@ -64,7 +64,7 @@ describe("page titles", () => {
 
   it("leads every tool title with the tool, not the brand", () => {
     // A site ranking on tool queries wants the matched words first; a title
-    // that opens with "TDS Tools — …" spends the rendered budget on a brand
+    // that opens with "TD Tools — …" spends the rendered budget on a brand
     // nobody searched for.
     for (const tool of tools) {
       const title = tool.seo?.title ?? `${tool.name} — ${site.name}`;

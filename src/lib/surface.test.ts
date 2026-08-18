@@ -41,16 +41,59 @@ describe("the design surface", () => {
     expect(layout).toMatch(/<html[^>]*data-surface="blog"/);
   });
 
-  it("writes no data-frontend and no data-flat", () => {
+  it("writes data-flat and no data-frontend", () => {
     // `data-frontend` is the panel layer's accent axis — the invariant that
     // keeps this PUBLIC site out of the management red (tds-shared's
-    // design.test.ts pins the other half). `data-flat` is a panel-only
-    // variant; on the blog surface it selects nothing at all, so leaving it
-    // behind would just be a false claim about how this page is styled.
+    // design.test.ts pins the other half). It must stay absent.
+    //
+    // `data-flat` is the opt-in FLAT variant and must stay PRESENT. This
+    // assertion is inverted from what it said in 0.9.0, and the inversion is
+    // the bug: the blog surface is angular and flat but it keeps its
+    // hairlines (an article list separates its rows by their edge), so
+    // dropping the attribute when this site changed surface silently re-drew
+    // an outline around every button, chip, boxed input and card on the site.
     const layout = read(join(SRC, "layouts", "Layout.astro"));
-    const html = layout.match(/<html[^>]*>/)?.[0] ?? "";
+    // Anchored on `data-surface`, not on `<html` alone: the frontmatter
+    // prose above names "<html lang>" while explaining the `lang` prop, and a
+    // bare match lands on THAT — which is a tag carrying neither attribute, so
+    // an absence assertion passes for the wrong reason and a presence one
+    // fails for the wrong reason.
+    const html = layout.match(/<html[^>]*data-surface[^>]*>/)?.[0] ?? "";
+    expect(html, "no <html> tag found").not.toBe("");
     expect(html).not.toMatch(/data-frontend/);
-    expect(html).not.toMatch(/data-flat/);
+    expect(html).toMatch(/data-flat/);
+  });
+
+  it("gets a flat variant that actually SELECTS from the installed library", () => {
+    // The variant has two halves in two files and only one of them is
+    // surface-scoped: the fill counterparts in primitives.css select the bare
+    // `[data-flat]` and reach every surface, while the token half is written
+    // per surface. The blog pairing landed in tds-shared 0.25.1; before it,
+    // writing the attribute here got every fill and none of the flattening —
+    // an attribute selecting nothing, with no symptom in `astro check`, in
+    // the build, or in any test that only reads this repo.
+    //
+    // So this reads the INSTALLED package, not our own source. A pin that
+    // resolves a tds-shared without the pairing is exactly the regression
+    // worth failing on, and a 0.x caret makes that a live possibility.
+    const blog = readFileSync(
+      join(
+        SRC,
+        "..",
+        "node_modules",
+        "@tracht-digital-solutions",
+        "tds-shared",
+        "styles",
+        "surfaces",
+        "blog.css",
+      ),
+      "utf8",
+    );
+    const at = blog.indexOf('[data-surface="blog"][data-flat]');
+    expect(at, "installed tds-shared has no blog flat pairing").toBeGreaterThan(-1);
+    expect(blog.slice(at, blog.indexOf("}", at))).toMatch(
+      /--tds-border-hairline:\s*0/,
+    );
   });
 
   it("imports the blog surface layer and not the panel one", () => {

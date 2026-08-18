@@ -74,11 +74,28 @@ const adsActive = ads.enabled && !!ads.publisherId;
      `--tds-flat-tint` / `--tds-flat-hover` fills. The two public properties
      that link to each other now also read as one property.
 
-     It replaces the panel surface + its `data-flat` variant, which this site
-     was the only consumer of. That pairing was already most of the way here
+     It replaces the panel surface, which this site rendered in the same
+     `data-flat` variant. That pairing was already most of the way here
      (flat is flat), but it kept the panel's 8px cards, 0.75rem chips and
      `--tds-panel-*` colour axis — i.e. it looked like the ADMIN dashboard, on
      a public marketing-adjacent site whose sibling is the journal.
+
+     data-flat is the opt-in FLAT variant, and it came BACK in 0.13.1 after a
+     release without it. The blog surface is angular and flat but it keeps its
+     hairlines — an article list separates its rows by their edge — so moving
+     surface quietly re-drew an outline around every button, chip, boxed input
+     and card on this site. The variant is what drops them:
+     `--tds-border-hairline: 0` from surfaces/blog.css (tds-shared 0.25.1),
+     plus the fill counterparts in primitives.css.
+
+     THOSE FILLS ARE THE POINT, not an implementation detail. Four primitives
+     separate from their ground ONLY by their edge, and this site's tool
+     islands hold all four (20 `.status-pill`, 10 `.field-boxed`, 6 `.chip`,
+     5 `.btn-ghost`): zeroing the token alone would not make the page flatter,
+     it would make a boxed input inside a card completely INVISIBLE, its label
+     colliding into its value. So never chase a stray outline with a local
+     `border: 0` — the counterpart has to come with it, and it lives in
+     tds-shared.
 
      Consequence worth knowing before you edit anything here: the
      `--tds-panel-*` family no longer carries panel VALUES. Real values come
@@ -95,7 +112,7 @@ const adsActive = ads.enabled && !!ads.publisherId;
      Do NOT author radii or shadows locally — that is exactly what made the
      blog repo fork `.chip`, `.display` and `.eyebrow` before the surface
      split. Set a token in the surface layer or use a shared class. -->
-<html lang={lang} data-surface="blog">
+<html lang={lang} data-surface="blog" data-flat>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />

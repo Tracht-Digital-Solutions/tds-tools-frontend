@@ -46,16 +46,25 @@ const otherHref = localizedPath(path, otherLang);
     what the geometry split exists to prevent. */}
 <header class="brand-header">
   <div class="mx-auto flex max-w-6xl flex-wrap items-center gap-x-3 gap-y-1 px-4 py-2.5 sm:gap-x-4 sm:px-6 min-h-15">
-    {/* The TD mark as a mask (`.brand-logo`, tds-shared), so it follows
-        `--color-primary` into dark mode instead of needing an inverted second
-        asset. `py-2` is a touch target, not spacing. */}
+    {/* The mark IS the "TD" of the name — the wordmark reads TD Tools, and
+        the mark carries the first half, so only "Tools" is set in type. Same
+        construction as the journal's (`.brand-logo` + `Journal`), which is
+        what makes the two public properties read as one brand rather than as
+        two sites that happen to share a font.
+
+        `.brand-logo` (tds-shared) is a CSS mask over `--color-primary`, so it
+        follows the theme instead of needing an inverted second asset. Because
+        the mark replaces text, the accessible name has to restate it: the
+        `aria-label` below carries the full `TD Tools`, and the mark itself is
+        `aria-hidden`. Drop that and the link announces as "Tools".
+        `py-2` is a touch target, not spacing. */}
     <a
       href={`${base}/`}
       class="brand-wordmark inline-flex shrink-0 items-center gap-2 py-2 text-[1.0625rem] tracking-tight no-underline"
       aria-label={`${site.name} — ${s.navAllTools}`}
     >
       <span class="brand-logo" aria-hidden="true"></span>
-      <span>TDS <span class="accent-italic">Tools</span></span>
+      <span class="accent-italic">Tools</span>
     </a>
     <span class="nav-divider hidden sm:block" aria-hidden="true"></span>
 

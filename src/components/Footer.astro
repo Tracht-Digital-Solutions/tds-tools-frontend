@@ -74,9 +74,17 @@ const groups = [
 <footer class="mt-20 tds-tone-navy">
   <div class="mx-auto grid max-w-6xl gap-9 px-4 py-12 sm:px-6 md:grid-cols-[1.4fr_repeat(3,1fr)]">
     <div>
+      {/* The wordmark reads TD Tools with the MARK carrying the "TD", the
+          same construction as the header's and as the journal footer's.
+          `--inverse` because this ground is fixed-dark: the mask paints in
+          the page's ink token otherwise, which disappears on navy.
+
+          The mark is decorative to assistive tech, so the "TD" it stands for
+          is restated `sr-only` — without it the brand block announces as the
+          bare word "Tools". */}
       <p class="brand-wordmark mb-3 inline-flex items-center gap-2 text-lg" style="color: #fff;">
         <span class="brand-logo brand-logo--inverse" aria-hidden="true"></span>
-        <span>TDS <span style="color: var(--color-accent-pink);">Tools</span></span>
+        <span><span class="sr-only">TD </span><span style="color: var(--color-accent-pink);">Tools</span></span>
       </p>
       {/* The three-part brand accent as the footer's closing detail — the same
           mark the blog and the landingpage footers carry, which is what makes

@@ -12,9 +12,15 @@ noindex frontend host.
 Since **0.9.0** it renders the same design as the journal: `data-surface="blog"`
 (tds-shared's flat "kantig" kit — no radii, no elevation, colour blocks and 2px
 accent bars), and it links the blog and the main site by name from the header,
-the hero and the footer. It rendered the admin panel's `data-flat` surface
-before that; see `AGENTS.md` for what moved and what breaks silently if a
-`--tds-panel-*` reference is left behind.
+the hero and the footer. It rendered the admin panel's surface before that; see
+`AGENTS.md` for what moved and what breaks silently if a `--tds-panel-*`
+reference is left behind.
+
+Since **0.13.1** the `<html>` also carries **`data-flat`**, the opt-in variant
+that drops every self-outline. The blog surface keeps its hairlines by default,
+so the site had quietly become bordered when it changed surface. The name is
+**TD Tools**, with `.brand-logo` carrying the `TD` and only `Tools` set in type
+— the journal's construction.
 
 > **Operator handbook:** `TOOLS-PLATFORM.md` is the hands-on guide (local dev,
 > release, deploy, admin config, **how to add a new tool**).

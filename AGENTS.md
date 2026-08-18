@@ -111,11 +111,40 @@ A standalone Astro `output:"static"` product modelled on `tds-landingpage-fronte
     surface, restated here because this site has no `.panel-main`. The journal
     sits on plain `--color-paper` and separates with `--color-soft` blocks, so
     the restatement is gone with the surface it belonged to.
-  - **Flat here does NOT mean borderless.** The blog surface keeps
-    `--tds-border-hairline: 1px` — it is angular and unelevated, not edgeless —
-    so `.tds-card`, `.field-boxed`, `.status-pill` and `.chip--neutral` all keep
-    their outlines and need none of the fill counterparts the panel's
-    `data-flat` variant required. Nothing in the tool islands had to change.
+  - **The site is BORDERLESS, and that takes an explicit opt-in:
+    `<html data-surface="blog" data-flat>`.** The blog surface's BASE block
+    keeps `--tds-border-hairline: 1px` — it is angular and unelevated, not
+    edgeless, and an article list separates its rows by their edge. So the
+    move off the panel surface on 2026-08-17 silently re-drew an outline
+    around every button, chip, boxed input and card here; the site had been
+    borderless under `panel` + `data-flat` and simply stopped being so, with
+    nothing red anywhere. `data-flat` is back as of 0.13.1, now paired with
+    the blog layer in tds-shared 0.25.1.
+  - **The variant has TWO HALVES and only one of them is surface-scoped.**
+    The fill counterparts live in `primitives.css` under the bare
+    `[data-flat]` and reach every surface; the token half
+    (`--tds-border-hairline: 0`) is written per surface. Writing the attribute
+    on a layer with no pairing therefore gets every fill and none of the
+    flattening — an attribute that selects nothing, invisible to `astro
+    check`, to the build, and to any test that reads only this repo. So
+    `lib/surface.test.ts` asserts against the INSTALLED
+    `node_modules/@tracht-digital-solutions/tds-shared/styles/surfaces/blog.css`,
+    not against our own source.
+  - **Never chase a stray outline with a local `border: 0`.** Four primitives
+    separate from their ground ONLY by their edge, and the tool islands hold
+    all four (20 `.status-pill`, 10 `.field-boxed`, 6 `.chip`, 5 `.btn-ghost`
+    across the seven packs): removing the edge without the fill counterpart
+    does not make the page flatter, it makes a boxed input inside a card
+    completely invisible with its label colliding into its value. The
+    counterparts belong in tds-shared, next to the token.
+  - **A card inside a card needed a counterpart of its own** (tds-shared
+    0.25.2), and it was found in a browser rather than in a diff: a nested
+    `.tds-card` carries its parent's exact `--color-card` fill, so borderless
+    it merged into it. On this site the nested card is always the RESULT — the
+    QR preview, the contrast sample, the generated password, the generated UTM
+    link — i.e. the thing the visitor came to read and copy. Judge a flat
+    change by rendering the page, not by reading the diff: walk each box to
+    its first opaque ancestor and compare the two `backgroundColor`s.
   - **The card hover cue is site-local and lives on `.tool-card`, not
     `.tds-card`.** `.tool-card` is now the journal's flat card: a `--color-soft`
     colour block, no border, no radius, hover deepening the fill to
@@ -127,9 +156,12 @@ A standalone Astro `output:"static"` product modelled on `tds-landingpage-fronte
   - **The header owns none of its own chrome.** Fill, blur and the warm bottom
     hairline come from `.brand-header`. It used to hand-author an 85% canvas
     tint, `backdrop-blur`, a `border-b` *on top of* the shared rule's own, and
-    `z-40` against the shared stacking ladder's 30. Note the blur is back: the
-    panel's `[data-flat]` variant had turned the bar opaque, and the journal's
-    bar is the translucent one.
+    `z-40` against the shared stacking ladder's 30. The bar is opaque with no
+    blur again, because `[data-flat] .brand-header` turns it so: that class
+    draws its bottom line with a LITERAL 1px the hairline token cannot reach,
+    so the variant is the only thing that can switch it off — and translucency
+    over a blurred page is a depth effect, the one thing on a flat page that
+    still reads as glass.
   - **Choosing the surface is not the same as USING it.** The surface layer only
     sets tokens; they reach an element through a shared class. Until 2026-08-16
     the markup wrote its own geometry — `rounded-2xl` (16px) for the gate box and
@@ -193,6 +225,22 @@ A standalone Astro `output:"static"` product modelled on `tds-landingpage-fronte
   `contain`-fitted mask and renders the mark undersized with nothing to say so.
   The site carried no mark at all until 2026-08-17 — header and footer were text
   wordmarks — so a visitor arriving from `tracht-digital.de` saw no continuity.
+  - **The site is called TD Tools, and the MARK is the "TD".** Header and
+    footer set only `Tools` in type beside `.brand-logo`; the mark carries the
+    first half, exactly as the journal's does (`.brand-logo` + *Journal*),
+    which is what makes the two public properties read as one brand rather
+    than as two sites sharing a font. It was `TDS Tools` written out beside
+    the mark until 0.13.1, i.e. the name rendered twice.
+  - **`site.name` is the SAME string, because it is where the name is written
+    OUT** — the SEO title suffix, the OG eyebrow, the 404, the header's
+    accessible name. The rendered mark and the written name have to agree or
+    the site is called one thing on the page and another in every search
+    result and share card.
+  - **Replacing text with a graphic costs an accessible name.** The mark is
+    `aria-hidden`, so the header link carries `aria-label={`${site.name} — …`}`
+    and the footer restates the `TD` `sr-only`. Without them the brand
+    announces as the bare word "Tools". `components/header.test.ts` pins both
+    halves plus the absence of a written-out `TD`/`TDS` beside the mark.
 - **Category sections are strengthened typographically, not structurally.** Every
   `ToolDef` has always carried a `category` and `index.astro` has always grouped
   by it; with 7 tools over 6 categories those sections run 1–2 cards and the page
@@ -410,8 +458,12 @@ the real build.
   guards is invisible to every other gate: a `var(--tds-panel-…)` left behind
   after the surface move type-checks, builds, minifies and then renders in
   base.css's inert navy fallback rather than the surface's accent. It also pins
-  `data-surface="blog"`, the absence of `data-frontend` / `data-flat`, the
-  imported surface layer, and the blog + main-site links in header and footer.
+  `data-surface="blog"`, the PRESENCE of `data-flat` and the absence of
+  `data-frontend`, the imported surface layer, and the blog + main-site links
+  in header and footer. One assertion deliberately reads the INSTALLED
+  tds-shared rather than this repo: the flat variant's token half is
+  surface-scoped, so a pin resolving a library without the blog pairing gives
+  the site every fill counterpart and none of the flattening, silently.
 - **`virtual:tools-catalog` is aliased to `test/fixtures/tools-catalog.ts`.**
   The real module is generated by `toolHost()` during `astro build`, so it does
   not exist under vitest. The fixture mirrors a real composition — a free tool,

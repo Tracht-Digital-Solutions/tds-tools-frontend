@@ -18,6 +18,7 @@ import { join } from "node:path";
 const SRC = join(process.cwd(), "src");
 const raw = readFileSync(join(SRC, "components", "Header.astro"), "utf8");
 const i18n = readFileSync(join(SRC, "lib", "i18n.ts"), "utf8");
+const site = readFileSync(join(SRC, "lib", "site.ts"), "utf8");
 
 /** This file documents the traps being pinned, so assert against code only. */
 const source = raw
@@ -38,6 +39,28 @@ function openingTag(id: string): string {
   return start === -1 || end === -1 ? "" : source.slice(start, end + 1);
 }
 
+describe("the wordmark", () => {
+  it("lets the logomark carry the TD and sets only Tools in type", () => {
+    // The site is called TD Tools and the MARK is the "TD" — the same
+    // construction as the journal's (`.brand-logo` + "Journal"), which is
+    // what makes the two public properties read as one brand. Spelling the
+    // letters out beside the mark would render the name twice.
+    expect(source).toContain('<span class="brand-logo" aria-hidden="true">');
+    expect(source).toContain("<span class=\"accent-italic\">Tools</span>");
+    // Not "TDS Tools" and not "TD Tools" beside the mark: the mark already
+    // says it, and the two together render the name twice.
+    expect(source, "the mark already says TD").not.toContain("TDS ");
+    expect(source, "the mark already says TD").not.toContain("TD Tools");
+  });
+
+  it("keeps the full name as the link's accessible name", () => {
+    // The mark is `aria-hidden`, so without this the home link announces as
+    // the bare word "Tools" — the one place where replacing text with a
+    // graphic actually costs something.
+    expect(source).toContain("aria-label={`${site.name} — ${s.navAllTools}`}");
+    expect(site).toContain('name: "TD Tools"');
+  });
+});
 describe("mobile navigation", () => {
   it("exists at all", () => {
     // The regression this guards is the site's own history: a public,

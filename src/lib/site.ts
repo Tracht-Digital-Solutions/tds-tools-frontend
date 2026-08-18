@@ -10,7 +10,17 @@ import { categoryLabels as labels, copy } from "./i18n";
  *  identity (name, origin) and re-exports the German defaults that predate the
  *  English tree, so nothing that already imported them had to change. */
 export const site = {
-  name: "TDS Tools",
+  /**
+   * The site's name, as it is written everywhere it is written OUT — the SEO
+   * title suffix, the OG eyebrow, the header's accessible name, the 404.
+   *
+   * "TD Tools", not "TDS Tools": the header and footer set only "Tools" in
+   * type and let `.brand-logo` carry the "TD", the same construction the
+   * journal uses. The rendered mark and the written name have to agree, or
+   * the site is called one thing on the page and another in every search
+   * result and share card.
+   */
+  name: "TD Tools",
   origin: "https://tools.tracht-digital.de",
   tagline: copy.de.tagline,
   /**

@@ -20,7 +20,7 @@
  * 1200×630 — the LinkedIn / X card size:
  *
  *   ┌────────────────────────────────────────────────────────────┐
- *   │  MARKETING · TDS TOOLS                                     │  navy
+ *   │  MARKETING · TD TOOLS                                      │  navy
  *   │                                                            │
  *   │  QR-Code-Generator                                         │
  *   │  ▬▬▬▬ ▬▬ ▬                                                 │
@@ -32,6 +32,7 @@ import fs from "node:fs";
 import path from "node:path";
 import satori from "satori";
 import { Resvg } from "@resvg/resvg-js";
+import { site } from "~/lib/site";
 
 // Resolved from the project root: Astro bundles this module into dist/, where
 // an `import.meta.url`-relative path no longer reaches src/og/fonts.
@@ -201,7 +202,7 @@ async function rasterise(tree: Node): Promise<Buffer> {
 export async function renderDefaultOgPng(): Promise<Buffer> {
   return rasterise(
     card({
-      eyebrow: "TDS Tools",
+      eyebrow: site.name,
       headline: [
         { type: "span", props: { children: "Kostenlose digitale" } },
         { type: "span", props: { style: { color: CORAL }, children: "Werkzeuge." } },
@@ -234,7 +235,7 @@ export async function renderToolOgPng(tool: ToolCardInput): Promise<Buffer> {
 
   return rasterise(
     card({
-      eyebrow: `${tool.category} · TDS Tools`,
+      eyebrow: `${tool.category} · ${site.name}`,
       headline: [{ type: "span", props: { children: tool.name } }],
       headlineSize: headlineSize(tool.name),
       footerLeft: `tools.tracht-digital.de`,
