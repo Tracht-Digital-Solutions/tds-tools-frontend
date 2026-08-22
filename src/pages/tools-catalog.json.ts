@@ -13,7 +13,7 @@ import { catalog as composed } from "virtual:tools-catalog";
  * design.
  *
  * Publishing the catalog as a plain artefact lets the host-side setup wizard
- * (`/_setup/install.php`) do the sync instead, with the token entered in the
+ * (`/install/`) do the sync instead, with the token entered in the
  * form. That is the better home for it anyway: the token stays off the CI
  * runner, and the person who has the token is the person running the setup.
  *

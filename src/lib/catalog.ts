@@ -32,7 +32,7 @@
  *
  * The sync lives host-side now: the build publishes the same payload as a
  * static artefact (`src/pages/tools-catalog.json.ts` → `dist/tools-catalog.json`)
- * and `/_setup/install.php` posts it with the token entered in its form. That
+ * and `/install/` posts it with the token entered in its form. That
  * also keeps the token off the CI runner. See TOOLS-PLATFORM.md.
  */
 

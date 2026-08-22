@@ -11,7 +11,7 @@ interface Props {
 }
 
 /**
- * Build-time fallbacks. A host configured with `/_setup/install.php` overrides
+ * Build-time fallbacks. A host configured with `/install/` overrides
  * both through `tds-runtime.json`, which is also what switches this gate onto
  * the same-origin proxy (`/api/auth/me` instead of the API domain).
  */

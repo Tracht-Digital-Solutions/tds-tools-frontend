@@ -183,7 +183,7 @@ Cross-Repo-Dispatch aus einem Package-Release aus (Abschnitt 2). Einen separaten
 Ab hier sind alle **freien Tools + AdSense** live. AdSense bleibt aus, bis eine
 Publisher-ID im Frontend gesetzt ist (siehe unten).
 
-**4. Optional, aber empfohlen: `https://tools.tracht-digital.de/_setup/install.php`.**
+**4. Optional, aber empfohlen: `https://tools.tracht-digital.de/install`.**
 Jeder Build liefert einen Setup-Assistenten mit (Quelle:
 `@tracht-digital-solutions/tds-shared/install`, kopiert vom `prebuild`-Schritt).
 Er meldet sich per Plattform-Admin-Login an, prüft `GET /tools/catalog` auf
@@ -206,7 +206,7 @@ eingegeben, und der Katalog aus `dist/tools-catalog.json` geht an
 entsprechen.
 
 Nach einem erfolgreichen Lauf sperrt sich der Assistent per
-`_setup/.tds-site-installed` in einen Nur-Lese-Diagnosemodus. Zum Neu-Verbinden
+`install/.tds-site-installed` in einen Nur-Lese-Diagnosemodus. Zum Neu-Verbinden
 diese Datei löschen.
 
 ---
@@ -220,7 +220,7 @@ Tools / AdSense** (Namespace `tools`, DB-first + Env-Fallback):
 |---|---|
 | AdSense aktivieren + **Publisher-ID** (`ca-pub-…`) + Slots | schaltet die Consent-gated Werbung frei |
 | **Rebuild-Repo** (`Tracht-Digital-Solutions/tds-tools-frontend`) + Workflow (`dev.yml`) + **Rebuild-Token** | löst nach Katalog-Änderungen einen Rebuild der Website aus |
-| **Registry-Sync-Token** | muss identisch im Setup-Assistenten der Website (`/_setup`) eingegeben werden — er überträgt die Tool-Liste. Ohne diesen Eintrag hier antwortet `POST /tools/registry` mit 503 |
+| **Registry-Sync-Token** | muss identisch im Setup-Assistenten der Website (`/install`) eingegeben werden — er überträgt die Tool-Liste. Ohne diesen Eintrag hier antwortet `POST /tools/registry` mit 503 |
 | **Stripe Secret Key** + **Webhook Secret** + Währung + Success/Cancel-URL | Premium-Bezahlung (Checkout) |
 
 Weiter unter **Tools** (die Verwaltungsseite): je Tool _sichtbar / Login-Pflicht /
@@ -306,7 +306,7 @@ const packs = [qr, textkit, devkit, media, mein];   // hinzufügen
 **e) Veröffentlichen & ausrollen:** neues Paket **Release** drücken → dann
 `tds-tools-frontend` neu bauen (Push/Release oder Rebuild-Button im Frontend). Das Tool
 erscheint damit auf der öffentlichen Website. **In die Admin-Verwaltung kommt es
-erst durch den Registry-Sync** — einmal `/_setup` auf der Tools-Website fahren und
+erst durch den Registry-Sync** — einmal `/install` auf der Tools-Website fahren und
 dort den Schritt *Tool-Katalog übertragen* ausführen. Der Build macht das nicht.
 
 **Wichtige Regeln:**

@@ -292,7 +292,7 @@ describe("memoisation", () => {
 });
 
 /**
- * The build no longer syncs the registry — `/_setup/install.php` does, from
+ * The build no longer syncs the registry — `/install/` does, from
  * the `dist/tools-catalog.json` artefact.
  *
  * These tests replace a suite that asserted the opposite and passed for the
