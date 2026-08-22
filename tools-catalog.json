@@ -1,0 +1,117 @@
+{
+  "generatedAt": "2026-08-22T19:56:41.512Z",
+  "tools": [
+    {
+      "id": "etiketten-drucken",
+      "name": "Etiketten drucken",
+      "category": "business",
+      "requires_login_default": false,
+      "premium_default": true,
+      "price_cents_default": 500
+    },
+    {
+      "id": "stundenzettel",
+      "name": "Stundenzettel",
+      "category": "business",
+      "requires_login_default": false,
+      "premium_default": true,
+      "price_cents_default": 500
+    },
+    {
+      "id": "texterkennung",
+      "name": "Texterkennung (OCR)",
+      "category": "content",
+      "requires_login_default": false,
+      "premium_default": true,
+      "price_cents_default": 500
+    },
+    {
+      "id": "contrast-checker",
+      "name": "Farb-Kontrast-Checker (WCAG)",
+      "category": "design",
+      "requires_login_default": false,
+      "premium_default": false,
+      "price_cents_default": 0
+    },
+    {
+      "id": "json-formatter",
+      "name": "JSON-Formatter & -Validator",
+      "category": "developer",
+      "requires_login_default": false,
+      "premium_default": false,
+      "price_cents_default": 0
+    },
+    {
+      "id": "qr-code",
+      "name": "QR-Code-Generator",
+      "category": "marketing",
+      "requires_login_default": false,
+      "premium_default": false,
+      "price_cents_default": 0
+    },
+    {
+      "id": "utm-builder",
+      "name": "UTM-Link-Generator",
+      "category": "marketing",
+      "requires_login_default": false,
+      "premium_default": false,
+      "price_cents_default": 0
+    },
+    {
+      "id": "image-compress",
+      "name": "Bild komprimieren",
+      "category": "media",
+      "requires_login_default": false,
+      "premium_default": false,
+      "price_cents_default": 0
+    },
+    {
+      "id": "bilder-zu-pdf",
+      "name": "Bilder zu PDF",
+      "category": "media",
+      "requires_login_default": false,
+      "premium_default": true,
+      "price_cents_default": 500
+    },
+    {
+      "id": "pdf-komprimieren",
+      "name": "PDF komprimieren",
+      "category": "media",
+      "requires_login_default": false,
+      "premium_default": true,
+      "price_cents_default": 500
+    },
+    {
+      "id": "pdf-zu-bildern",
+      "name": "PDF zu Bildern",
+      "category": "media",
+      "requires_login_default": false,
+      "premium_default": true,
+      "price_cents_default": 500
+    },
+    {
+      "id": "pdf-wasserzeichen",
+      "name": "PDF-Wasserzeichen",
+      "category": "media",
+      "requires_login_default": false,
+      "premium_default": true,
+      "price_cents_default": 500
+    },
+    {
+      "id": "pdf-tools",
+      "name": "PDF-Werkzeuge",
+      "category": "media",
+      "requires_login_default": false,
+      "premium_default": true,
+      "price_cents_default": 500
+    },
+    {
+      "id": "password-generator",
+      "name": "Passwort-Generator",
+      "category": "security",
+      "requires_login_default": false,
+      "premium_default": false,
+      "price_cents_default": 0
+    }
+  ]
+}
