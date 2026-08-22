@@ -185,3 +185,68 @@ describe("the DE|EN language switch", () => {
     expect(primitives).toContain(".tds-lang-toggle a.on");
   });
 });
+
+describe("the account menu", () => {
+  /**
+   * The shared session, visible in the header. Unlike the blog's copy this one
+   * also has to serve the signed-OUT visitor: on this site a session unlocks
+   * the premium tools, so the way in belongs in the bar.
+   */
+
+  it("comes from tds-shared, not from a local copy", () => {
+    expect(source).toMatch(
+      /import \{[^}]*\bAccountMenu\b[^}]*\} from "@tracht-digital-solutions\/tds-shared\/components"/,
+    );
+  });
+
+  it("offers a sign-in link to a visitor with no session", () => {
+    // Without `loggedOut="login"` the island renders nothing at all when
+    // signed out — correct for the blog, wrong here, and indistinguishable
+    // from "the session probe failed" by looking at the page.
+    expect(source).toMatch(
+      /<AccountMenu\s+client:idle\s+lang=\{lang\}\s+loggedOut="login"\s*\/>/,
+    );
+  });
+
+  it("sits OUTSIDE the desktop-only cluster and before the hamburger", () => {
+    // Inside `hidden … lg:flex` it would vanish below `lg` — where it is the
+    // only control beside the hamburger, so its absence would be total.
+    const cluster = source.indexOf('class="hidden shrink-0 items-center gap-2 lg:flex"');
+    const clusterEnd = source.indexOf("</div>", source.indexOf("btn btn-primary", cluster));
+    const mount = source.indexOf("<AccountMenu");
+    const toggle = source.indexOf('id="menu-toggle"');
+
+    expect(cluster).toBeGreaterThan(-1);
+    expect(mount).toBeGreaterThan(clusterEnd);
+    expect(mount).toBeLessThan(toggle);
+  });
+
+  it("carries no visibility utility of its own", () => {
+    // tds-shared's CSS is unlayered and Tailwind's utilities are layered, so
+    // `hidden` on `.tds-dropdown` loses outright — the same trap the CTA above
+    // it already documents.
+    const tag = source.slice(source.indexOf("<AccountMenu"));
+    const opening = tag.slice(0, tag.indexOf(">") + 1);
+    expect(opening).not.toMatch(/\bhidden\b/);
+    expect(opening).not.toMatch(/\blg:hidden\b/);
+  });
+
+  it("resolves in the INSTALLED tds-shared", () => {
+    // Same lesson as the lang toggle above: a 0.x caret is minor-locked and CI
+    // re-resolves every range, so a pin that cannot reach the version carrying
+    // this export fails at build time and nowhere earlier.
+    const dts = readFileSync(
+      join(
+        process.cwd(),
+        "node_modules",
+        "@tracht-digital-solutions",
+        "tds-shared",
+        "dist",
+        "components",
+        "index.d.ts",
+      ),
+      "utf8",
+    );
+    expect(dts).toMatch(/\bAccountMenu\b/);
+  });
+});

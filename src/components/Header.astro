@@ -19,7 +19,7 @@
  * different answer in the workspace to one question, and it is why the
  * hamburger arrives here as an addition rather than a replacement.
  */
-import { ThemeToggle } from "@tracht-digital-solutions/tds-shared/components";
+import { AccountMenu, ThemeToggle } from "@tracht-digital-solutions/tds-shared/components";
 import { links, site } from "~/lib/site";
 import { t } from "~/lib/i18n";
 import { EN_ENABLED, localizedPath, neutralPath, type Lang } from "~/lib/seo";
@@ -135,6 +135,21 @@ const langHrefs: { code: Lang; href: string; label: string }[] = [
       <a href={links.contact} class="btn btn-primary no-underline">
         {s.cta}
       </a>
+    </div>
+
+    {/* Identity at EVERY width — the session is the same on a phone, and
+        below `lg` this is the only thing beside the hamburger. Unlike the
+        blog, a signed-out visitor gets a sign-in link here: on this site a
+        session unlocks something (the premium tools), so the way in is worth
+        a slot in the bar. The link paints immediately rather than after the
+        session probe, because anonymous is the common case on a public site
+        and making almost every visitor watch the header reflow would be a
+        poor trade for one round trip.
+
+        Utilities go on the wrapper, never on the island — same
+        unlayered-vs-utility reason as the CTA above. */}
+    <div class="flex shrink-0 items-center">
+      <AccountMenu client:idle lang={lang} loggedOut="login" />
     </div>
 
     {/* The breakpoint comes from `.tds-menu-toggle` itself, not from an

@@ -510,6 +510,43 @@ A standalone Astro `output:"static"` product modelled on `tds-landingpage-fronte
   parsed the href as a `URL` and asserted only the `next` parameter, which is
   why it never looked at the origin; `ToolGate.test.tsx` now pins the origin too.
 
+## The account menu (2026-08-22, tds-shared 0.25.6)
+
+The header carries `AccountMenu` from
+`@tracht-digital-solutions/tds-shared/components` — avatar, name, dropdown, top
+right, the same control the panel has. This site already knew about the shared
+session, but only inside `ToolGate`, for premium tools: a signed-in visitor on
+the catalog page saw nothing at all.
+
+- **Signed out it shows a sign-in link** (`loggedOut="login"`), unlike the blog,
+  which passes nothing. Here a session unlocks something, so the way in belongs
+  in the bar. The link **paints immediately** rather than after the `/me` probe —
+  anonymous is the common case on a public site, and making nearly every
+  visitor watch the header reflow would be a poor trade for one round trip.
+- **It is mounted OUTSIDE the `hidden … lg:flex` cluster**, before
+  `#menu-toggle`. Below `lg` that cluster is gone and this is the only control
+  beside the hamburger, so inside it the menu would be absent rather than
+  smaller. Pinned by `header.test.ts`.
+- **Utilities go on the wrapper `<div>`, never on `<AccountMenu>`** — the same
+  unlayered-vs-`@layer utilities` trap the CTA above it already documents.
+- **Signing out reloads the page.** Not cosmetic: `ToolGate` may already have
+  revealed a premium tool's body from the session it probed at mount, so
+  leaving the page standing would show an unlocked paid tool to someone who
+  just signed out.
+- **`ToolGate` and the menu both probe `/auth/me` and do NOT share the memo** —
+  the gate still uses its own bare `fetch`. Pointing it at tds-shared's
+  `fetchAccount` would collapse the two into one request per page and is the
+  named next step; it is a behaviour change to a paywall, so it is not being
+  folded into a header change.
+- **The panel keeps its shadow on this flat surface, and that is its whole
+  separator.** `data-flat` zeroes `--tds-border-hairline`, so the outline is
+  gone; the shadow (8% navy at 12px blur) is what makes the panel read against
+  the page and against a card beneath it. It deliberately gets no fill
+  counterpart in tds-shared's FLAT section — those wash toward `--color-ink`,
+  and this panel's usual ground is `--color-paper`, so a wash would move it
+  toward the common ground to fix a rare overlap. tds-shared's `design.test.ts`
+  pins the shadow.
+
 ## The OCR assets are served by this site, and that is the whole privacy claim
 
 `texterkennung` (from `tds-tool-office`) runs tesseract.js, which by default
