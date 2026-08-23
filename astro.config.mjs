@@ -16,6 +16,7 @@ import devkit from "@tracht-digital-solutions/tds-tool-devkit";
 import media from "@tracht-digital-solutions/tds-tool-media";
 import pdf from "@tracht-digital-solutions/tds-tool-pdf";
 import office from "@tracht-digital-solutions/tds-tool-office";
+import { siteKeyGuard } from "./src/lib/siteKey";
 
 const packs = [qr, textkit, devkit, media, pdf, office];
 
@@ -24,6 +25,12 @@ export default defineConfig({
   output: "static",
   integrations: [
     react(),
+    // Fails the build when TDS_SITE_KEY was rejected. It has to live here,
+    // not in the fetch helpers: every content fetch is wrapped in a
+    // fail-soft try/catch, and a throw from inside one is swallowed — a
+    // real build against a 401 stub printed the abort message five times
+    // and then completed green. astro:build:done runs outside all of them.
+    siteKeyGuard(),
     toolHost({ packs }),
     sitemap({
       // `/install` is a noindex operator page with no /en/ twin — the i18n

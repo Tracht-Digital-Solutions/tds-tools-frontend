@@ -104,6 +104,19 @@ symlink). Keep the published `^` ranges in `package.json` for CI.
 |---|---|
 | `PUBLIC_DEMO_MODE` | `true` → static fallback catalog, ads off (dev branch) |
 | `PUBLIC_AUTH_API_URL` | auth base for the premium login gate (Phase 3) |
+| `TDS_SITE_KEY` | the site key for the build-time catalog read (optional; `secrets.TDS_SITE_KEY` in CI) |
+
+**`TDS_SITE_KEY` carries no `PUBLIC_` prefix on purpose, and that is not a
+naming detail.** A `PUBLIC_` variable is inlined into the shipped bundle, so
+prefixing it would publish the credential. It is read through `process.env` at
+build time (Node), never `import.meta.env` — Astro/Vite inline only `PUBLIC_`
+names there, and this repo declares no `envField` schema, so
+`import.meta.env.TDS_SITE_KEY` would be `undefined` in every build with nothing
+to say so. That is precisely how `TOOLS_REGISTRY_TOKEN` spent its whole life.
+
+It is optional: unset, the build behaves exactly as before. Set and **rejected**,
+the build fails on purpose — the catalog fetch is fail-soft, so a wrong key
+would otherwise ship the static fallback catalog and report success.
 
 
 ## Setup auf dem Host: `/install`

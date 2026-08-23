@@ -625,3 +625,29 @@ npm run build        # → dist/
 ```
 
 Deploy: `dev.yml` (push→dev, demo), `release.yml` (manual→release + webhook).
+
+## Site key (`TDS_SITE_KEY`)
+
+The credential this site presents to the API for its **build-time** catalog read
+(`/tools/catalog`). Issued in the admin portal under *Einstellungen →
+Site-Verbindungen*, and it also serves as the credential for the `/install`
+registry sync — the legacy `registry_token` still works for one release.
+
+Optional: unset, the build behaves exactly as before.
+
+Four things here were each learned by breaking:
+
+- **`process.env`, never `import.meta.env`.** Only `PUBLIC_` names are inlined
+  there and this repo declares no `envField` schema — which is precisely how
+  `TOOLS_REGISTRY_TOKEN` died. The obvious "fix", a `PUBLIC_` prefix, is worse:
+  it inlines the credential into the shipped bundle.
+- **A `throw` from the fetch helper does NOT fail the build**, because the
+  catalog fetch is fail-soft and returns the static fallback. The first version
+  did that and a real build against a 401 stub completed green.
+- **`siteKeyGuard()` in `astro.config.mjs`** throws in `astro:build:done`,
+  outside every `try/catch`.
+- **The rejection list hangs off `globalThis`** — the config and the page
+  modules are separate module graphs, so a module-scoped array leaves the guard
+  reading zero while the pages record several.
+
+`src/lib/siteKey.test.ts` pins the structural half.

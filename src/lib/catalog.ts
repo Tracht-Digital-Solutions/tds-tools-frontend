@@ -38,6 +38,7 @@
 
 import { catalog as composed } from "virtual:tools-catalog";
 import type { ToolDef } from "@tracht-digital-solutions/tds-tools-contract";
+import { assertKeyAccepted, siteKeyHeaders } from "./siteKey";
 
 /** A tool with its admin-resolved runtime flags folded onto the manifest def. */
 export interface ResolvedTool extends ToolDef {
@@ -117,7 +118,8 @@ async function load(): Promise<{ tools: ResolvedTool[]; ads: AdsConfig }> {
     // back, but a HANGING api host (not refusing, not erroring) would block
     // the release build until the job timeout — the one path that could
     // actually leave the live site stale.
-    const res = await fetch(`${BASE_URL}/tools/catalog`, { signal: AbortSignal.timeout(10_000) });
+    const res = await fetch(`${BASE_URL}/tools/catalog`, { headers: siteKeyHeaders(), signal: AbortSignal.timeout(10_000) });
+    assertKeyAccepted(res, `${BASE_URL}/tools/catalog`);
     if (!res.ok) return fallback();
     const data = (await res.json()) as CatalogApiResponse;
     const byId = new Map((data.tools ?? []).map((r) => [r.id, r]));
