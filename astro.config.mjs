@@ -26,7 +26,11 @@ export default defineConfig({
     react(),
     toolHost({ packs }),
     sitemap({
-      filter: (page) => !page.includes("/404") && !page.includes("/500"),
+      // `/install` is a noindex operator page with no /en/ twin — the i18n
+      // option below would otherwise emit an alternate pointing at a 404. It
+      // was invisible to the sitemap while it lived in public/.
+      filter: (page) =>
+        !page.includes("/install") && !page.includes("/404") && !page.includes("/500"),
       // The site publishes German at `/` and English at `/en/` with the same
       // slugs. Declaring the pair here makes the sitemap carry `xhtml:link`
       // alternates alongside the ones in each page's <head> — the two are

@@ -1,0 +1,30 @@
+---
+/**
+ * `/install` — the host-side setup wizard.
+ *
+ * Connects this deployed site to the API without a rebuild, and carries the
+ * tool-catalog transfer: the build was supposed to POST the composed catalog to
+ * `/tools/registry`, but no workflow ever exported a token, so it has never run
+ * once. The operator does it here.
+ *
+ * A normal page of the site: every frontend subdomain runs with PHP disabled
+ * (`tds-gateway-api/DEPLOY-PLESK.md`), so anything shipped here has to work as
+ * a static file.
+ *
+ * `noindex` AND excluded from the sitemap in `astro.config.mjs`. German only —
+ * it is an operator page, and the Layout skips hreflang alternates on noindex.
+ */
+import { InstallWizard, tools } from "@tracht-digital-solutions/tds-shared/install";
+import Layout from "~/layouts/Layout.astro";
+---
+
+<Layout
+  title="Einrichtung — TD Tools"
+  description="Verbindet diese Site mit der API. Interne Seite, nicht für Besucher."
+  lang="de"
+  noindex
+>
+  <main class="tds-shell">
+    <InstallWizard client:load profile={tools} />
+  </main>
+</Layout>

@@ -184,8 +184,11 @@ Ab hier sind alle **freien Tools + AdSense** live. AdSense bleibt aus, bis eine
 Publisher-ID im Frontend gesetzt ist (siehe unten).
 
 **4. Optional, aber empfohlen: `https://tools.tracht-digital.de/install`.**
-Jeder Build liefert einen Setup-Assistenten mit (Quelle:
-`@tracht-digital-solutions/tds-shared/install`, kopiert vom `prebuild`-Schritt).
+Jeder Build liefert einen Setup-Assistenten mit — eine Seite der Site, die
+vollständig im Browser läuft (Quelle:
+`@tracht-digital-solutions/tds-shared/install`). Auf dieser Domain ist PHP
+abgeschaltet, deshalb schreibt der Assistent nichts selbst: er erzeugt die
+`tds-runtime.json` zum Herunterladen und bestätigt danach, dass sie liegt.
 Er meldet sich per Plattform-Admin-Login an, prüft `GET /tools/catalog` auf
 echte Inhalte statt nur auf HTTP 200, fährt den CORS-Preflight für
 `https://tools.tracht-digital.de`, schreibt `tds-runtime.json` (die Site liest
@@ -205,9 +208,10 @@ eingegeben, und der Katalog aus `dist/tools-catalog.json` geht an
 `POST /tools/registry`. Es muss dem Wert unter *Einstellungen → Tools*
 entsprechen.
 
-Nach einem erfolgreichen Lauf sperrt sich der Assistent per
-`install/.tds-site-installed` in einen Nur-Lese-Diagnosemodus. Zum Neu-Verbinden
-diese Datei löschen.
+Es gibt keine Sperre und keine Anmeldung mehr: die Seite schreibt nichts, und
+ein Passwortformular auf einer öffentlichen Domain wäre eine Angriffsfläche ohne
+Gegenwert. Der Registry-Sync selbst ist durch das Token geschützt, das die API
+prüft.
 
 ---
 
