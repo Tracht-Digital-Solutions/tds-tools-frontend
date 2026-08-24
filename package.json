@@ -55,7 +55,8 @@
   "tds": {
     "notes": {
       "release": "What scripts/pack-release.mjs assembles for the production host. runtimeDependencies must stay PUBLIC-REGISTRY ONLY: the host has no GitHub Packages token, and everything first-party (including the tds-tool-* packs) is bundled into server/ by vite.ssr.noExternal instead.",
-      "runtimeDependencies": "pdf-lib, qrcode and whatwg-url come from the tds-tool-* packs. The packs themselves are bundled (vite.ssr.noExternal), but their own dependencies are not: island SSR renders each tool once on the server for the initial HTML, so those libraries have to exist at runtime. Shipped rather than bundled because each brings its own tree - bundling one costs a failed build per transitive name."
+      "runtimeDependencies": "pdf-lib, qrcode and whatwg-url come from the tds-tool-* packs. The packs themselves are bundled (vite.ssr.noExternal), but their own dependencies are not: island SSR renders each tool once on the server for the initial HTML, so those libraries have to exist at runtime. Shipped rather than bundled because each brings its own tree - bundling one costs a failed build per transitive name.",
+      "browserOnly": "Megabyte-grosse Browser-Engines, die die Tool-Packs LAZY in einem Klick-Handler laden (tds-tool-pdf: PdfToImages, tds-tool-office: TextRecognition). Der Server-Bundle nennt sie, fuehrt sie aber nie aus - Island-SSR rendert nur das Anfangs-HTML. Ausliefern wuerde jedem Deploy zig Megabyte fuer Code hinzufuegen, der dort nicht laufen kann."
     },
     "release": {
       "name": "tds-tools-release",
@@ -68,7 +69,11 @@
         "react-dom": "^19.0.0",
         "sharp": "^0.34.0",
         "whatwg-url": "^14.2.0"
-      }
+      },
+      "browserOnly": [
+        "pdfjs-dist",
+        "tesseract.js"
+      ]
     }
   }
 }
