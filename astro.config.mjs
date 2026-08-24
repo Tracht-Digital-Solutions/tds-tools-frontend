@@ -75,7 +75,11 @@ export default defineConfig({
       // package with its own dependency tree costs one failed build per
       // transitive name when bundled; as a runtime dependency npm resolves it
       // in one step.
-      noExternal: [/^@tracht-digital-solutions\//, "marked", "zod"],
+      // "marked" used to be listed here. It is not a dependency of this site
+      // and is not installed — the entry was copied from tds-blog, where the
+      // markdown renderer does need it. A noExternal name nothing imports is a
+      // silent no-op, which is exactly why it survived.
+      noExternal: [/^@tracht-digital-solutions\//, "zod"],
       // Native addons cannot be bundled.
       external: ["sharp"],
     },

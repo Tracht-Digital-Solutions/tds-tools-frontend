@@ -1,13 +1,17 @@
 # tds-tools-frontend
 
-The **public tools site** — `tools.tracht-digital.de`. A static Astro site that
-composes tool packages (`tds-tool-*`) into a catalog of free, browser-based
+The **public tools site** — `tools.tracht-digital.de`. A server-rendered Astro
+site (`output: "server"`, `@astrojs/node`) behind a file-backed page cache, that
+composes tool packages (`tds-tool-*`) into a catalog of browser-based
 digitalisation tools, monetised with consent-gated Google AdSense and steered
-from the admin frontend (`tds-ext-tools-pkg`).
+from the admin frontend (`tds-ext-tools-pkg`). A cache hit is served straight
+off disk and never wakes Node, so it costs exactly what the old static build
+cost — it is the same file.
 
-Public, indexable, no login for free tools. It is the tools-platform sibling of
-`tds-landingpage-frontend` / `tds-blog-frontend` — a standalone static product, **not** part of the
-noindex frontend host.
+Public, indexable, no login for free tools (8 of the 14 composed tools are
+premium). It is the tools-platform sibling of `tds-landingpage-frontend` /
+`tds-blog-frontend` — a standalone product, **not** part of the noindex frontend
+host.
 
 Since **0.9.0** it renders the same design as the journal: `data-surface="blog"`
 (tds-shared's flat "kantig" kit — no radii, no elevation, colour blocks and 2px
@@ -52,7 +56,7 @@ is deployed. An admin change fires a rebuild (the `RebuildTrigger` pattern).
 ```bash
 npm install --no-package-lock   # needs a GitHub PAT with read:packages (NPM_TOKEN)
 npm run dev
-npm run build                   # → dist/ (the static artifact deployed)
+npm run build                   # → dist/ + release/ (the Node app that deploys)
 npm run preview
 npm run type-check              # astro check — the correctness gate (0 errors)
 npm run test:run                # vitest — catalog resolution + the access gate
@@ -61,8 +65,9 @@ npm run og:smoke                # render the OG cards to scripts/ and eyeball th
 
 ## Tests
 
-47 tests over the site's two pieces of real logic; the `.astro` pages stay on
-`astro check` + the real build.
+341 tests. They run in CI as of 26.7.0 — before that the suite existed and
+gated nothing, which is also how the share card kept a claim the rest of the
+site had dropped. The `.astro` pages stay on `astro check` + the real build.
 
 - **`src/lib/catalog.test.ts`** — the build-time merge of manifest defaults with
   admin overrides, plus two properties with consequences beyond a broken page:
@@ -103,8 +108,18 @@ symlink). Keep the published `^` ranges in `package.json` for CI.
 | var | purpose |
 |---|---|
 | `PUBLIC_DEMO_MODE` | `true` → static fallback catalog, ads off (dev branch) |
-| `PUBLIC_AUTH_API_URL` | auth base for the premium login gate (Phase 3) |
-| `TDS_SITE_KEY` | the site key for the build-time catalog read (optional; `secrets.TDS_SITE_KEY` in CI) |
+| `TDS_SITE_KEY` | the site key for the catalog + guides reads (optional; `secrets.TDS_SITE_KEY` in CI **and** the host's Node app environment — see below) |
+
+`PUBLIC_AUTH_API_URL` used to be listed here. Nothing read it: the premium gate
+resolves its auth origin from `tds-runtime.json`. It was declared in
+`env.d.ts`, documented, and dead — removed in 26.7.0.
+
+**Set `TDS_SITE_KEY` on the HOST too, not only in CI.** `src/lib/siteKey.ts`
+reads it at module load, which under SSR is server boot — so a key supplied
+only to the build never reaches a request-time fetch. Harmless while site-key
+enforcement is `off`/`warn`; under `enforce` the catalog and guide reads 401,
+fail soft, and the site quietly serves manifest defaults with ads off. See
+`AGENTS.md`.
 
 **`TDS_SITE_KEY` carries no `PUBLIC_` prefix on purpose, and that is not a
 naming detail.** A `PUBLIC_` variable is inlined into the shipped bundle, so
@@ -169,9 +184,15 @@ konfiguriert aber nur die Laufzeit.
 
 ## Deploy
 
-Continuous: **every push to `main` builds + deploys** to the orphan `release` branch
-(`release.yml`, prod config) and pings `DEPLOY_WEBHOOK_URL`. The same deploy is also
-dispatched automatically when a dependency package (`tds-tools-contract-pkg` /
-`tds-tool-*`) publishes a new `@latest` — so a tool update rebuilds the site with no
-manual step. Point `tools.tracht-digital.de` at the `release` branch. See
-`TOOLS-PLATFORM.md` + `AGENTS.md`.
+**Manual dispatch only** (`release.yml`, prod config → the orphan `release`
+branch + `DEPLOY_WEBHOOK_URL`). It stopped running on every push to `main` on
+2026-08-24: the release tree is a Node application now (`app.cjs`, `server/`,
+`client/`, a prebuilt `node_modules/`), and deploying it onto a host still
+configured for static serving takes the site down on every path. A deploy is a
+decision, not a side effect of a push.
+
+A `@latest` publish of a dependency (`tds-tools-contract-pkg` / `tds-tool-*`)
+still dispatches it — those releases are themselves deliberate. Content does not
+need a deploy at all: a tool's copy and guide are edited in the panel and go
+live by rebuilding that page's cache. Point `tools.tracht-digital.de` at the
+`release` branch. See `TOOLS-PLATFORM.md` + `AGENTS.md`.

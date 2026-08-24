@@ -4,20 +4,28 @@
  * time; the inline `push` queues it, and the queued unit only renders once the
  * loader script is injected — which the Layout does exclusively after the
  * visitor grants ad consent. So pre-consent this element is inert (no request,
- * no cookie). Neutrally labelled "Anzeige" per AdSense placement policy.
- * Ported from tds-blog's AdSlot.
+ * no cookie). Neutrally labelled per AdSense placement policy — and that label
+ * is the one thing here a visitor reads, so it follows the page language. It
+ * did not: this copy was taken from tds-blog's AdSlot without the `lang` prop
+ * the original has, so every `/en/` page announced "Werbung" and labelled the
+ * unit "Anzeige". Both callers already had `lang` in scope.
  */
 interface Props {
   /** AdSense publisher id (ca-pub-…). */
   client: string;
   /** AdSense ad-unit id (data-ad-slot). */
   slot: string;
+  /** Page language. German default, matching every other island here. */
+  lang?: "de" | "en";
 }
-const { client, slot } = Astro.props;
+const { client, slot, lang = "de" } = Astro.props;
+const t = lang === "de"
+  ? { region: "Werbung", label: "Anzeige" }
+  : { region: "Advertisement", label: "Advertisement" };
 ---
 
-<aside class="tds-adslot" aria-label="Werbung">
-  <span class="tds-adslot__label">Anzeige</span>
+<aside class="tds-adslot" aria-label={t.region}>
+  <span class="tds-adslot__label">{t.label}</span>
   <ins
     class="adsbygoogle"
     style="display:block"

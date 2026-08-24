@@ -23,11 +23,9 @@ declare module "virtual:tools-components" {
 interface ImportMetaEnv {
   /** "true" builds with the static fallback catalog + ads off (dev/staging). */
   readonly PUBLIC_DEMO_MODE?: string;
-  /** Auth API base for the premium login gate (SSO cookie verify). */
-  readonly PUBLIC_AUTH_API_URL?: string;
   /** Public panel API base for the client-side gate (entitlement/checkout/me). */
   readonly PUBLIC_API_URL?: string;
-  /** Login URL the premium/login gate links to (customer portal). */
+  /** Login URL the premium/login gate links to (the central login site). */
   readonly PUBLIC_LOGIN_URL?: string;
 }
 

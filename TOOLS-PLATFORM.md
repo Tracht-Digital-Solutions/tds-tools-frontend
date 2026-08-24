@@ -223,7 +223,8 @@ Tools / AdSense** (Namespace `tools`, DB-first + Env-Fallback):
 | Feld | Wirkung |
 |---|---|
 | AdSense aktivieren + **Publisher-ID** (`ca-pub-…`) + Slots | schaltet die Consent-gated Werbung frei |
-| **Rebuild-Repo** (`Tracht-Digital-Solutions/tds-tools-frontend`) + Workflow (`dev.yml`) + **Rebuild-Token** | löst nach Katalog-Änderungen einen Rebuild der Website aus |
+| **Rebuild-Repo** (`Tracht-Digital-Solutions/tds-tools-frontend`) + Workflow (`release.yml`) + **Rebuild-Token** | löst nach Katalog-Änderungen einen Rebuild der Website aus. **Nicht `dev.yml`** — dieser Workflow wurde am 2026-08-24 gelöscht, als der Deploy aufhörte, bei jedem Push zu laufen. Der Dispatch schlägt nie fehl, er lief nur ins Leere |
+| **Seiten-Cache: Basis-URL + Token** | re-rendert einzelne Seiten, wenn Ratgeber-Texte gespeichert werden — Sekunden statt CI-Build. Ohne Token passiert nichts |
 | **Registry-Sync-Token** | muss identisch im Setup-Assistenten der Website (`/install`) eingegeben werden — er überträgt die Tool-Liste. Ohne diesen Eintrag hier antwortet `POST /tools/registry` mit 503 |
 | **Stripe Secret Key** + **Webhook Secret** + Währung + Success/Cancel-URL | Premium-Bezahlung (Checkout) |
 

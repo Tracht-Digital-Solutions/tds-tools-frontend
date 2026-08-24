@@ -25,7 +25,7 @@
  *   │  QR-Code-Generator                                         │
  *   │  ▬▬▬▬ ▬▬ ▬                                                 │
  *   │                                                            │
- *   │  tools.tracht-digital.de        kostenlos · ohne Anmeldung │
+ *   │  tools.tracht-digital.de        Schwarzenbek · Hamburg     │
  *   └────────────────────────────────────────────────────────────┘
  */
 import fs from "node:fs";
@@ -198,14 +198,42 @@ async function rasterise(tree: Node): Promise<Buffer> {
   return new Resvg(svg, { fitTo: { mode: "width", value: WIDTH } }).render().asPng();
 }
 
-/** The catalog card — used by every page that does not override `ogImage`. */
-export async function renderDefaultOgPng(): Promise<Buffer> {
+/**
+ * The catalog card's headline, per language, split into its two spans — the
+ * second is the coral accent word.
+ *
+ * Exported so `marketing.test.ts` can assert the claim it makes. Recovering the
+ * two spans from the source as string literals does NOT work: they are separate
+ * literals, and a scanner that joins independent strings invents phrases nobody
+ * wrote (it did, immediately — "…much of it free" + "tools straight in your
+ * browser…"). Joining them here, where they are known to be one sentence, is
+ * the only honest seam.
+ */
+export const DEFAULT_OG_HEADLINES: Record<"de" | "en", [string, string]> = {
+  de: ["Digitale Werkzeuge", "für Unternehmen."],
+  en: ["Digital tools", "for your business."],
+};
+
+/**
+ * The catalog card — used by every page that does not override `ogImage`.
+ *
+ * It used to read "Kostenlose digitale Werkzeuge.", the site-wide free claim
+ * that was removed everywhere else on 2026-08-18 once 8 of the 14 composed
+ * tools became premium. The hero, the title and the meta description were all
+ * corrected; the share card was missed, and `marketing.test.ts` did not scan
+ * this file — so every share of the catalog page went on making a promise the
+ * site itself no longer made. The per-tool cards below were always honest,
+ * because their badge is derived from `isPremium`.
+ */
+export async function renderDefaultOgPng(lang: "de" | "en" = "de"): Promise<Buffer> {
+  const headline = DEFAULT_OG_HEADLINES[lang];
+
   return rasterise(
     card({
       eyebrow: site.name,
       headline: [
-        { type: "span", props: { children: "Kostenlose digitale" } },
-        { type: "span", props: { style: { color: CORAL }, children: "Werkzeuge." } },
+        { type: "span", props: { children: headline[0] } },
+        { type: "span", props: { style: { color: CORAL }, children: headline[1] } },
       ],
       headlineSize: "84px",
       footerLeft: "tools.tracht-digital.de",

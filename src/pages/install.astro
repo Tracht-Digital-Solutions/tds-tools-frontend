@@ -3,9 +3,11 @@
  * `/install` — the host-side setup wizard.
  *
  * Connects this deployed site to the API without a rebuild, and carries the
- * tool-catalog transfer: the build was supposed to POST the composed catalog to
- * `/tools/registry`, but no workflow ever exported a token, so it has never run
- * once. The operator does it here.
+ * tool-catalog transfer. That used to be a build step posting the composed
+ * catalog to `/tools/registry`, gated on a token no workflow ever exported —
+ * so it never ran once and the admin's tool list stayed empty. The operator
+ * does it here instead, from `/tools-catalog.json`, which the build now emits
+ * as a real prerendered file.
  *
  * A normal page of the site: every frontend subdomain runs with PHP disabled
  * (`tds-gateway-api/DEPLOY-PLESK.md`), so anything shipped here has to work as

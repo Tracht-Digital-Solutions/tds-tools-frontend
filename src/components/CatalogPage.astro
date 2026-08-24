@@ -66,6 +66,7 @@ const jsonLd = asGraph(
   title={`${site.name} — ${s.tagline}`}
   description={s.description}
   lang={lang}
+  ogImage={lang === "de" ? "/og/default.png" : "/og/en/default.png"}
   jsonLd={jsonLd}
 >
   {/* Flat navy hero band, the journal's own hero treatment: an `.eyebrow` in
@@ -104,7 +105,7 @@ const jsonLd = asGraph(
   </section>
 
   <div class="mx-auto max-w-6xl px-4 py-12 sm:px-6">
-    {ads.enabled && ads.slotCatalog && <AdSlot client={ads.publisherId} slot={ads.slotCatalog} />}
+    {ads.enabled && ads.slotCatalog && <AdSlot client={ads.publisherId} slot={ads.slotCatalog} lang={lang} />}
 
     {groups.length === 0 ? (
       <p class="text-[color:var(--color-muted)]">{s.emptyCatalog}</p>

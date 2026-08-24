@@ -1,16 +1,24 @@
 import type { APIRoute } from "astro";
 import { catalog as composed } from "virtual:tools-catalog";
 
+export const prerender = true;
+
 /**
- * The composed tool list, emitted as a static file into `dist/`.
+ * The composed tool list, emitted as a static file.
+ *
+ * Prerendered: it reads only `virtual:tools-catalog`, a build-time constant, so
+ * rendering it per request would wake Node to reproduce a file that cannot
+ * change between deploys. `src/lib/cache.ts` already treats it as a cacheable
+ * artefact; being a real file is simply the cheaper way to be one.
  *
  * ### Why this file exists
  *
- * The registry sync in `src/lib/catalog.ts` only runs when
- * `TOOLS_REGISTRY_TOKEN` is set at build time — and no workflow in this repo
- * ever exports it, so it has never run: the admin panel has never seen the tool
- * list, and nothing anywhere goes red about it, because the sync fails soft by
- * design.
+ * `src/lib/catalog.ts` used to POST the composed catalog to `/tools/registry`
+ * at build time, gated on `TOOLS_REGISTRY_TOKEN` — which no workflow ever
+ * exported, and which Vite never puts on `import.meta.env` anyway without a
+ * `PUBLIC_` prefix. So it never ran once, the admin panel never saw the tool
+ * list, and nothing went red, because the sync failed soft by design. That
+ * code is gone.
  *
  * Publishing the catalog as a plain artefact lets the host-side setup wizard
  * (`/install/`) do the sync instead, with the token entered in the

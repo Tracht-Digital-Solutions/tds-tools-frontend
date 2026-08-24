@@ -5,20 +5,25 @@ non-trivial changes.
 
 ## What this is
 
-The public, indexable static site at `tools.tracht-digital.de`, in German at `/` and English at `/en/`. Composes
+The public, indexable site at `tools.tracht-digital.de`, in German at `/` and English at `/en/`. Composes
 `tds-tool-*` packages (via `tds-tools-contract-pkg`'s `toolHost`) into a tool catalog;
 consent-gated AdSense; admin-controlled catalog + premium from `tds-ext-tools-pkg`.
-A standalone Astro `output:"static"` product modelled on `tds-landingpage-frontend` /
-`tds-blog-frontend` — NOT the noindex frontend host.
+A standalone Astro **`output: "server"`** product (`@astrojs/node`, standalone,
+under Passenger) behind a file-backed page cache, modelled on
+`tds-landingpage-frontend` / `tds-blog-frontend` — NOT the noindex frontend host.
+It was static until 2026-08-24; anything below still calling it a static build
+is describing the shape, not the runtime.
 
 ## Architecture
 
 - **Build-time composition.** `astro.config.mjs` → `toolHost({ packs })` composes
   the tool manifests and serves `virtual:tools-catalog` (data) +
   `virtual:tools-components` (id → Component). Routing is the site's own
-  `src/pages/tools/[slug].astro` via `getStaticPaths()` over the catalog (the
-  template owns the Layout/SEO/ads/premium chrome, so it can't live in the
-  contract).
+  `src/pages/tools/[slug].astro` (the template owns the Layout/SEO/ads/premium
+  chrome, so it can't live in the contract). **Not `getStaticPaths()`** — that
+  is illegal on an on-demand route; both language routes resolve their own tool
+  through `~/lib/toolRoute` and answer 404 themselves, so a tool the admin
+  switched off stops existing instead of rendering an indexable empty page.
 - **Catalog = manifest defaults + admin overrides.** `src/lib/catalog.ts` fetches
   `GET /tools/catalog` on the gateway (served by `tds-ext-tools-pkg`) at build time
   and merges enabled/requires-login/premium/price + ads config onto the manifest
@@ -585,14 +590,14 @@ out of `node_modules`.
   and that throw is indistinguishable from "not installed". It cost one debugging
   round: the script reported a missing dependency for a package sitting right
   there, and the only symptom downstream was an empty `dist/ocr/`.
-- The step fails **soft** (a warning, like `sync-installer.mjs`) so a missing
+- The step fails **soft** (a warning) so a missing
   optional dependency cannot take the whole site build down.
 - This adds roughly 14 MB to `dist/`. That is the price of not calling a CDN;
   it is served static and gzipped by the host.
 
 ## Tests
 
-`npm run test:run` (vitest). 210 tests over `lib/catalog.ts`, `lib/site.ts`,
+`npm run test:run` (vitest). 341 tests over `lib/catalog.ts`, `lib/site.ts`,
 `ToolGate.tsx` and — as plain text — the layout/CSS surface contract
 (`lib/surface.test.ts`). The `.astro` pages otherwise stay on `astro check` +
 the real build.
@@ -636,7 +641,11 @@ npm run test:run     # vitest — catalog + access gate
 npm run build        # → dist/
 ```
 
-Deploy: `dev.yml` (push→dev, demo), `release.yml` (manual→release + webhook).
+Deploy: `release.yml` only, and only on a manual dispatch (→ the orphan
+`release` branch + `DEPLOY_WEBHOOK_URL`). There is no `dev.yml` here: the
+release tree is a Node application now, so a deploy onto a host still set up
+for static serving takes the site down on every path — that must not be a side
+effect of a routine push to `main`.
 
 ## Site key (`TDS_SITE_KEY`)
 
@@ -663,3 +672,59 @@ Four things here were each learned by breaking:
   reading zero while the pages record several.
 
 `src/lib/siteKey.test.ts` pins the structural half.
+
+### `TDS_SITE_KEY` is a BUILD secret, and this site is server-rendered now
+
+Unresolved, and host-side — recorded here because nothing in the code can show
+it.
+
+`_build.yml` supplies `TDS_SITE_KEY` as an env var **on the build step only**,
+and `src/lib/siteKey.ts` reads `process.env.TDS_SITE_KEY` at *module load*.
+Under `output: "static"` that was the build, and the key was baked into every
+content fetch. Under SSR, module load is **server boot on the host** — where
+nothing sets the variable. So the request-time catalog and guide reads go out
+with no key at all.
+
+Invisible today, because site-key enforcement is `off`/`warn`. The moment it
+moves to `enforce`:
+
+- both reads answer 401,
+- `assertKeyAccepted()` returns early — it only records a rejection when a key
+  *is* configured, and here `SITE_KEY === ""`,
+- the fail-soft `catch` returns `{}`,
+- and the site serves manifest defaults with **ads off** and every admin
+  override ignored, permanently, with nothing red anywhere.
+
+`siteKeyGuard()` cannot catch it either: it throws in `astro:build:done`, and
+the content fetches no longer happen during the build.
+
+**The fix is host configuration**, not code: set `TDS_SITE_KEY` in the Plesk
+Node application's environment (alongside the document root and startup file),
+so the running server has it. Until then, leave enforcement below `enforce`.
+See `tds-gateway-api/DEPLOY-PLESK.md` §3.2.
+
+## Duplicated with the sibling public sites
+
+Six files are byte-identical (or two log-prefix lines apart) across
+`tds-tools-frontend`, `tds-blog-frontend` and `tds-landingpage-frontend`:
+
+| File | Delta |
+|---|---|
+| `scripts/pack-release.mjs` (320 lines) | identical |
+| `app.cjs` | identical |
+| `src/middleware.ts` | identical |
+| `public/.htaccess` | two comment hunks |
+| `src/lib/siteKey.ts` | two log-prefix strings |
+| `src/lib/pageCache.ts` | two log-prefix strings |
+
+`src/components/AdSlot.astro` is a seventh, and it is the cautionary one: it was
+copied from the blog **without** the `lang` prop the original has, so `/en/`
+pages labelled their ad units in German until 26.7.0. A copy does not stay a
+copy.
+
+The shared home would be `tds-shared` (`siteKey({ prefix })`, a `pageCache`
+factory, a `bin` entry for the release packer). Deliberately **not** done in
+26.7.0: it drags `tds-shared-pkg` plus both sibling sites into a release cycle
+they did not otherwise need, and a `tds-shared` minor then forces repinning
+every consumer. Kept as a named follow-up rather than a silent divergence — if
+you fix a bug in any of the six, fix it in all three repos.

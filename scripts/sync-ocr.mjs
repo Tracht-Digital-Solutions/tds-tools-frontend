@@ -89,7 +89,7 @@ function main() {
   const workerDir = resolvePackageDir("tesseract.js");
   const coreDir = resolvePackageDir("tesseract.js-core");
 
-  // A warning rather than a failure, to match sync-installer.mjs: a missing
+  // A warning rather than a failure: a missing
   // optional dependency must not take the whole site build down. The OCR tool
   // then 404s its engine, which its own error message surfaces.
   if (!workerDir || !coreDir) {

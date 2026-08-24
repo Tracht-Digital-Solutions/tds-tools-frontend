@@ -46,11 +46,17 @@ jobs:
         run: npm run type-check
 
       - name: Lint primitives
-        # This site renders on the `panel` surface, so its geometry has to come
-        # from the surface layer's tokens. Hand-authored radii bypass them: the
-        # gate box and the tool box were both `rounded-2xl` (16px) while the
-        # panel card token is 8px. Scoped to src/ — dist/ is build output.
+        # This site renders on the `blog` surface (moved there 2026-08-17), so
+        # its geometry has to come from that layer's tokens. Hand-authored radii
+        # bypass them: the gate box and the tool box were both `rounded-2xl`
+        # (16px) while the card token is 8px. Scoped to src/ — dist/ is output.
         run: npm run lint:primitives
+
+      - name: Test
+        # 171 tests that only ever ran on a developer machine. Four of them are
+        # the design freeze (surface/header/marketing/seo); a suite that gates
+        # nothing cannot hold a freeze.
+        run: npm run test:run
 
       - name: Configure demo mode
         if: ${{ inputs.publish_branch != '' }}
@@ -71,6 +77,10 @@ jobs:
         run: |
           mkdir -p release/client
           {
+            # The only place the deployed version is observable. The site renders
+            # it nowhere — no footer line, no meta tag — so without this a
+            # release cannot be told apart from the one before it.
+            echo "version=$(node -p "require('./package.json').version")"
             echo "channel=${{ inputs.publish_branch }}"
             echo "commit=${GITHUB_SHA}"
             echo "built_at=$(date -u +%Y-%m-%dT%H:%M:%SZ)"

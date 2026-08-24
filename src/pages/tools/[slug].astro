@@ -1,28 +1,14 @@
 ---
 import ToolPage from "~/components/ToolPage.astro";
-import { enabledTools } from "~/lib/catalog";
-import { guideOverrides } from "~/lib/guideOverrides";
+import { resolveToolRoute } from "~/lib/toolRoute";
 
 /**
- * The German tool pages.
- *
- * Server-rendered: `getStaticPaths` is not allowed on an on-demand route, so
- * the page looks its own tool up and answers 404 itself. A slug the catalog
- * does not know is a 404 rather than an empty shell — a tool the admin
- * switched off must stop existing, not render as a blank page that stays
- * indexable and permanently 200.
- *
- * Both trees carry the SAME slugs on purpose (`/tools/x` and `/en/tools/x`),
- * which is what makes an hreflang pair a pure prefix operation: the two URLs
- * always name each other.
+ * The German tool pages. Server-rendered, so the route looks its own tool up and
+ * answers 404 itself — `getStaticPaths` is not allowed on an on-demand route.
+ * See `~/lib/toolRoute` for why a miss is a 404 and not an empty page.
  */
-const slug = String(Astro.params.slug ?? "");
-const allTools = await enabledTools();
-const tool = allTools.find((candidate) => candidate.slug === slug);
-if (!tool) return new Response("Not found", { status: 404 });
-
-// Panel-editable copy, merged over the manifest and the committed guide.
-const overrides = await guideOverrides("de");
+const data = await resolveToolRoute(String(Astro.params.slug ?? ""), "de");
+if (!data) return new Response("Not found", { status: 404 });
 ---
 
-<ToolPage tool={tool} allTools={allTools} lang="de" overrides={overrides} />
+<ToolPage tool={data.tool} allTools={data.allTools} lang="de" overrides={data.overrides} />
