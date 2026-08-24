@@ -9,5 +9,13 @@
     }
   },
   "include": [".astro/types.d.ts", "**/*"],
-  "exclude": ["dist", "node_modules"]
+  // `release/` is the deployable tree scripts/pack-release.mjs assembles out
+  // of dist/ — bundled, minified dependency code, not source. It is
+  // gitignored, so it is invisible in a diff and absent in CI, and present on
+  // any machine that has run `npm run build`. Type-checking it does not just
+  // add noise here: it ran the checker out of V8 heap
+  // (`node::OnFatalError`), so the correctness gate did not run at all.
+  // `var/` is the local page-cache store. Same fix as the blog and the
+  // landingpage.
+  "exclude": ["dist", "node_modules", "release", "var"]
 }
