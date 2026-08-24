@@ -719,12 +719,12 @@ Six files are byte-identical (or two log-prefix lines apart) across
 
 `src/components/AdSlot.astro` is a seventh, and it is the cautionary one: it was
 copied from the blog **without** the `lang` prop the original has, so `/en/`
-pages labelled their ad units in German until 26.7.0. A copy does not stay a
+pages labelled their ad units in German until 0.20.0. A copy does not stay a
 copy.
 
 The shared home would be `tds-shared` (`siteKey({ prefix })`, a `pageCache`
 factory, a `bin` entry for the release packer). Deliberately **not** done in
-26.7.0: it drags `tds-shared-pkg` plus both sibling sites into a release cycle
+0.20.0: it drags `tds-shared-pkg` plus both sibling sites into a release cycle
 they did not otherwise need, and a `tds-shared` minor then forces repinning
 every consumer. Kept as a named follow-up rather than a silent divergence — if
 you fix a bug in any of the six, fix it in all three repos.
