@@ -31,6 +31,18 @@ A standalone Astro `output:"static"` product modelled on `tds-landingpage-fronte
 
 ## Gotchas (repo-wide conventions apply — see root CLAUDE.md)
 
+- **`.htaccess` may not ask for `Options +FollowSymLinks`.** Plesk grants its
+  vhosts a restricted `AllowOverride Options=…` that omits it, and an Option the
+  host does not allow is **fatal rather than ignored**: Apache answers *every*
+  request with 500 and logs `Option FollowSymLinks not allowed here` — the whole
+  site, not just the rule that wanted it. It shipped that way with the SSR move
+  on 2026-08-24 and took the domain down on every path. `Options -Indexes` is
+  all this file may set. Nothing here needs more: per-directory rewriting
+  already works under the vhost's own grant (`api.tracht-digital.de` rewrites
+  everything with `-Indexes` alone), and the `_tds-cache` symlink is created by
+  the same user that owns its target, which satisfies SymLinksIfOwnerMatch. If a
+  cache hit ever answers 403, grant it at the **vhost** level in Plesk's
+  *Additional Apache directives*, which `AllowOverride` does not restrict.
 - **The mobile navigation is shared, and it did not exist here at all until
   2026-08-18 (tds-shared 0.25.0).** The nav used to reflow onto a second
   full-width row below `sm`; there was no hamburger, no panel, nothing to open.
