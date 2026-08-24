@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
@@ -77,7 +77,20 @@ describe("page titles", () => {
   });
 });
 
-describe("the business identity", () => {
+/**
+ * The landingpage's `seo.ts`, when the sibling repo is checked out beside this
+ * one — the normal developer workspace, and nothing like a CI runner, which
+ * clones this repo alone.
+ *
+ * Reading it unconditionally is why this suite could never run in CI: the
+ * ENOENT is thrown while the module is being collected, so it takes the whole
+ * FILE down, not just these nine cases. Same convention as the DB-backed PHP
+ * tests — run where the inputs exist, skip loudly where they do not.
+ */
+const LANDING_SEO = join(__dirname, "..", "..", "..", "tds-landingpage-frontend", "src", "lib", "seo.ts");
+const hasLandingRepo = existsSync(LANDING_SEO);
+
+describe.runIf(hasLandingRepo)("the business identity", () => {
   /**
    * The whole value of a local-business signal is that the name, address and
    * phone are byte-identical everywhere they appear. A paraphrase reads as a
@@ -85,10 +98,12 @@ describe("the business identity", () => {
    * of truth is the landingpage's `seo.ts` and this compares against it
    * rather than trusting two hand-kept copies.
    */
-  const landingSeo = readFileSync(
-    join(__dirname, "..", "..", "..", "tds-landingpage-frontend", "src", "lib", "seo.ts"),
-    "utf8",
-  );
+  // Conditional, and `describe.runIf` alone is NOT enough: vitest still runs a
+  // skipped suite's callback to collect its test names, so an unconditional
+  // read here throws during collection and takes the whole file down — which
+  // is precisely how this suite failed in CI. Verified by pointing the path at
+  // a directory that does not exist.
+  const landingSeo = hasLandingRepo ? readFileSync(LANDING_SEO, "utf8") : "";
 
   it.each([
     ["streetAddress", seoConfig.address.streetAddress],
