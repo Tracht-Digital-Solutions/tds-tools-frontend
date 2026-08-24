@@ -1,6 +1,6 @@
 {
   "name": "tds-tools-frontend",
-  "version": "0.18.0",
+  "version": "0.19.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -13,18 +13,19 @@
     "type-check": "astro check",
     "test": "vitest",
     "test:run": "vitest run",
-    "ocr:fetch-lang": "node scripts/fetch-ocr-lang.mjs"
+    "ocr:fetch-lang": "node scripts/fetch-ocr-lang.mjs",
+    "postbuild": "node scripts/pack-release.mjs",
+    "start": "node app.cjs"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.9",
+    "@astrojs/node": "^11.1.4",
     "@astrojs/react": "^6.0.2",
-    "@astrojs/sitemap": "^3.7.3",
     "@fontsource-variable/jetbrains-mono": "^5.2.8",
     "@fontsource-variable/plus-jakarta-sans": "^5.2.8",
     "@fontsource/lato": "^5.2.7",
-    "@resvg/resvg-js": "^2.6.2",
     "@tailwindcss/postcss": "~4.3.3",
-    "@tracht-digital-solutions/tds-shared": "^0.28.0",
+    "@tracht-digital-solutions/tds-shared": "^0.30.1",
     "@tracht-digital-solutions/tds-tool-devkit": "^0.1.0",
     "@tracht-digital-solutions/tds-tool-media": "^0.1.0",
     "@tracht-digital-solutions/tds-tool-office": "^0.1.0",
@@ -35,19 +36,39 @@
     "astro": "^7.1.6",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "satori": "^0.26.0",
     "tailwindcss": "~4.3.3",
     "typescript": "^5.6.0"
   },
   "devDependencies": {
+    "@resvg/resvg-js": "^2.6.2",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/react": "^16.1.0",
     "@testing-library/user-event": "^14.5.2",
-    "@types/node": "^22.10.0",
+    "@types/node": "^22.20.1",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "jsdom": "^25.0.1",
+    "satori": "^0.26.0",
     "tsx": "^4.22.3",
     "vitest": "^2.1.9"
+  },
+  "tds": {
+    "notes": {
+      "release": "What scripts/pack-release.mjs assembles for the production host. runtimeDependencies must stay PUBLIC-REGISTRY ONLY: the host has no GitHub Packages token, and everything first-party (including the tds-tool-* packs) is bundled into server/ by vite.ssr.noExternal instead.",
+      "runtimeDependencies": "pdf-lib, qrcode and whatwg-url come from the tds-tool-* packs. The packs themselves are bundled (vite.ssr.noExternal), but their own dependencies are not: island SSR renders each tool once on the server for the initial HTML, so those libraries have to exist at runtime. Shipped rather than bundled because each brings its own tree - bundling one costs a failed build per transitive name."
+    },
+    "release": {
+      "name": "tds-tools-release",
+      "runtimeDependencies": {
+        "@astrojs/node": "^11.1.4",
+        "astro": "^7.1.6",
+        "pdf-lib": "^1.17.1",
+        "qrcode": "^1.5.4",
+        "react": "^19.0.0",
+        "react-dom": "^19.0.0",
+        "sharp": "^0.34.0",
+        "whatwg-url": "^14.2.0"
+      }
+    }
   }
 }

@@ -1,23 +1,28 @@
 ---
-import type { GetStaticPaths } from "astro";
 import ToolPage from "~/components/ToolPage.astro";
 import { enabledTools } from "~/lib/catalog";
-import type { ResolvedTool } from "~/lib/catalog";
+import { guideOverrides } from "~/lib/guideOverrides";
 
-// One static page per enabled tool. The resolved tool (manifest + admin flags)
-// rides along as a prop so the body doesn't re-resolve the catalog per page.
-export const getStaticPaths = (async () => {
-  const tools = await enabledTools();
-  return tools.map((tool) => ({ params: { slug: tool.slug }, props: { tool } }));
-}) satisfies GetStaticPaths;
-
-interface Props {
-  tool: ResolvedTool;
-}
-const { tool } = Astro.props;
-// Memoised for the whole build (see lib/catalog.ts), so resolving the related
-// tools costs nothing per page.
+/**
+ * The German tool pages.
+ *
+ * Server-rendered: `getStaticPaths` is not allowed on an on-demand route, so
+ * the page looks its own tool up and answers 404 itself. A slug the catalog
+ * does not know is a 404 rather than an empty shell — a tool the admin
+ * switched off must stop existing, not render as a blank page that stays
+ * indexable and permanently 200.
+ *
+ * Both trees carry the SAME slugs on purpose (`/tools/x` and `/en/tools/x`),
+ * which is what makes an hreflang pair a pure prefix operation: the two URLs
+ * always name each other.
+ */
+const slug = String(Astro.params.slug ?? "");
 const allTools = await enabledTools();
+const tool = allTools.find((candidate) => candidate.slug === slug);
+if (!tool) return new Response("Not found", { status: 404 });
+
+// Panel-editable copy, merged over the manifest and the committed guide.
+const overrides = await guideOverrides("de");
 ---
 
-<ToolPage tool={tool} allTools={allTools} lang="de" />
+<ToolPage tool={tool} allTools={allTools} lang="de" overrides={overrides} />

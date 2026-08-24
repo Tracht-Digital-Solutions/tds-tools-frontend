@@ -39,6 +39,7 @@
 import { catalog as composed } from "virtual:tools-catalog";
 import type { ToolDef } from "@tracht-digital-solutions/tds-tools-contract";
 import { assertKeyAccepted, siteKeyHeaders } from "./siteKey";
+import { contentCache } from "./cache";
 
 /** A tool with its admin-resolved runtime flags folded onto the manifest def. */
 export interface ResolvedTool extends ToolDef {
@@ -93,8 +94,6 @@ interface CatalogApiResponse {
   };
 }
 
-let cache: Promise<{ tools: ResolvedTool[]; ads: AdsConfig }> | null = null;
-
 /** Merge one manifest tool with its (optional) admin override row. */
 function resolve(tool: ToolDef, row: CatalogApiTool | undefined): ResolvedTool {
   return {
@@ -143,10 +142,17 @@ async function load(): Promise<{ tools: ResolvedTool[]; ads: AdsConfig }> {
   }
 }
 
-/** The resolved catalog (memoised for the whole static build). */
+/**
+ * The resolved catalog.
+ *
+ * Memoised through `contentCache`, so the dozen tool pages of one render share
+ * a single request while a cache rebuild still reads through. It used to be a
+ * module-level promise, which was right for a static build — one process, one
+ * fetch, then exit — and would live as long as the server under SSR: switching
+ * a tool off in the panel would never reach a visitor, and nothing would log.
+ */
 export function toolsData(): Promise<{ tools: ResolvedTool[]; ads: AdsConfig }> {
-  if (!cache) cache = load();
-  return cache;
+  return contentCache.get("tools:catalog", load);
 }
 
 /** Enabled tools only (what the catalog + routes should surface). */

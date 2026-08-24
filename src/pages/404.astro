@@ -10,6 +10,9 @@ import { t } from "~/lib/i18n";
  * either and nothing about it can invalidate the German↔English sets.
  */
 const s = t("de");
+// Prerendered: nothing here varies with panel content, so it is built once at
+// deploy time and served as a plain file.
+export const prerender = true;
 ---
 
 <Layout title={`Seite nicht gefunden — ${site.name}`} noindex>

@@ -27,16 +27,26 @@ import {
   howToSchema,
   softwareApplicationSchema,
 } from "~/lib/jsonld";
-import { guideFor } from "~/lib/guides";
+import { mergeCopy, mergeGuide, type GuideOverrides } from "~/lib/guideOverrides";
 import type { ResolvedTool } from "~/lib/catalog";
 
 interface Props {
   tool: ResolvedTool;
   allTools: ResolvedTool[];
   lang: Lang;
+  /**
+   * Panel-edited copy for every tool, keyed by id.
+   *
+   * Passed in rather than fetched here so one render costs one request for the
+   * whole page, not one per component. Optional: a caller with no overrides
+   * (or an unreachable API) gets exactly the committed text, which is the
+   * fail-soft contract every content read on these sites keeps.
+   */
+  overrides?: GuideOverrides;
 }
 
-const { tool, allTools, lang } = Astro.props;
+const { tool, allTools, lang, overrides = {} } = Astro.props;
+const override = overrides[tool.id];
 const s = t(lang);
 const ads = await adsConfig();
 
@@ -56,14 +66,17 @@ const showAds = ads.enabled && !!ads.slotTool && !tool.isPremium;
 const gated = tool.requiresLogin || tool.isPremium;
 
 // German copy comes from the pack manifest, English from `lib/i18n`.
-const copy = toolCopyFor(lang, tool, site.name);
+// German copy comes from the pack manifest, English from `lib/i18n`, and a
+// panel edit outranks both — field by field, so an editor who rewrote the
+// description does not also have to restate the name.
+const copy = mergeCopy(toolCopyFor(lang, tool, site.name), override);
 const toolUrl = `${site.origin}${localizedPath(`/tools/${tool.slug}`, lang)}`;
 
 /* The guide feeds the visible section AND the HowTo/FAQPage nodes. One
    source: Google drops a FAQ rich result when the structured answer differs
    from the visible one, and two copies of a sentence diverge on the first
    edit. A tool without a guide simply contributes neither node. */
-const guide = guideFor(tool.slug, lang);
+const guide = mergeGuide(tool.slug, lang, override);
 
 /* The breadcrumb this page has always DRAWN, now also declared. Without the
    node the hierarchy was visible to a reader and to nothing else — a search

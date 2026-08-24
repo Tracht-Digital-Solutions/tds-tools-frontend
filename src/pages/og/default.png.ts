@@ -2,6 +2,11 @@ import type { APIRoute } from "astro";
 import { renderDefaultOgPng } from "~/og/render";
 
 /**
+ * Prerendered — see og/tools/[slug].png.ts for the two reasons.
+ */
+export const prerender = true;
+
+/**
  * Default OG card. Astro emits this as a static `/og/default.png` at build
  * time; `Layout.astro` references it through `seoConfig.defaultOgImage` on
  * every page that does not pass its own `ogImage`.

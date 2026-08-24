@@ -37,3 +37,7 @@ package-lock.json
 # failure mode is a premium tool that silently stops recognising anything.
 public/ocr/*
 !public/ocr/lang/
+
+# The deployable tree scripts/pack-release.mjs assembles from dist/.
+# CI publishes it to the release branch; it is never committed here.
+release/

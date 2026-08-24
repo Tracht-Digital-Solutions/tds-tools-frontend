@@ -1,6 +1,6 @@
 import { defineConfig } from "astro/config";
+import node from "@astrojs/node";
 import react from "@astrojs/react";
-import sitemap from "@astrojs/sitemap";
 // Shared CSS minify settings (incl. the cssTarget that keeps lightningcss
 // from dropping the header backdrop-filter prefix). See tds-shared#10.
 import { tdsViteBuild } from "@tracht-digital-solutions/tds-shared/astro";
@@ -22,7 +22,22 @@ const packs = [qr, textkit, devkit, media, pdf, office];
 
 export default defineConfig({
   site: "https://tools.tracht-digital.de",
-  output: "static",
+
+  // ─── Server-rendered, behind a file-backed page cache ───────────────────
+  //
+  // This site used to be a static build, and until the guides moved into the
+  // CMS it had nothing that changed independently of a deploy — which was a
+  // fair argument for leaving it static. That is no longer true: the tool
+  // guides, the tool copy and the SEO fields are panel-editable now, so a
+  // wording fix would otherwise cost a full rebuild of every tool page.
+  //
+  // A cache hit costs exactly what the static file cost, because it is one.
+  output: "server",
+  adapter: node({
+    mode: "standalone",
+    // The cache writer needs a complete body before it can store a page.
+    experimentalDisableStreaming: true,
+  }),
   integrations: [
     react(),
     // Fails the build when TDS_SITE_KEY was rejected. It has to live here,
@@ -32,38 +47,12 @@ export default defineConfig({
     // and then completed green. astro:build:done runs outside all of them.
     siteKeyGuard(),
     toolHost({ packs }),
-    sitemap({
-      // `/install` is a noindex operator page with no /en/ twin — the i18n
-      // option below would otherwise emit an alternate pointing at a 404. It
-      // was invisible to the sitemap while it lived in public/.
-      filter: (page) =>
-        !page.includes("/install") && !page.includes("/404") && !page.includes("/500"),
-      // The site publishes German at `/` and English at `/en/` with the same
-      // slugs. Declaring the pair here makes the sitemap carry `xhtml:link`
-      // alternates alongside the ones in each page's <head> — the two are
-      // read by different parts of a crawler, and Search Console reports an
-      // hreflang set as valid only when both agree.
-      i18n: {
-        defaultLocale: "de",
-        locales: { de: "de-DE", en: "en-GB" },
-      },
-      serialize(item) {
-        // The catalog is the entry point; the tool pages are the corpus.
-        // Everything else (og routes are not pages, 404 is filtered) keeps
-        // the default. `lastmod` is the build time, which for a static site
-        // rebuilt on every content change is the honest answer.
-        const path = new URL(item.url).pathname.replace(/^\/en/, "") || "/";
-        item.lastmod = new Date().toISOString();
-        if (path === "/") {
-          item.priority = 1.0;
-          item.changefreq = "weekly";
-        } else if (path.startsWith("/tools/")) {
-          item.priority = 0.8;
-          item.changefreq = "monthly";
-        }
-        return item;
-      },
-    }),
+    // @astrojs/sitemap is deliberately gone. It derives its entries from the
+    // routes the build EMITS, and the tool pages are server-rendered now — it
+    // would have shipped a sitemap holding only the pages its own filter used
+    // to exclude, with nothing red anywhere. src/lib/sitemap.ts replaces it and
+    // keeps the de/en alternates, which on THIS site really are a pure prefix
+    // operation (same slugs in both trees).
   ],
   trailingSlash: "ignore",
   build: {
@@ -77,5 +66,18 @@ export default defineConfig({
   },
   vite: {
     build: { ...tdsViteBuild },
+    ssr: {
+      // Bundle first-party and pure-JS packages INTO dist/server so the host
+      // never needs a GitHub Packages token to boot — that covers every
+      // tds-tool-* pack and the tools contract as well as tds-shared.
+      //
+      // Rule of thumb from the sibling sites: bundle a leaf, ship a tree. A
+      // package with its own dependency tree costs one failed build per
+      // transitive name when bundled; as a runtime dependency npm resolves it
+      // in one step.
+      noExternal: [/^@tracht-digital-solutions\//, "marked", "zod"],
+      // Native addons cannot be bundled.
+      external: ["sharp"],
+    },
   },
 });

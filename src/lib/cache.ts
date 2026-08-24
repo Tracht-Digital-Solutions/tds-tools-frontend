@@ -1,0 +1,78 @@
+/**
+ * This site's half of the page cache: which pages a content change dates, and
+ * the memo that a rebuild throws away.
+ *
+ * The API sends *what changed* (`{type:"tool", id:"qr-code", lang:"de"}`); this
+ * file answers *which of my pages that is*. Unlike the blog, this site's two
+ * language trees DO mirror by prefix — same slugs at `/tools/x` and
+ * `/en/tools/x` — which is what lets the sitemap emit alternates for every
+ * page rather than only for articles.
+ */
+
+import {
+  createGenerationCache,
+  forLanguages,
+  type CacheEvent,
+  type EventMap,
+} from "@tracht-digital-solutions/tds-shared/cache";
+
+/**
+ * The one memo every content fetch on this site shares.
+ *
+ * It replaces the module-level promise `catalog.ts` used to keep. That was
+ * right while this site was a static build — one process, one fetch, then exit
+ * — and becomes *permanent* under SSR: switching a tool off in the panel would
+ * never reach a visitor, however often the cache was rebuilt, and nothing
+ * would log.
+ */
+export const contentCache = createGenerationCache();
+
+/** Language-tree prefix. German lives at the root. */
+const prefix = (lang: "de" | "en") => (lang === "de" ? "" : "/en");
+
+/** The catalog pages plus the sitemap — everything a tool appears on. */
+function catalogPages(lang: "de" | "en"): string[] {
+  return [`${prefix(lang)}/`, "/sitemap-0.xml", "/tools-catalog.json"];
+}
+
+/**
+ * The route table, as the cache sees it.
+ *
+ * A tool event without an id means "the catalog changed" — a tool switched on
+ * or off, reordered, or made premium. That changes the listing but not any
+ * other tool's page, so only the catalog is rebuilt.
+ */
+export const cacheEvents: EventMap = {
+  /** A tool's copy, guide or catalog flags changed. */
+  tool: (event: CacheEvent) => {
+    const slug = event.id;
+    return forLanguages(event, (lang) => {
+      const pages = catalogPages(lang);
+      return slug ? [`${prefix(lang)}/tools/${slug}`, ...pages] : pages;
+    });
+  },
+
+  /** AdSense or another global switch changed — it appears on every page. */
+  catalog: (event: CacheEvent) => forLanguages(event, catalogPages),
+
+  /** These belong to the sibling sites; saying so keeps a typo visible. */
+  post: () => [],
+  block: () => [],
+  legal: () => [],
+};
+
+/**
+ * Pages a "rebuild everything" must include even when nothing is cached yet.
+ *
+ * The individual tool pages are absent on purpose: the composed catalog is
+ * known to the build, not to this list, and enumerating it here would be a
+ * second copy that drifts the first time a pack is added. A rebuild covers
+ * whatever is already cached plus these entry points.
+ */
+export const alwaysPaths = [
+  "/",
+  "/en/",
+  "/sitemap-0.xml",
+  "/sitemap-index.xml",
+  "/tools-catalog.json",
+];
