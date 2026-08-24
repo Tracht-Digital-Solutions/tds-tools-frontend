@@ -1,14 +1,32 @@
-name: Deploy → release branch (push + manual + dispatch)
+name: Deploy → release branch (manual + dispatch)
 
-# Production deploy. Runs on every push to main, on the manual button, AND when a
-# dependency package dispatches it (workflow_dispatch from a tds-tool-* / contract
-# release). Builds with prod config (PUBLIC_DEMO_MODE=false → live catalog with
-# static fallback), force-pushes dist/ to the orphan `release` branch, then pings
-# DEPLOY_WEBHOOK_URL. Pipeline body in _build.yml.
+# Production deploy. Builds with prod config (PUBLIC_DEMO_MODE=false → live
+# catalog with static fallback), force-pushes the assembled `release/` tree to
+# the orphan `release` branch, then pings DEPLOY_WEBHOOK_URL. Pipeline body in
+# _build.yml.
+#
+# ── Why this no longer runs on every push to main (2026-08-24) ──────────────
+#
+# This site was continuous delivery: every push to `main` deployed. That was
+# safe while the release branch was a folder of static files — the worst a bad
+# push could do was publish wrong content.
+#
+# It is a Node application now (Astro SSR behind a page cache), and the tree
+# only works on a host configured for it: Node app enabled, document root on
+# `client/`, startup file `app.cjs`, and a restart after the pull. Pushed to a
+# host still set up for static serving, the deploy takes the site down on every
+# path — and it would do so from a routine `main` push that never mentioned
+# deployment.
+#
+# So the deploy is a decision now, not a side effect. The dependency dispatch
+# from a `tds-tool-*` / contract release still works; those releases are
+# themselves deliberate.
+#
+# Content no longer needs a deploy at all: a tool's copy and guide are edited
+# in the admin panel and go live by rebuilding that page's cache, in seconds.
+# See tds-core-frontend-api/SITES.md.
 
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 concurrency:
