@@ -112,7 +112,7 @@ symlink). Keep the published `^` ranges in `package.json` for CI.
 
 `PUBLIC_AUTH_API_URL` used to be listed here. Nothing read it: the premium gate
 resolves its auth origin from `tds-runtime.json`. It was declared in
-`env.d.ts`, documented, and dead — removed in 26.7.0.
+`env.d.ts`, documented, and dead — removed in 0.20.0.
 
 **Set `TDS_SITE_KEY` on the HOST too, not only in CI.** `src/lib/siteKey.ts`
 reads it at module load, which under SSR is server boot — so a key supplied
