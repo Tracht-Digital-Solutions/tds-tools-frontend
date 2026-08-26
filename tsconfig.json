@@ -15,7 +15,9 @@
   // any machine that has run `npm run build`. Type-checking it does not just
   // add noise here: it ran the checker out of V8 heap
   // (`node::OnFatalError`), so the correctness gate did not run at all.
-  // `var/` is the local page-cache store. Same fix as the blog and the
-  // landingpage.
-  "exclude": ["dist", "node_modules", "release", "var"]
+  // `var/` is the local page-cache store. `public/ocr/` contains generated
+  // Tesseract worker/core bundles; they are deploy assets, not project source,
+  // and make astro check emit millions of diagnostics after a build.
+  // Same fix as the blog and the landingpage.
+  "exclude": ["dist", "node_modules", "public/ocr", "release", "var"]
 }

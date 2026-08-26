@@ -36,6 +36,11 @@ is describing the shape, not the runtime.
 
 ## Gotchas (repo-wide conventions apply — see root CLAUDE.md)
 
+- **The current tds-shared line is `^0.33.0`.** A caret on a `0.x` package is
+  minor-locked, so every shared minor needs an explicit repin here. Validate
+  it from a fresh `npm install --no-package-lock`; otherwise the installed
+  tree can remain on an older surface/cache implementation while every local
+  gate stays green.
 - **`.htaccess` may not ask for `Options +FollowSymLinks`.** Plesk grants its
   vhosts a restricted `AllowOverride Options=…` that omits it, and an Option the
   host does not allow is **fatal rather than ignored**: Apache answers *every*
@@ -584,6 +589,12 @@ out of `node_modules`.
   your machine picks works locally and 404s on somebody else's. It also wants the
   **single-file** core (`tesseract-core-*.wasm.js`, wasm inlined), not the small
   loader plus a separate `.wasm`.
+- **`tsconfig.json` excludes `public/ocr/`.** The worker and the three core
+  bundles are generated deploy assets, not application source. After a build,
+  `astro check` otherwise parses the minified WASM wrappers and emits millions
+  of diagnostic lines before it reaches the real project files. Keep the
+  committed language data excluded with the directory too; it has no TypeScript
+  surface to validate.
 - **The resolver probes paths and deliberately avoids `require.resolve`.** A
   package with an `exports` map — which both new tool packs have — refuses
   `require.resolve("<pkg>/package.json")` with `ERR_PACKAGE_PATH_NOT_EXPORTED`,
