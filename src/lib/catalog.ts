@@ -40,6 +40,7 @@ import { catalog as composed } from "virtual:tools-catalog";
 import type { ToolDef } from "@tracht-digital-solutions/tds-tools-contract";
 import { assertKeyAccepted, siteKeyHeaders } from "./siteKey";
 import { contentCache } from "./cache";
+import { apiBase } from "./connection";
 
 /** A tool with its admin-resolved runtime flags folded onto the manifest def. */
 export interface ResolvedTool extends ToolDef {
@@ -75,8 +76,6 @@ const DEMO_MODE = import.meta.env.PUBLIC_DEMO_MODE === "true";
  * `tds-runtime.json` on the host (see `apiBase()` in tds-shared); this is the
  * BUILD-time read, and the gateway hostname is stable.
  */
-const BASE_URL = "https://api.tracht-digital.de";
-
 interface CatalogApiTool {
   id: string;
   enabled?: boolean;
@@ -117,8 +116,9 @@ async function load(): Promise<{ tools: ResolvedTool[]; ads: AdsConfig }> {
     // back, but a HANGING api host (not refusing, not erroring) would block
     // the release build until the job timeout — the one path that could
     // actually leave the live site stale.
-    const res = await fetch(`${BASE_URL}/tools/catalog`, { headers: siteKeyHeaders(), signal: AbortSignal.timeout(10_000) });
-    assertKeyAccepted(res, `${BASE_URL}/tools/catalog`);
+    const url = `${apiBase()}/tools/catalog`;
+    const res = await fetch(url, { headers: siteKeyHeaders(), signal: AbortSignal.timeout(10_000) });
+    assertKeyAccepted(res, url);
     if (!res.ok) return fallback();
     const data = (await res.json()) as CatalogApiResponse;
     const byId = new Map((data.tools ?? []).map((r) => [r.id, r]));

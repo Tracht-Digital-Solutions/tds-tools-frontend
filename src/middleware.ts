@@ -2,6 +2,7 @@ import { defineMiddleware, sequence } from "astro:middleware";
 
 import { siteCache } from "./lib/pageCache";
 import { siteKeyRejectionCount } from "./lib/siteKey";
+import { ensureCatalogSynced } from "./lib/connection";
 
 /**
  * Serve cached pages and store rendered ones.
@@ -45,6 +46,13 @@ const refuseStaleKey = defineMiddleware(async (_context, next) => {
   return response;
 });
 
+const retryCatalogSync = defineMiddleware((_context, next) => {
+  void ensureCatalogSynced().catch((error) => {
+    console.warn(`[tds-tools] catalog sync retry failed: ${String(error)}`);
+  });
+  return next();
+});
+
 /**
  * `sequence` runs these outside-in, so the cache wraps the guard: the guard's
  * `no-store` is already on the response by the time the cache decides whether
@@ -52,6 +60,7 @@ const refuseStaleKey = defineMiddleware(async (_context, next) => {
  * it would see hits it never rendered and mark them unstorable for no reason.
  */
 export const onRequest = sequence(
+  retryCatalogSync,
   defineMiddleware((context, next) =>
     siteCache.middleware(
       {

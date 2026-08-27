@@ -18,9 +18,7 @@ import { assertKeyAccepted, siteKeyHeaders } from "./siteKey";
 import { contentCache } from "./cache";
 import { guideFor, type ToolGuide } from "./guides";
 import type { Lang } from "./seo";
-
-/** Deliberately the same hard constant `catalog.ts` uses — see its note. */
-const BASE_URL = "https://api.tracht-digital.de";
+import { apiBase } from "./connection";
 
 /** One tool's overridden copy, in the shape `GET /tools/guides` returns. */
 export interface ToolCopyOverride {
@@ -51,7 +49,7 @@ export async function guideOverrides(lang: Lang): Promise<GuideOverrides> {
 
   return contentCache.get(`tool-guides:${lang}`, async () => {
     try {
-      const url = new URL(`${BASE_URL}/tools/guides`);
+      const url = new URL(`${apiBase()}/tools/guides`);
       url.searchParams.set("lang", lang);
       const res = await fetch(url, {
         headers: siteKeyHeaders(),
