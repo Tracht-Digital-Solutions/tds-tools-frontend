@@ -11,10 +11,28 @@ import {
 
 const DEFAULT_API_BASE = "https://api.tracht-digital.de";
 
+const DEFAULT_LOGIN_URL = "https://auth.tracht-digital.de";
+
 function buildApiBase(): string {
   return ((import.meta.env.PUBLIC_API_URL as string | undefined) ?? DEFAULT_API_BASE)
     .trim()
     .replace(/\/+$/, "");
+}
+
+/**
+ * Where the account menu sends someone who is not signed in.
+ *
+ * `PUBLIC_LOGIN_URL` already steered the premium gate (`ToolGate.tsx`); this
+ * was the production URL as a literal, so the two disagreed in every
+ * non-production build — the gate went to the configured login site and the
+ * account menu to the live one, from the same bundle.
+ */
+function buildLoginUrl(): string {
+  return (
+    ((import.meta.env.PUBLIC_LOGIN_URL as string | undefined) ?? DEFAULT_LOGIN_URL)
+      .trim()
+      .replace(/\/+$/, "") || DEFAULT_LOGIN_URL
+  );
 }
 
 async function syncCatalog(paired: SiteConnection): Promise<void> {
@@ -72,7 +90,7 @@ export const connection = siteConnection({
   fallbackCacheToken: () => process.env.TDS_CACHE_TOKEN ?? "",
   fallbackRuntime: () => ({
     apiBase: buildApiBase(),
-    loginUrl: "https://auth.tracht-digital.de",
+    loginUrl: buildLoginUrl(),
     liveChatFrontend: "tools",
   }),
   onConnected: syncCatalog,

@@ -105,10 +105,15 @@ symlink). Keep the published `^` ranges in `package.json` for CI.
 
 ## Env
 
+Template: `.env.example` → `.env`.
+
 | var | purpose |
 |---|---|
+| `PUBLIC_API_URL` | API origin, **no** path — the fallback for the catalog and guide reads (`src/lib/connection.ts`). Default `https://api.tracht-digital.de`; on a paired host the stored connection wins |
+| `PUBLIC_LOGIN_URL` | where the premium/login gate sends a logged-out visitor (`ToolGate.tsx`). Default `https://auth.tracht-digital.de` |
 | `PUBLIC_DEMO_MODE` | `true` → static fallback catalog, ads off (dev branch) |
 | `TDS_SITE_KEY` | the site key for the catalog + guides reads (optional; `secrets.TDS_SITE_KEY` in CI **and** the host's Node app environment — see below) |
+| `TDS_CACHE_TOKEN` | token for this site's own `/tds/cache/*` control plane, which the panel calls after a change. Unset → `503`, and the site simply re-renders every request |
 
 `PUBLIC_AUTH_API_URL` used to be listed here. Nothing read it: the premium gate
 resolves its auth origin from `tds-runtime.json`. It was declared in
