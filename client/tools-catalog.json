@@ -1,0 +1,149 @@
+{
+  "generatedAt": "2026-09-02T09:47:59.923Z",
+  "tools": [
+    {
+      "id": "etiketten-drucken",
+      "name": "Etiketten drucken",
+      "category": "business",
+      "requires_login_default": false,
+      "premium_default": true,
+      "price_cents_default": 500
+    },
+    {
+      "id": "stundenzettel",
+      "name": "Stundenzettel",
+      "category": "business",
+      "requires_login_default": false,
+      "premium_default": true,
+      "price_cents_default": 500
+    },
+    {
+      "id": "accessibility-statement-generator",
+      "name": "Barrierefreiheitserklärung-Generator",
+      "category": "compliance",
+      "requires_login_default": false,
+      "premium_default": false,
+      "price_cents_default": 0
+    },
+    {
+      "id": "privacy-policy-generator",
+      "name": "Datenschutzerklärung-Generator",
+      "category": "compliance",
+      "requires_login_default": false,
+      "premium_default": false,
+      "price_cents_default": 0
+    },
+    {
+      "id": "imprint-generator",
+      "name": "Impressum-Generator",
+      "category": "compliance",
+      "requires_login_default": false,
+      "premium_default": false,
+      "price_cents_default": 0
+    },
+    {
+      "id": "ai-image-badge",
+      "name": "KI-Kennzeichnung für Bilder",
+      "category": "compliance",
+      "requires_login_default": false,
+      "premium_default": false,
+      "price_cents_default": 0
+    },
+    {
+      "id": "texterkennung",
+      "name": "Texterkennung (OCR)",
+      "category": "content",
+      "requires_login_default": false,
+      "premium_default": true,
+      "price_cents_default": 500
+    },
+    {
+      "id": "contrast-checker",
+      "name": "Farb-Kontrast-Checker (WCAG)",
+      "category": "design",
+      "requires_login_default": false,
+      "premium_default": false,
+      "price_cents_default": 0
+    },
+    {
+      "id": "json-formatter",
+      "name": "JSON-Formatter & -Validator",
+      "category": "developer",
+      "requires_login_default": false,
+      "premium_default": false,
+      "price_cents_default": 0
+    },
+    {
+      "id": "qr-code",
+      "name": "QR-Code-Generator",
+      "category": "marketing",
+      "requires_login_default": false,
+      "premium_default": false,
+      "price_cents_default": 0
+    },
+    {
+      "id": "utm-builder",
+      "name": "UTM-Link-Generator",
+      "category": "marketing",
+      "requires_login_default": false,
+      "premium_default": false,
+      "price_cents_default": 0
+    },
+    {
+      "id": "image-compress",
+      "name": "Bild komprimieren",
+      "category": "media",
+      "requires_login_default": false,
+      "premium_default": false,
+      "price_cents_default": 0
+    },
+    {
+      "id": "bilder-zu-pdf",
+      "name": "Bilder zu PDF",
+      "category": "media",
+      "requires_login_default": false,
+      "premium_default": true,
+      "price_cents_default": 500
+    },
+    {
+      "id": "pdf-komprimieren",
+      "name": "PDF komprimieren",
+      "category": "media",
+      "requires_login_default": false,
+      "premium_default": true,
+      "price_cents_default": 500
+    },
+    {
+      "id": "pdf-zu-bildern",
+      "name": "PDF zu Bildern",
+      "category": "media",
+      "requires_login_default": false,
+      "premium_default": true,
+      "price_cents_default": 500
+    },
+    {
+      "id": "pdf-wasserzeichen",
+      "name": "PDF-Wasserzeichen",
+      "category": "media",
+      "requires_login_default": false,
+      "premium_default": true,
+      "price_cents_default": 500
+    },
+    {
+      "id": "pdf-tools",
+      "name": "PDF-Werkzeuge",
+      "category": "media",
+      "requires_login_default": false,
+      "premium_default": true,
+      "price_cents_default": 500
+    },
+    {
+      "id": "password-generator",
+      "name": "Passwort-Generator",
+      "category": "security",
+      "requires_login_default": false,
+      "premium_default": false,
+      "price_cents_default": 0
+    }
+  ]
+}

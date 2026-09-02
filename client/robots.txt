@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+# The host-side setup wizard. It is admin-gated and sends X-Robots-Tag: noindex
+# itself; this keeps it out of crawl budgets and out of any index that ignores
+# the header.
+Disallow: /install/
+
+Sitemap: https://tools.tracht-digital.de/sitemap-index.xml
