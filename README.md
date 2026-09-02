@@ -65,7 +65,7 @@ npm run og:smoke                # render the OG cards to scripts/ and eyeball th
 
 ## Tests
 
-341 tests. They run in CI as of 0.20.0 — before that the suite existed and
+392 tests. They run in CI as of 0.20.0 — before that the suite existed and
 gated nothing, which is also how the share card kept a claim the rest of the
 site had dropped. The `.astro` pages stay on `astro check` + the real build.
 

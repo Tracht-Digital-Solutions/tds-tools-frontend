@@ -16,7 +16,7 @@ Tool-Paketen zusammengesetzt.
 | Repo | Typ | Rolle |
 |---|---|---|
 | `tds-tools-contract-pkg` | npm-SDK | `defineTool` / `defineToolPack` / `composeToolPacks` / `toolHost()` |
-| `tds-tool-qr-pkg` `-textkit` `-devkit` `-media` `-pdf` `-office` | Tool-Pakete | je 1–n Tools (Manifest + `.astro`/`.tsx`); zusammen 14 Tools, davon 8 premium |
+| `tds-tool-qr-pkg` `-textkit` `-devkit` `-media` `-pdf` `-office` `-legal` | Tool-Pakete | je 1–n Tools (Manifest + `.astro`/`.tsx`); zusammen 18 Tools, davon 8 premium |
 | `tds-tools-frontend` | Static-Site | die Website; komponiert die Pakete via `toolHost` |
 | `tds-ext-tools-pkg` | Frontend-Extension | Admin-Verwaltung + Backend (Katalog, AdSense, Stripe-Premium) |
 
@@ -273,7 +273,7 @@ export default defineToolPack({
       id: "mein-tool",             // global eindeutig
       slug: "mein-tool",           // URL: /tools/mein-tool, global eindeutig
       name: "Mein Tool",
-      category: "developer",       // content|developer|design|marketing|media|security|business|other
+      category: "developer",       // content|developer|design|marketing|media|security|business|compliance|other
       description: "Kurzbeschreibung fürs Katalog-Kärtchen + Meta-Description.",
       icon: "braces",
       keywords: ["…"],

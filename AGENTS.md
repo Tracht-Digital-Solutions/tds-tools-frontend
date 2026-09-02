@@ -36,6 +36,28 @@ is describing the shape, not the runtime.
 
 ## Gotchas (repo-wide conventions apply — see root CLAUDE.md)
 
+- **A tool page's `<title>` comes through `mergeCopy`, and it used to be lost
+  there.** `ToolPage.astro` hands `copy.seoTitle` straight to the layout, and
+  `mergeCopy` returned `undefined` for that field whenever the panel supplied
+  no override — which is every page, because the panel ships none by default.
+  All eighteen tool pages therefore rendered an empty `<title>` and an empty
+  `og:title` (fixed 2026-09-02; the two SEO fields now fall back to the copy
+  that came in, exactly like `name` and `description` beside them).
+  Worth knowing because **no gate could see it**: `seo.test.ts` measures
+  `tool.seo?.title`, the value in the MANIFEST, not the one that reaches the
+  page; a browser shows the URL in the tab when the title is empty, so the
+  page still looks right; and the only visible trace is a search result nobody
+  is watching. `guideOverrides.test.ts` now pins the fallback in both
+  directions, including that an emptied panel field is a WITHDRAWAL of the
+  override rather than a blank title.
+- **A whole sentence in a `.status-pill` silently widens the document.** The
+  pill is an inline label with `white-space: nowrap`; a legal notice inside one
+  pushed a 390px viewport out to 1117px. `body { overflow-x: hidden }` clips
+  the overhang, so nothing looks wrong — the only way to find it is to measure
+  `document.documentElement.scrollWidth` against the viewport. Block messages
+  belong in `.tds-alert` (`--success` / `--warning` / `--danger`), which
+  tds-shared documents right above the pill rule.
+
 - **The current tds-shared line is `^0.33.0`.** A caret on a `0.x` package is
   minor-locked, so every shared minor needs an explicit repin here. Validate
   it from a fresh `npm install --no-package-lock`; otherwise the installed
@@ -608,7 +630,7 @@ out of `node_modules`.
 
 ## Tests
 
-`npm run test:run` (vitest). 341 tests over `lib/catalog.ts`, `lib/site.ts`,
+`npm run test:run` (vitest). 392 tests over `lib/catalog.ts`, `lib/site.ts`,
 `ToolGate.tsx` and — as plain text — the layout/CSS surface contract
 (`lib/surface.test.ts`). The `.astro` pages otherwise stay on `astro check` +
 the real build.
