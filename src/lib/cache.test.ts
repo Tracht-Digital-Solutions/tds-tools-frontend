@@ -56,6 +56,18 @@ describe("cacheEvents", () => {
     expect((await resolveEvents(cacheEvents, [{ type: "widget" }])).unknown).toEqual(["widget"]);
   });
 
+  it("rebuilds the tool pages too when the exclusion list changes", async () => {
+    // The list moves the `robots` meta of the excluded page, not just the
+    // sitemap. Rebuilding only the sitemap would leave that page serving its
+    // old indexable head from cache — the omission visible in the XML, the
+    // `noindex` nowhere.
+    const result = await paths([{ type: "sitemap" }]);
+    expect(result).toContain("/sitemap-0.xml");
+    expect(result).toContain("/sitemap-index.xml");
+    expect(result).toContain("/tools/kostenloses-tool");
+    expect(result).toContain("/en/tools/kostenloses-tool");
+  });
+
   it("keeps individual tool pages out of alwaysPaths", async () => {
     // The composed catalog is known to the build, not to this list — a second
     // copy would drift the first time a pack is added.

@@ -17,6 +17,7 @@ import Footer from "~/components/Footer.astro";
 import { site } from "~/lib/site";
 import { t } from "~/lib/i18n";
 import { seoConfig, ogLocale, localizedPath, EN_ENABLED, type Lang } from "~/lib/seo";
+import { isExcluded } from "~/lib/sitemapExclusions";
 import { adsConfig } from "~/lib/catalog";
 
 interface Props {
@@ -46,6 +47,13 @@ const {
 
 const origin = Astro.site?.origin ?? site.origin;
 const url = canonical ?? new URL(Astro.url.pathname, origin).toString();
+
+// A page the panel excluded from the sitemap is also served `noindex`. Both
+// halves are required and neither is sufficient: a sitemap omission is a hint a
+// crawler may ignore, while `noindex` on a URL still advertised in the sitemap
+// tells it two different things. `noindex` (the prop) stays the local override
+// for pages that are never public — `/install`, `/404`.
+const hidden = noindex || (await isExcluded(Astro.url.pathname));
 const ogImageAbs = ogImage.startsWith("http") ? ogImage : new URL(ogImage, origin).toString();
 
 // hreflang alternates. English is mounted under `/en/…` with the SAME slugs,
@@ -119,7 +127,7 @@ const adsActive = ads.enabled && !!ads.publisherId;
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
     <meta name="theme-color" content="#050f68" />
-    {noindex && <meta name="robots" content="noindex,nofollow" />}
+    {hidden && <meta name="robots" content="noindex,nofollow" />}
     {/* The brand mark shared by every TDS property — byte-identical to the
         landingpage's and the blog's. It used to be a hand-drawn SVG unique to
         this site; the tools site is indexable and links back to the main
@@ -142,7 +150,7 @@ const adsActive = ads.enabled && !!ads.publisherId;
     {/* i18n alternates — only on indexable pages. `x-default` is the German
         page: the audience is local businesses in Northern Germany, so German
         is the right guess for a visitor whose language we do not know. */}
-    {EN_ENABLED && !noindex && (
+    {EN_ENABLED && !hidden && (
       <>
         <link rel="alternate" hreflang="de" href={deAltUrl} />
         <link rel="alternate" hreflang="en" href={enAltUrl} />
@@ -180,7 +188,7 @@ const adsActive = ads.enabled && !!ads.publisherId;
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content={title} />
     <meta property="og:locale" content={ogLocale[lang]} />
-    {EN_ENABLED && !noindex && (
+    {EN_ENABLED && !hidden && (
       <meta property="og:locale:alternate" content={altOgLocale} />
     )}
     <meta property="og:site_name" content={site.name} />

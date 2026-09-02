@@ -55,6 +55,38 @@ export const cacheEvents: EventMap = {
   /** AdSense or another global switch changed — it appears on every page. */
   catalog: (event: CacheEvent) => forLanguages(event, catalogPages),
 
+  /**
+   * The sitemap exclusion list changed.
+   *
+   * The widest event this site has, and it has to be. The list moves TWO
+   * things: the sitemap, and the `robots` meta of every page that entered or
+   * left it. A mapping that rebuilt only the sitemap would leave the excluded
+   * page itself serving its old, indexable head out of cache — the omission
+   * visible in the XML, the `noindex` nowhere, and nothing red.
+   *
+   * The tool pages are enumerated from the live catalog rather than from
+   * `alwaysPaths`, where a hand-kept copy would drift the first time a pack is
+   * added. The import is dynamic on purpose: `catalog.ts` reads `contentCache`
+   * from this module, so a static import would close the cycle at module-init
+   * time — the same `TypeError` the landingpage split `contentCache.ts` out to
+   * avoid. A resolver runs per request, long after both modules exist.
+   */
+  sitemap: async (event: CacheEvent) => {
+    const { enabledTools } = await import("./catalog");
+    let slugs: string[] = [];
+    try {
+      slugs = (await enabledTools()).map((tool) => tool.slug);
+    } catch {
+      // Catalog unreachable — still rebuild the listing pages and the sitemap,
+      // which is strictly better than rebuilding nothing.
+    }
+    return forLanguages(event, (lang) => [
+      ...catalogPages(lang),
+      "/sitemap-index.xml",
+      ...slugs.map((slug) => `${prefix(lang)}/tools/${slug}`),
+    ]);
+  },
+
   /** These belong to the sibling sites; saying so keeps a typo visible. */
   post: () => [],
   block: () => [],

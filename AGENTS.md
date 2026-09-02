@@ -420,9 +420,11 @@ is describing the shape, not the runtime.
   `neutralPath` in `lib/seo.ts`) and guarantees the two URLs always name each
   other — the commonest way an hreflang set goes wrong is one side pointing
   at a URL that does not point back. Both sides emit an identical
-  de/en/x-default block, and `@astrojs/sitemap`'s `i18n` option puts the same
-  pairs in the sitemap (Search Console only calls a set valid when both
-  agree).
+  de/en/x-default block, and `lib/sitemap.ts` puts the same pairs in the
+  sitemap (Search Console only calls a set valid when both agree). This is
+  also why an exclusion drops the whole language group: see
+  `lib/sitemapExclusions.ts`, where `hreflangGroup()` is the only sanctioned
+  way to ask whether a page is excluded.
   - **Where each string lives, and why the split is not arbitrary:** a tool's
     GERMAN name/description/SEO title belongs to its pack manifest, its island
     labels to the pack's own `STRINGS` table, the site chrome AND the ENGLISH

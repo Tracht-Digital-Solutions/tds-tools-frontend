@@ -24,6 +24,7 @@
 
 import { enabledTools } from "./catalog";
 import { EN_ENABLED, localizedPath, type Lang } from "./seo";
+import { exclusionPatterns, groupExcluded, hreflangGroup } from "./sitemapExclusions";
 import { site } from "./site";
 
 export interface SitemapUrl {
@@ -53,8 +54,9 @@ export function absolute(path: string): string {
  * alternates depend on.
  */
 export async function sitemapPaths(): Promise<SitemapUrl[]> {
-  const tools = await enabledTools();
-  return [
+  const [tools, patterns] = await Promise.all([enabledTools(), exclusionPatterns()]);
+
+  const all: SitemapUrl[] = [
     { path: "/", changefreq: "weekly", priority: 1.0 },
     ...tools.map((tool) => ({
       path: `/tools/${tool.slug}`,
@@ -62,6 +64,15 @@ export async function sitemapPaths(): Promise<SitemapUrl[]> {
       priority: 0.8,
     })),
   ];
+
+  if (patterns.length === 0) return all;
+
+  // Filtered on the whole hreflang group, never on one URL: `renderUrlset`
+  // emits both trees from ONE entry here, so dropping a language would be
+  // impossible anyway — and if it were possible it would leave the surviving
+  // side pointing an alternate at a URL no longer offered, which invalidates
+  // the set on both sides.
+  return all.filter((entry) => !groupExcluded(hreflangGroup(entry.path), patterns));
 }
 
 export function renderUrlset(paths: SitemapUrl[], lastmod: string): string {

@@ -13,8 +13,10 @@
  * (`tds-gateway-api/DEPLOY-PLESK.md`), so anything shipped here has to work as
  * a static file.
  *
- * `noindex` AND excluded from the sitemap in `astro.config.mjs`. German only —
- * it is an operator page, and the Layout skips hreflang alternates on noindex.
+ * `noindex` AND absent from `sitemapPaths()` in `lib/sitemap.ts` — the
+ * exclusion has not lived in `astro.config.mjs` since `@astrojs/sitemap` was
+ * dropped. German only: it is an operator page, so it has no English twin, and
+ * the Layout skips hreflang alternates on a noindex page for that reason.
  */
 import { InstallWizard, tools } from "@tracht-digital-solutions/tds-shared/install";
 import Layout from "~/layouts/Layout.astro";
