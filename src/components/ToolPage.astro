@@ -136,9 +136,31 @@ const jsonLd = asGraph(
         mark the zones, equal gaps read as four unrelated blocks. */}
     <div class="tool-intro">
       <div class="tds-page__head">
-        <h1 class="tds-page__title tool-title flex items-center gap-3">
-          <Icon name={tool.icon} class="h-7 w-7 text-[color:var(--color-accent)]" />
-          {copy.name}
+        {/* `w-full` auf dem h1 und `break-words` auf dem span — die Ueberschrift
+            stand sonst 19px ueber dem rechten Fensterrand.
+
+            Die Ursache ist nicht offensichtlich: `.tds-page__head` ist ein
+            Flex-Container mit `flex-direction: column` UND `flex-wrap: wrap`.
+            Eine umbrechende Spalte darf mehrere Spalten bilden, und die Breite
+            einer Flex-Linie richtet sich nach ihrem breitesten Element. Ein
+            langes Wort wie "Barrierefreiheitserklaerung-Generator" ist in der
+            Display-Groesse 393px breit und macht damit die Linie breiter als
+            den Container (358px) — `align-items: stretch` streckt danach auf
+            die zu breite Linie statt auf den Container.
+
+            `min-width: 0` half deshalb nicht, und `break-words` allein auch
+            nicht: `overflow-wrap: break-word` erlaubt den Bruch, senkt aber die
+            min-content-Breite nicht (das taete erst `anywhere`). Erst eine
+            explizite Breite bindet die Ueberschrift an ihren Container, und
+            dann bricht der Bindestrich um.
+
+            Zu sehen ist so ein Ueberlauf nie: `body { overflow-x: hidden }`
+            schneidet ihn ab. Gefunden nur, indem
+            `document.documentElement.scrollWidth` gegen `window.innerWidth`
+            gemessen wurde. */}
+        <h1 class="tds-page__title tool-title flex w-full items-center gap-3">
+          <Icon name={tool.icon} class="h-7 w-7 shrink-0 text-[color:var(--color-accent)]" />
+          <span class="min-w-0 hyphens-auto break-words">{copy.name}</span>
         </h1>
       </div>
       <p class="tds-page__lede max-w-2xl">{copy.description}</p>

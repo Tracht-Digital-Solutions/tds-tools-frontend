@@ -166,7 +166,7 @@ export default function ToolGate({ toolId, requiresLogin, isPremium, priceCents,
         <p className="mb-4 text-sm text-[color:var(--color-muted)]">
           Einmalig {(priceCents / 100).toLocaleString("de-DE", { style: "currency", currency: "EUR" })} — danach dauerhaft nutzbar.
         </p>
-        {error && <p className="status-pill status-pill--danger mb-3 text-sm">{error}</p>}
+        {error && <p className="tds-alert tds-alert--danger mb-3">{error}</p>}
         <button type="button" className="btn btn-primary" onClick={buy} disabled={busy}>
           {busy ? "Weiterleitung …" : "Jetzt freischalten"}
         </button>

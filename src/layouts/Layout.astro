@@ -90,10 +90,11 @@ const adsActive = ads.enabled && !!ads.publisherId;
 
      THOSE FILLS ARE THE POINT, not an implementation detail. Four primitives
      separate from their ground ONLY by their edge, and this site's tool
-     islands hold all four (20 `.status-pill`, 10 `.field-boxed`, 6 `.chip`,
-     5 `.btn-ghost`): zeroing the token alone would not make the page flatter,
-     it would make a boxed input inside a card completely INVISIBLE, its label
-     colliding into its value. So never chase a stray outline with a local
+     islands hold all four (28 `.field-boxed`, 21 `.btn-ghost`, 19 `.chip`,
+     9 `.status-pill`, and 53 `.tds-alert` beside them): zeroing the token
+     alone would not make the page flatter, it would make a boxed input inside
+     a card completely INVISIBLE, its label colliding into its value. So never
+     chase a stray outline with a local
      `border: 0` — the counterpart has to come with it, and it lives in
      tds-shared.
 
