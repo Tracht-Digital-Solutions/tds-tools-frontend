@@ -6,6 +6,7 @@ import pdf from "@tracht-digital-solutions/tds-tool-pdf";
 import office from "@tracht-digital-solutions/tds-tool-office";
 import qr from "@tracht-digital-solutions/tds-tool-qr";
 import textkit from "@tracht-digital-solutions/tds-tool-textkit";
+import legal from "@tracht-digital-solutions/tds-tool-legal";
 
 import { categoryLabels, copy, t, toolCopyEn, toolCopyFor } from "./i18n";
 import { guides } from "./guides";
@@ -24,7 +25,7 @@ import { site, categoryOrder } from "./site";
  * are properties of the search engine, not of a language.
  */
 
-const tools = [qr, textkit, devkit, media, pdf, office].flatMap((p) => p.tools);
+const tools = [qr, textkit, devkit, media, pdf, office, legal].flatMap((p) => p.tools);
 const RENDERED = 160;
 const MIN_USEFUL = 80;
 const TITLE_RENDERED = 60;

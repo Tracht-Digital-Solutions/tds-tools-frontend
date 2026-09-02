@@ -75,7 +75,7 @@ const guide: ToolGuideSet = {
         a: "Für öffentliche Stellen ist es in Deutschland verbindlich. Seit Juni 2025 gelten über das Barrierefreiheitsstärkungsgesetz zudem Anforderungen für viele privatwirtschaftliche Online-Angebote, etwa im Onlinehandel; Kleinstunternehmen sind teilweise ausgenommen. Unabhängig von der Pflicht gilt: Lesbarer Text nutzt allen, auch bei Sonnenlicht auf dem Telefon.",
       },
     ],
-    related: ["json-formatter", "bild-komprimieren"],
+    related: ["json-formatter", "bild-komprimieren", "barrierefreiheitserklaerung-generator"],
   },
   en: {
     intro: [
@@ -151,7 +151,7 @@ const guide: ToolGuideSet = {
         a: "For public bodies in Germany it is binding. Since June 2025 the Barrierefreiheitsstärkungsgesetz has also imposed requirements on many private online offerings, in online retail for instance; micro-enterprises are partly exempt. Regardless of obligation: readable text helps everyone, including in sunlight on a phone.",
       },
     ],
-    related: ["json-formatter", "bild-komprimieren"],
+    related: ["json-formatter", "bild-komprimieren", "barrierefreiheitserklaerung-generator"],
   },
 };
 

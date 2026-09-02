@@ -113,8 +113,24 @@ export function mergeGuide(
   return empty && !base ? undefined : merged;
 }
 
-/** The display copy for one tool: manifest values with overrides on top. */
-export function mergeCopy<T extends { name: string; description: string }>(
+/**
+ * The display copy for one tool: manifest values with overrides on top.
+ *
+ * The two SEO fields fall back to the copy that came IN, exactly like the name
+ * and the description above. They used to fall back to `undefined`, and
+ * because `ToolPage.astro` passes `copy.seoTitle` straight into the layout,
+ * every tool page without a panel override rendered an empty `<title>` — all
+ * of them, since the panel ships no overrides by default.
+ *
+ * Nothing could see it. `seo.test.ts` measures `tool.seo?.title`, the value in
+ * the MANIFEST, not the one the page ends up with; the browser shows the URL in
+ * the tab when a title is empty, so the page still looks fine; and the OG card
+ * simply loses its heading. The only visible trace was in a search result
+ * nobody on the team was looking at.
+ */
+export function mergeCopy<
+  T extends { name: string; description: string; seoTitle?: string; seoDescription?: string },
+>(
   tool: T,
   override: ToolCopyOverride | undefined,
 ): T & { seoTitle?: string; seoDescription?: string } {
@@ -122,7 +138,7 @@ export function mergeCopy<T extends { name: string; description: string }>(
     ...tool,
     name: has(override?.name) ? override.name : tool.name,
     description: has(override?.description) ? override.description : tool.description,
-    seoTitle: has(override?.seo_title) ? override.seo_title : undefined,
-    seoDescription: has(override?.seo_description) ? override.seo_description : undefined,
+    seoTitle: has(override?.seo_title) ? override.seo_title : tool.seoTitle,
+    seoDescription: has(override?.seo_description) ? override.seo_description : tool.seoDescription,
   };
 }

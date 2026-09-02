@@ -75,7 +75,7 @@ const guide: ToolGuideSet = {
         a: "Das Werkzeug arbeitet Bild für Bild. Wenn bei Ihnen regelmäßig ganze Ordner anfallen — etwa aus der Baustellendokumentation —, lässt sich das automatisieren, statt es von Hand zu wiederholen.",
       },
     ],
-    related: ["pdf-werkzeuge", "qr-code-generator"],
+    related: ["pdf-werkzeuge", "qr-code-generator", "ki-kennzeichnung-bilder"],
   },
   en: {
     intro: [
@@ -151,7 +151,7 @@ const guide: ToolGuideSet = {
         a: "The tool works one image at a time. If whole folders regularly come up for you — from site documentation, say — that can be automated rather than repeated by hand.",
       },
     ],
-    related: ["pdf-werkzeuge", "qr-code-generator"],
+    related: ["pdf-werkzeuge", "qr-code-generator", "ki-kennzeichnung-bilder"],
   },
 };
 

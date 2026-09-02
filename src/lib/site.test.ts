@@ -8,6 +8,7 @@ import pdf from "@tracht-digital-solutions/tds-tool-pdf";
 import office from "@tracht-digital-solutions/tds-tool-office";
 import qr from "@tracht-digital-solutions/tds-tool-qr";
 import textkit from "@tracht-digital-solutions/tds-tool-textkit";
+import legal from "@tracht-digital-solutions/tds-tool-legal";
 
 import { categoryLabels, categoryOrder, site, toolCountLabel } from "./site";
 
@@ -34,7 +35,7 @@ import { categoryLabels, categoryOrder, site, toolCountLabel } from "./site";
 const RENDERED = 160;
 const MIN_USEFUL = 80;
 
-const packs = [qr, textkit, devkit, media, pdf, office];
+const packs = [qr, textkit, devkit, media, pdf, office, legal];
 const tools = packs.flatMap((p) => p.tools);
 
 describe("the site-level description", () => {

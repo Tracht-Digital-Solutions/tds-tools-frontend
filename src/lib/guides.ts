@@ -14,6 +14,10 @@ import pdfZuBildern from "~/content/guides/pdf-zu-bildern";
 import etikettenDrucken from "~/content/guides/etiketten-drucken";
 import stundenzettel from "~/content/guides/stundenzettel";
 import texterkennung from "~/content/guides/texterkennung";
+import impressumGenerator from "~/content/guides/impressum-generator";
+import datenschutzerklaerungGenerator from "~/content/guides/datenschutzerklaerung-generator";
+import barrierefreiheitserklaerungGenerator from "~/content/guides/barrierefreiheitserklaerung-generator";
+import kiKennzeichnungBilder from "~/content/guides/ki-kennzeichnung-bilder";
 
 /**
  * The long-form guide rendered under each tool.
@@ -70,6 +74,10 @@ export const guides: Record<string, ToolGuideSet> = {
   "etiketten-drucken": etikettenDrucken,
   stundenzettel,
   texterkennung,
+  "impressum-generator": impressumGenerator,
+  "datenschutzerklaerung-generator": datenschutzerklaerungGenerator,
+  "barrierefreiheitserklaerung-generator": barrierefreiheitserklaerungGenerator,
+  "ki-kennzeichnung-bilder": kiKennzeichnungBilder,
 };
 
 /**

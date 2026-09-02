@@ -84,5 +84,6 @@ export const categoryOrder: ToolCategory[] = [
   "media",
   "content",
   "business",
+  "compliance",
   "other",
 ];

@@ -202,6 +202,7 @@ export const categoryLabels: Record<Lang, Record<ToolCategory, string>> = {
     media: "Medien",
     security: "Sicherheit",
     business: "Business",
+    compliance: "Recht & Pflichten",
     other: "Weitere",
   },
   en: {
@@ -212,6 +213,7 @@ export const categoryLabels: Record<Lang, Record<ToolCategory, string>> = {
     media: "Media",
     security: "Security",
     business: "Business",
+    compliance: "Compliance",
     other: "Other",
   },
 };
@@ -323,6 +325,36 @@ export const toolCopyEn: Record<string, ToolCopy> = {
     description:
       "No more retyping: text recognition for photos and scanned images, German and English. It runs on your device and the picture stays there.",
     seoTitle: "Text recognition (OCR) — read text from an image",
+  },
+
+  // tds-tool-legal
+  //
+  // Die Werkzeuge erzeugen deutsche Rechtstexte, die englischen Seiten
+  // beschreiben sie für ein Publikum, das in Deutschland veröffentlicht — die
+  // Vorschriften werden deshalb beim Namen genannt und nicht übersetzt.
+  "impressum-generator": {
+    name: "German Imprint Generator",
+    description:
+      "Build a sample imprint under section 5 DDG: legal form, register, VAT ID and supervisory body appear as you tick them. Runs in your browser.",
+    seoTitle: "Imprint generator — a sample under § 5 DDG",
+  },
+  "datenschutzerklaerung-generator": {
+    name: "Privacy Policy Generator (GDPR)",
+    description:
+      "Assemble a sample GDPR privacy policy from blocks: hosting, contact form, cookies, analytics and newsletter. Nothing is uploaded anywhere.",
+    seoTitle: "Privacy policy generator — a GDPR sample",
+  },
+  "barrierefreiheitserklaerung-generator": {
+    name: "Accessibility Statement Generator",
+    description:
+      "Write an accessibility statement for the German BFSG or for BITV 2.0: compliance status, feedback route and enforcement, as a sample.",
+    seoTitle: "Accessibility statement — BFSG and BITV 2.0",
+  },
+  "ki-kennzeichnung-bilder": {
+    name: "AI Image Labelling",
+    description:
+      "Label AI images as required: burn a visible badge into the picture and embed a machine-readable note in the PNG or JPEG. All in your browser.",
+    seoTitle: "Label AI images — badge and metadata",
   },
 };
 
