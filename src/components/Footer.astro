@@ -15,6 +15,8 @@
  * page and nothing else, so no page that actually sells anything was ever
  * pointed at from here.
  */
+import { ConsentLink } from "@tracht-digital-solutions/tds-shared/consent";
+
 import { adsConfig } from "~/lib/catalog";
 import { links } from "~/lib/site";
 import { t } from "~/lib/i18n";
@@ -64,6 +66,10 @@ const groups = [
       { label: s.footerImprint, href: links.impressum },
       { label: s.footerPrivacy, href: links.datenschutz },
     ],
+    // Not a link — a control that reopens the consent settings on this page.
+    // Art. 7 Abs. 3 DSGVO wants withdrawing a consent to be as easy as giving
+    // it, and a banner that shows once leaves no route back without this.
+    consent: true,
   },
 ];
 ---
@@ -108,6 +114,15 @@ const groups = [
               </a>
             </li>
           ))}
+          {g.consent ? (
+            <li>
+              <ConsentLink
+                client:idle
+                lang={lang}
+                className="text-sm text-white/75 no-underline hover:text-white"
+              />
+            </li>
+          ) : null}
         </ul>
       </div>
     ))}

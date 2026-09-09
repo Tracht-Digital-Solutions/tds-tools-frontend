@@ -10,11 +10,11 @@ import "@fontsource/lato/900.css";
 import "@fontsource-variable/plus-jakarta-sans";
 import "@fontsource-variable/jetbrains-mono";
 import "~/styles/global.css";
-import { CookieNotice } from "@tracht-digital-solutions/tds-shared/components";
+import { ConsentBanner } from "@tracht-digital-solutions/tds-shared/consent";
 import { themeBootstrapScript } from "@tracht-digital-solutions/tds-shared/astro";
 import Header from "~/components/Header.astro";
 import Footer from "~/components/Footer.astro";
-import { site } from "~/lib/site";
+import { links, site } from "~/lib/site";
 import { t } from "~/lib/i18n";
 import { seoConfig, ogLocale, localizedPath, EN_ENABLED, type Lang } from "~/lib/seo";
 import { adsConfig } from "~/lib/catalog";
@@ -203,9 +203,30 @@ const adsActive = ads.enabled && !!ads.publisherId;
     </main>
     <Footer lang={lang} />
 
-    {/* AdSense consent gate — a real Accept/Decline opt-in; the loader below
-        only runs after "granted". */}
-    {adsActive && <CookieNotice client:idle lang={lang} consent />}
+    {/*
+      The consent manager, mounted ALWAYS — not only when advertising is on.
+
+      It used to be `{adsActive && …}`, which meant that with ads off this site
+      showed nothing at all: no statement of what it stores, and no way to reach
+      the settings. That is defensible for a site that stores nothing, and this
+      one does store something — the theme, the language, a tool's own working
+      state — so a visitor had no way to find out what.
+
+      `categories` is what makes it a QUESTION rather than a statement. With
+      advertising on there is a real purpose to decide about; with it off there
+      is none, and the banner says so and offers one acknowledgement instead of
+      soliciting a consent nobody needs, which is its own dark pattern.
+
+      The AdSense loader below is unchanged: it still reads `tds-ad-consent`,
+      which the new store keeps writing.
+    */}
+    <ConsentBanner
+      client:idle
+      lang={lang}
+      categories={adsActive ? ["marketing"] : []}
+      privacyUrl={links.datenschutz}
+      imprintUrl={links.impressum}
+    />
 
     {/* Consent-gated AdSense loader. Injects adsbygoogle.js only after the
         visitor grants ad consent (now or via the banner event) — nothing loads
