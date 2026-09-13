@@ -58,7 +58,8 @@ is describing the shape, not the runtime.
   belong in `.tds-alert` (`--success` / `--warning` / `--danger`), which
   tds-shared documents right above the pill rule.
 
-- **The current tds-shared line is `^0.37.1`.** A caret on a `0.x` package is
+- **The current tds-shared line is `^0.37.4`** (site pairing behind the host's
+  TLS proxy — below it `/tds/connect` refuses every pairing). A caret on a `0.x` package is
   minor-locked, so every shared minor needs an explicit repin here. Validate
   it from a fresh `npm install --no-package-lock`; otherwise the installed
   tree can remain on an older surface/cache implementation while every local
