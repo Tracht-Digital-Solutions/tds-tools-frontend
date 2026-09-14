@@ -14,6 +14,12 @@
  * internal linking: before it, this property linked to the main domain's home
  * page and nothing else, so no page that actually sells anything was ever
  * pointed at from here.
+ *
+ * Secondary text on the navy (the address line, the column heads, the bottom
+ * bar) is white at 0.6. At 0.5 it cleared AA on the light theme's #050f68 but
+ * not on the dark theme's lifted #1d2e72, where the 11–13px labels measured
+ * 4.32:1; 0.6 is 5.5:1 and still sits below the blurb (0.65) and the links
+ * (0.75).
  */
 import { ConsentLink } from "@tracht-digital-solutions/tds-shared/consent";
 
@@ -99,13 +105,13 @@ const groups = [
       <p class="text-sm leading-relaxed" style="color: rgb(255 255 255 / 0.65); max-width: 34ch;">
         {s.footerBlurb}
       </p>
-      <p class="mt-5 text-[0.8125rem]" style="font-family: var(--font-mono); color: rgb(255 255 255 / 0.5);">
+      <p class="mt-5 text-[0.8125rem]" style="font-family: var(--font-mono); color: rgb(255 255 255 / 0.6);">
         Julian Tracht · 21493 Schwarzenbek bei Hamburg
       </p>
     </div>
     {groups.map((g) => (
       <div>
-        <p class="eyebrow mb-4" style="color: rgb(255 255 255 / 0.5);">{g.head}</p>
+        <p class="eyebrow mb-4" style="color: rgb(255 255 255 / 0.6);">{g.head}</p>
         <ul class="m-0 flex list-none flex-col gap-2.5 p-0">
           {g.items.map((it) => (
             <li>
@@ -132,7 +138,7 @@ const groups = [
       1px. Same rule, same value, as the blog footer's. */}
   <div
     class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 pt-4 pb-8 text-xs sm:px-6"
-    style="border-top: 1px solid rgb(255 255 255 / 0.1); font-family: var(--font-mono); color: rgb(255 255 255 / 0.5);"
+    style="border-top: 1px solid rgb(255 255 255 / 0.1); font-family: var(--font-mono); color: rgb(255 255 255 / 0.6);"
   >
     <p>© {year} Tracht Digital Solutions · {s.footerTagline}</p>
     {adsEnabled && (
