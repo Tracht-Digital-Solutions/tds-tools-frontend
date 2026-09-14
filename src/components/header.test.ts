@@ -103,7 +103,10 @@ describe("mobile navigation", () => {
       );
     }
     expect(openingTag("menu-toggle")).not.toMatch(/\blg:hidden\b/);
-    expect(source).toContain('class="hidden shrink-0 items-center gap-2 lg:flex"');
+    // Since the shared bar the cluster is `.tds-sitebar__desktop`, and the CTA
+    // sits one wrapper deeper in `.tds-sitebar__wide`, which yields below 80rem.
+    expect(source).toContain('<div class="tds-sitebar__desktop">');
+    expect(source).toMatch(/<div class="tds-sitebar__wide">\s*<a href=\{contact\} class="btn btn-primary/);
   });
 
   it("keeps the panel's docking offset and its max-height in agreement", () => {
@@ -186,6 +189,50 @@ describe("the DE|EN language switch", () => {
   });
 });
 
+describe("the property bar", () => {
+  /**
+   * The journal, this site and the shop share one bar. Each of these used to
+   * be different on each site: the width (120rem there, 72rem here), the link
+   * style, and the names and order of the sibling links.
+   */
+
+  it("is the shared bar, at the page's own edges", () => {
+    expect(source).toContain('<div class="tds-shell tds-sitebar">');
+    expect(source).not.toMatch(/max-w-6xl/);
+    expect(source).toContain('class="tds-sitebar__brand brand-wordmark"');
+    expect(source).toContain('<span class="tds-sitebar__divider" aria-hidden="true">');
+  });
+
+  it("takes its links from propertyNav, never from a local list", () => {
+    expect(source).toMatch(
+      /import \{[^}]*\bpropertyNav\b[^}]*\} from "@tracht-digital-solutions\/tds-shared\/nav"/,
+    );
+    expect(source).toContain('propertyNav("tools", lang, `${base}/`)');
+    expect(source).not.toMatch(/links\.(blog|main)/);
+    expect(source).toContain('class="tds-sitebar__link"');
+  });
+
+  it("sends the CTA to the contact section in the reader's language", () => {
+    expect(source).toContain("propertyContact(lang)");
+    expect(source).not.toContain("links.contact");
+  });
+
+  it("marks this property current on every page of it", () => {
+    // `page` on the catalog, `true` on a tool page — never absent inside the
+    // property, never on a sibling.
+    expect(source).toContain('aria-current={item.current ? (onCatalog ? "page" : "true") : undefined}');
+  });
+
+  it("resolves the bar in the INSTALLED tds-shared", () => {
+    const shared = join(process.cwd(), "node_modules", "@tracht-digital-solutions", "tds-shared");
+    const primitives = readFileSync(join(shared, "styles", "primitives.css"), "utf8");
+    expect(primitives).toContain(".tds-sitebar__wide");
+    const nav = readFileSync(join(shared, "dist", "nav", "index.d.ts"), "utf8");
+    expect(nav).toMatch(/\bpropertyNav\b/);
+    expect(nav).toMatch(/\bpropertyContact\b/);
+  });
+});
+
 describe("the account menu", () => {
   /**
    * The shared session, visible in the header. Unlike the blog's copy this one
@@ -209,10 +256,12 @@ describe("the account menu", () => {
   });
 
   it("sits OUTSIDE the desktop-only cluster and before the hamburger", () => {
-    // Inside `hidden … lg:flex` it would vanish below `lg` — where it is the
-    // only control beside the hamburger, so its absence would be total.
-    const cluster = source.indexOf('class="hidden shrink-0 items-center gap-2 lg:flex"');
-    const clusterEnd = source.indexOf("</div>", source.indexOf("btn btn-primary", cluster));
+    // Inside `.tds-sitebar__desktop` it would vanish below `lg` — where it is
+    // the only control beside the hamburger, so its absence would be total.
+    const cluster = source.indexOf('<div class="tds-sitebar__desktop">');
+    // Two closing tags after the CTA: its `.tds-sitebar__wide`, then the cluster.
+    const cta = source.indexOf("btn btn-primary", cluster);
+    const clusterEnd = source.indexOf("</div>", source.indexOf("</div>", cta) + 1);
     const mount = source.indexOf("<AccountMenu");
     const toggle = source.indexOf('id="menu-toggle"');
 

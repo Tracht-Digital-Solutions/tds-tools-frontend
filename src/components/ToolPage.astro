@@ -115,7 +115,10 @@ const jsonLd = asGraph(
   ogImage={lang === "de" ? `/og/tools/${tool.slug}.png` : `/og/en/tools/${tool.slug}.png`}
   jsonLd={jsonLd}
 >
-  <div class="tds-page mx-auto max-w-4xl px-4 py-10 sm:px-6">
+  {/* `.tds-shell`: the page's edges are the header's and the footer's. The
+      blog surface sets the width (120rem), shared with the journal and the
+      shop; the lede keeps its own `max-w-2xl` measure. */}
+  <div class="tds-page tds-shell py-10">
     <nav class="text-sm text-[color:var(--color-muted)]">
       {/* `.tnav-link` carries the muted→ink hover. A `hover:text-…` utility
           would not: tds-shared is unlayered and `.link-underline` declares
@@ -166,50 +169,61 @@ const jsonLd = asGraph(
       <p class="tds-page__lede max-w-2xl">{copy.description}</p>
     </div>
 
-    {gated && (
-      <ToolGate
-        client:load
-        toolId={tool.id}
-        requiresLogin={tool.requiresLogin}
-        isPremium={tool.isPremium}
-        priceCents={tool.priceCents}
-        bodySelector="#tool-body"
-      />
-    )}
+    {/* Two columns from 80rem (global.css, "Tool page columns"): the tool and
+        its guide in the main one, the related tools and the service note
+        beside them. One column below that, in this same source order. */}
+    <div class="tool-layout">
+      <div class="tool-main">
+        {gated && (
+          <ToolGate
+            client:load
+            toolId={tool.id}
+            requiresLogin={tool.requiresLogin}
+            isPremium={tool.isPremium}
+            priceCents={tool.priceCents}
+            bodySelector="#tool-body"
+          />
+        )}
 
-    {/* `lang` reaches the island through the pack's shell, so an English page
-        renders an English tool rather than a half-translated one. Packs
-        default the prop to German, so an older pinned pack still works. */}
-    <section id="tool-body" hidden={gated} class="tds-card p-5 sm:p-7">
-      {Tool ? (
-        <Tool lang={lang} />
-      ) : (
-        <p class="text-[color:var(--color-danger)]">
-          {lang === "de"
-            ? "Dieses Tool konnte nicht geladen werden."
-            : "This tool could not be loaded."}
-        </p>
-      )}
-    </section>
+        {/* `lang` reaches the island through the pack's shell, so an English
+            page renders an English tool rather than a half-translated one.
+            Packs default the prop to German, so an older pinned pack still
+            works. */}
+        <section id="tool-body" hidden={gated} class="tds-card p-5 sm:p-7">
+          {Tool ? (
+            <Tool lang={lang} />
+          ) : (
+            <p class="text-[color:var(--color-danger)]">
+              {lang === "de"
+                ? "Dieses Tool konnte nicht geladen werden."
+                : "This tool could not be loaded."}
+            </p>
+          )}
+        </section>
 
-    {showAds && <AdSlot client={ads.publisherId} slot={ads.slotTool} lang={lang} />}
+        {showAds && <AdSlot client={ads.publisherId} slot={ads.slotTool} lang={lang} />}
 
-    {/* The guide sits BELOW the tool, never above it: someone who searched
-        for "qr code generator" came to use one, and a wall of prose between
-        the heading and the input is the pattern that made recipe sites a
-        punchline. It is still on the page, in the DOM, ahead of the footer —
-        which is all the crawler needs. */}
-    {guide && <ToolGuide guide={guide} toolName={copy.name} lang={lang} />}
-    {guide && (
-      <RelatedTools
-        slugs={guide.related}
-        all={allTools}
-        current={tool.slug}
-        lang={lang}
-        base={base}
-      />
-    )}
+        {/* The guide sits BELOW the tool, never above it: someone who searched
+            for "qr code generator" came to use one, and a wall of prose between
+            the heading and the input is the pattern that made recipe sites a
+            punchline. It is still on the page, in the DOM, ahead of the footer —
+            which is all the crawler needs. */}
+        {guide && <ToolGuide guide={guide} toolName={copy.name} lang={lang} />}
+      </div>
 
-    <ServiceNote lang={lang} />
+      <div class="tool-aside">
+        {guide && (
+          <RelatedTools
+            slugs={guide.related}
+            all={allTools}
+            current={tool.slug}
+            lang={lang}
+            base={base}
+          />
+        )}
+
+        <ServiceNote lang={lang} />
+      </div>
+    </div>
   </div>
 </Layout>

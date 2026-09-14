@@ -119,10 +119,14 @@ describe("the sibling properties", () => {
     // The blog links here from its own nav and footer (`TOOLS_URL` in its
     // nav.ts). A one-way link leaves this site a dead end for a reader and an
     // orphan for a crawler, which is the whole reason both were added.
-    for (const file of ["components/Header.astro", "components/Footer.astro"]) {
-      const src = read(join(SRC, file));
-      expect(src, `${file} does not link the blog`).toMatch(/links\.blog/);
-      expect(src, `${file} does not link the main site`).toMatch(/links\.main/);
-    }
+    // The header's links are tds-shared's `propertyNav()` since the three
+    // public bars were unified; the footer still names its own.
+    const header = read(join(SRC, "components/Header.astro"));
+    expect(header, "the header does not use the shared property list").toContain(
+      'propertyNav("tools"',
+    );
+    const footer = read(join(SRC, "components/Footer.astro"));
+    expect(footer, "the footer does not link the blog").toMatch(/links\.blog/);
+    expect(footer, "the footer does not link the main site").toMatch(/links\.main/);
   });
 });

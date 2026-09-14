@@ -1,26 +1,22 @@
 ---
 /**
- * Top bar in the journal's idiom: logomark + wordmark, the bordeaux divider
- * square, flat underline nav, theme toggle, language switch, contact CTA.
- * Same shape as `tds-blog-frontend`'s JournalHeader, minus what this site has
- * no corpus for (search, the Entdecken disclosure).
+ * The public property bar — the one top bar the journal, the tools site and
+ * the shop share: `.tds-sitebar*` and `propertyNav()` from tds-shared.
  *
- * The nav carries the two SIBLING properties by name (Blog · Startseite), not
- * just the bare domain the site used to show. This site is public and
- * indexable and the blog links here from its own nav and footer; a one-way
- * link is a dead end for a reader and an orphan for a crawler.
+ * The three used to draw their own. This one sat at 72rem and said
+ * "Alle Tools · Blog · Startseite", the shop sat at 72rem with a different
+ * list, and the journal at 120rem with a third, so following a link between
+ * them moved the logo and renamed the links under the cursor. What stays here
+ * is only what is this site's own: the wordmark, the page-equivalent language
+ * switch and the sign-in link.
  *
- * Below `lg` the whole desktop cluster gives way to a hamburger opening the
- * shared `.tds-mobile-menu` sheet (tds-shared 0.25.0) — the same panel and the
- * same mechanics as the landingpage and the blog.
- *
- * This site previously had NO mobile menu at all: the nav simply reflowed onto
- * a second full-width row below `sm`. That worked, but it was the fourth
- * different answer in the workspace to one question, and it is why the
- * hamburger arrives here as an addition rather than a replacement.
+ * Below `lg` the nav and the desktop cluster give way to a hamburger opening
+ * the shared `.tds-mobile-menu` sheet — the same panel and the same mechanics
+ * as the landingpage, the journal and the shop.
  */
 import { AccountMenu, ThemeToggle } from "@tracht-digital-solutions/tds-shared/components";
-import { links, site } from "~/lib/site";
+import { propertyContact, propertyNav } from "@tracht-digital-solutions/tds-shared/nav";
+import { site } from "~/lib/site";
 import { t } from "~/lib/i18n";
 import { EN_ENABLED, localizedPath, neutralPath, type Lang } from "~/lib/seo";
 
@@ -34,6 +30,10 @@ const base = lang === "de" ? "" : "/en";
 
 const path = Astro.url.pathname;
 const onCatalog = neutralPath(path) === "/";
+
+/** Journal · Tools · Shop · Tracht Digital, with this site marked current. */
+const nav = propertyNav("tools", lang, `${base}/`);
+const contact = propertyContact(lang);
 
 /**
  * Both halves of the DE|EN switch (`.tds-lang-toggle`, tds-shared). This used to
@@ -53,57 +53,49 @@ const langHrefs: { code: Lang; href: string; label: string }[] = [
 
 {/* Fill, blur and the warm bottom hairline all come from `.brand-header`
     (tds-shared). Never re-declare them here: the class draws its border with a
-    literal 1px that no local rule can reach, and hand-authoring the pair is
-    what the geometry split exists to prevent. */}
+    literal 1px that no local rule can reach. */}
 <header class="brand-header">
-  <div class="mx-auto flex max-w-6xl flex-wrap items-center gap-x-3 gap-y-1 px-4 py-2.5 sm:gap-x-4 sm:px-6 min-h-15">
-    {/* The mark IS the "TD" of the name — the wordmark reads TD Tools, and
-        the mark carries the first half, so only "Tools" is set in type. Same
-        construction as the journal's (`.brand-logo` + `Journal`), which is
-        what makes the two public properties read as one brand rather than as
-        two sites that happen to share a font.
-
-        `.brand-logo` (tds-shared) is a CSS mask over `--color-primary`, so it
-        follows the theme instead of needing an inverted second asset. Because
-        the mark replaces text, the accessible name has to restate it: the
-        `aria-label` below carries the full `TD Tools`, and the mark itself is
-        `aria-hidden`. Drop that and the link announces as "Tools".
-        `py-2` is a touch target, not spacing. */}
+  {/* `.tds-shell` gives the bar the page's own edges — the blog surface's
+      120rem, the same on all three properties. */}
+  <div class="tds-shell tds-sitebar">
+    {/* The mark IS the "TD" of the name — the wordmark reads TD Tools and the
+        mark carries the first half, so only "Tools" is set in type, as the
+        journal's and the shop's do. Because the mark replaces text, the
+        `aria-label` restates the full name and the mark is `aria-hidden`;
+        drop that and the link announces as "Tools". */}
     <a
       href={`${base}/`}
-      class="brand-wordmark inline-flex shrink-0 items-center gap-2 py-2 text-[1.0625rem] tracking-tight no-underline"
+      class="tds-sitebar__brand brand-wordmark"
       aria-label={`${site.name} — ${s.navAllTools}`}
     >
       <span class="brand-logo" aria-hidden="true"></span>
       <span class="accent-italic">Tools</span>
     </a>
-    <span class="nav-divider hidden sm:block" aria-hidden="true"></span>
+    <span class="tds-sitebar__divider" aria-hidden="true"></span>
 
-    <nav
-      class="hidden flex-wrap items-center gap-x-1 gap-y-0.5 text-sm lg:flex lg:flex-1"
-      aria-label="Navigation"
-    >
-      {/* Colour lives in `.tnav-link` (global.css), NOT in a `text-…` utility:
-          tds-shared is unlayered CSS and Tailwind's utilities sit in
-          `@layer utilities`, so `.link-underline`'s own `color: inherit` wins
-          over any colour utility written here. The utilities left on these
-          anchors are the padding — a touch target, and nothing shared claims
-          it. */}
-      <a
-        href={`${base}/`}
-        class="tnav-link link-underline px-2 py-2"
-        aria-current={onCatalog ? "page" : undefined}
-      >
-        {s.navAllTools}
-      </a>
-      <a href={links.blog} class="tnav-link link-underline px-2 py-2">{s.navBlog}</a>
-      <a href={links.main} class="tnav-link link-underline px-2 py-2">{s.navHome}</a>
-      {/* The DE|EN switch — the same `.tds-lang-toggle` the blog carries, so the
-          two public properties behave alike. `aria-current` is what states the
-          active language to assistive tech; `.on` is only paint. `hreflang`
-          tells crawlers what is on the other end. */}
+    {/* `page` on the catalog, `true` on a tool page: the reader is inside this
+        property there, just not on its home. */}
+    <nav class="tds-sitebar__nav" aria-label="Navigation">
+      {nav.map((item) => (
+        <a
+          href={item.href}
+          class="tds-sitebar__link"
+          aria-current={item.current ? (onCatalog ? "page" : "true") : undefined}
+        >
+          {item.label}
+        </a>
+      ))}
+    </nav>
+
+    {/* Hidden below `lg` by the shared class on the WRAPPER: tds-shared is
+        unlayered, so a `hidden` utility on the `.btn` itself does nothing.
+        The CTA sits one wrapper deeper and yields below 80rem, where the
+        journal's row runs out of room — the same on all three bars. `hreflang`
+        tells crawlers what is on the other end of the language switch;
+        `aria-current` states the active language, `.on` only paints it. */}
+    <div class="tds-sitebar__desktop">
       {EN_ENABLED && (
-        <div class="tds-lang-toggle ml-1" role="group" aria-label="Sprache / Language">
+        <div class="tds-lang-toggle" role="group" aria-label="Sprache / Language">
           {langHrefs.map((l) => (
             <a
               href={l.href}
@@ -117,62 +109,39 @@ const langHrefs: { code: Lang; href: string; label: string }[] = [
           ))}
         </div>
       )}
-    </nav>
-
-    {/* Pushes the hamburger to the right below lg, where the nav is hidden and
-        no longer takes the flex space. */}
-    <div class="flex-1 lg:hidden"></div>
-
-    {/* The desktop cluster hides on a WRAPPER, never on the `.btn` itself:
-        tds-shared is unlayered and `.btn`'s own `display` beats a layered
-        `hidden` utility, so `hidden lg:inline-flex` on the CTA would do
-        nothing at all (verified at 375px, where the button rendered
-        regardless). `.btn` carries the geometry — flat here, the surface
-        collapses its radius — and `.btn-primary` only the colour; both
-        classes are required. */}
-    <div class="hidden shrink-0 items-center gap-2 lg:flex">
       <ThemeToggle client:idle />
-      <a href={links.contact} class="btn btn-primary no-underline">
-        {s.cta}
-      </a>
+      <div class="tds-sitebar__wide">
+        <a href={contact} class="btn btn-primary no-underline">
+          {s.cta}
+        </a>
+      </div>
     </div>
 
-    {/* Identity at EVERY width — the session is the same on a phone, and
-        below `lg` this is the only thing beside the hamburger. Unlike the
-        blog, a signed-out visitor gets a sign-in link here: on this site a
-        session unlocks something (the premium tools), so the way in is worth
-        a slot in the bar. The link paints immediately rather than after the
-        session probe, because anonymous is the common case on a public site
-        and making almost every visitor watch the header reflow would be a
-        poor trade for one round trip.
-
-        Utilities go on the wrapper, never on the island — same
-        unlayered-vs-utility reason as the CTA above. */}
-    <div class="flex shrink-0 items-center">
+    {/* Identity at EVERY width, then the hamburger. Unlike the journal, a
+        signed-out visitor gets a sign-in link: on this site a session unlocks
+        the premium tools, so the way in is worth a slot. The breakpoint of the
+        toggle comes from `.tds-menu-toggle` itself, not from `lg:hidden`. */}
+    <div class="tds-sitebar__actions">
       <AccountMenu client:idle lang={lang} loggedOut="login" />
+      <button
+        id="menu-toggle"
+        type="button"
+        class="btn btn-ghost tds-menu-toggle"
+        aria-controls="mobile-menu"
+        aria-expanded="false"
+        aria-label={s.navMenu}
+      >
+        <span class="tds-menu-bar tds-menu-bar-top" aria-hidden="true"></span>
+        <span class="tds-menu-bar tds-menu-bar-mid" aria-hidden="true"></span>
+        <span class="tds-menu-bar tds-menu-bar-bot" aria-hidden="true"></span>
+      </button>
     </div>
-
-    {/* The breakpoint comes from `.tds-menu-toggle` itself, not from an
-        `lg:hidden` here — same unlayered-vs-utility reason as the CTA above. */}
-    <button
-      id="menu-toggle"
-      type="button"
-      class="btn btn-ghost tds-menu-toggle"
-      aria-controls="mobile-menu"
-      aria-expanded="false"
-      aria-label={s.navMenu}
-    >
-      <span class="tds-menu-bar tds-menu-bar-top" aria-hidden="true"></span>
-      <span class="tds-menu-bar tds-menu-bar-mid" aria-hidden="true"></span>
-      <span class="tds-menu-bar tds-menu-bar-bot" aria-hidden="true"></span>
-    </button>
   </div>
 
   {/* The docked sheet, its motion and its scroll containment are all
       `.tds-mobile-menu` (tds-shared). Only the offset is local, matched to the
-      bar's `min-h-15` and published as `--tds-mobile-menu-inset` so the
-      panel's max-height stops at the viewport edge instead of running past it
-      with no scrollbar to reveal that it did. */}
+      bar's 3.75rem and published as `--tds-mobile-menu-inset` so the panel's
+      max-height stops at the viewport edge instead of running past it. */}
   <div
     id="mobile-menu"
     class="tds-mobile-menu inset-x-0 top-[3.75rem]"
@@ -181,24 +150,23 @@ const langHrefs: { code: Lang; href: string; label: string }[] = [
     aria-label={s.navMenu}
   >
     <nav aria-label="Navigation">
-      <a
-        href={`${base}/`}
-        data-menu-link
-        class="tds-mobile-menu__link"
-        aria-current={onCatalog ? "page" : undefined}
-      >
-        {s.navAllTools}
-      </a>
-      <a href={links.blog} data-menu-link class="tds-mobile-menu__link">{s.navBlog}</a>
-      <a href={links.main} data-menu-link class="tds-mobile-menu__link">{s.navHome}</a>
+      {nav.map((item) => (
+        <a
+          href={item.href}
+          data-menu-link
+          class="tds-mobile-menu__link"
+          aria-current={item.current ? (onCatalog ? "page" : "true") : undefined}
+        >
+          {item.label}
+        </a>
+      ))}
     </nav>
 
     <div class="mt-3 flex flex-wrap items-center justify-between gap-2 border-t border-[color:var(--color-line)] pt-3">
       <div class="flex items-center gap-2">
         <ThemeToggle client:idle />
         {/* The switch rides the drawer's control row rather than the link list:
-            it is a setting, not a destination, and the same pairing the blog's
-            drawer uses. */}
+            it is a setting, not a destination. */}
         {EN_ENABLED && (
           <div class="tds-lang-toggle" role="group" aria-label="Sprache / Language">
             {langHrefs.map((l) => (
@@ -216,7 +184,7 @@ const langHrefs: { code: Lang; href: string; label: string }[] = [
           </div>
         )}
       </div>
-      <a href={links.contact} data-menu-link class="btn btn-primary no-underline">
+      <a href={contact} data-menu-link class="btn btn-primary no-underline">
         {s.cta}
       </a>
     </div>

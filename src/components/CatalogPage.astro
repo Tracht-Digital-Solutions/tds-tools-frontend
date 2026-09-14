@@ -75,7 +75,10 @@ const jsonLd = asGraph(
       is what makes them read at weight 800 with the display face, so neither
       the weight nor the family belongs in this markup. */}
   <section class="tools-hero">
-    <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
+    {/* `.tds-shell`, not `max-w-6xl`: the blog surface's 120rem is the width
+        the journal and the shop use too, so the edges line up with the header
+        on every property. The headline and body keep their own measure. */}
+    <div class="tds-shell py-16 sm:py-20">
       <p class="eyebrow" style="color: var(--color-accent-pink);">{s.heroEyebrow}</p>
       <h1 class="display mt-3 max-w-3xl text-4xl leading-tight sm:text-5xl">
         {s.heroHeadlineLead}{" "}
@@ -104,7 +107,7 @@ const jsonLd = asGraph(
     </div>
   </section>
 
-  <div class="mx-auto max-w-6xl px-4 py-12 sm:px-6">
+  <div class="tds-shell py-12">
     {ads.enabled && ads.slotCatalog && <AdSlot client={ads.publisherId} slot={ads.slotCatalog} lang={lang} />}
 
     {groups.length === 0 ? (
@@ -117,7 +120,11 @@ const jsonLd = asGraph(
             <span class="cat-head__count">{s.toolCount(catTools.length)}</span>
           </div>
           <span aria-hidden="true" class="cat-head__mark"></span>
-          <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {/* The intrinsic grid, not a fixed `lg:grid-cols-3`: three columns in a
+              120rem shell stretched every card to 600px. `auto-fill` answers the
+              width with more columns instead, and keeps a lone card one column
+              wide rather than full width. */}
+          <div class="tds-grid-auto" style="--tds-grid-min: 17rem; gap: 1rem;">
             {catTools.map((tool) => <ToolCard tool={tool} lang={lang} base={base} />)}
           </div>
         </section>

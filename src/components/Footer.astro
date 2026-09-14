@@ -84,7 +84,7 @@ const groups = [
     inside the footer, so any shared primitive rendered here reads on the dark
     ground instead of keeping the light page's warm line. */}
 <footer class="mt-20 tds-tone-navy">
-  <div class="mx-auto grid max-w-6xl gap-9 px-4 py-12 sm:px-6 md:grid-cols-[1.4fr_repeat(3,1fr)]">
+  <div class="tds-shell grid gap-9 py-12 md:grid-cols-[1.4fr_repeat(3,1fr)]">
     <div>
       {/* The wordmark reads TD Tools with the MARK carrying the "TD", the
           same construction as the header's and as the journal footer's.
@@ -137,7 +137,7 @@ const groups = [
       draws around ITSELF, while a line BETWEEN two things keeps its literal
       1px. Same rule, same value, as the blog footer's. */}
   <div
-    class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 pt-4 pb-8 text-xs sm:px-6"
+    class="tds-shell flex flex-wrap items-center justify-between gap-4 pt-4 pb-8 text-xs"
     style="border-top: 1px solid rgb(255 255 255 / 0.1); font-family: var(--font-mono); color: rgb(255 255 255 / 0.6);"
   >
     <p>© {year} Tracht Digital Solutions · {s.footerTagline}</p>

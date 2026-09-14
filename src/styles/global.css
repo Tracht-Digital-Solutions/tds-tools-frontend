@@ -84,21 +84,13 @@
   --tds-brand-logo-size: 1.6rem;
 }
 
-/* ---- Header nav ---- */
-/* The bordeaux square that separates the wordmark from the nav — the journal
-   header's one piece of punctuation, and the cheapest way for the two public
-   properties to read as siblings. 5px, square (this surface has no radii). */
-.nav-divider {
-  width: 5px;
-  height: 5px;
-  background: var(--color-accent);
-  flex-shrink: 0;
-}
-/* Nav links ride the SHARED `.link-underline` primitive rather than a copy of
-   the blog's `.jnav-item`: same affordance (an underline that scales in from
-   the left on hover AND focus-visible), already collapsing under reduced
-   motion, and duplicating a component's CSS into a second repo is precisely
-   the drift the surface split exists to end.
+/* ---- In-page links ---- */
+/* The header's bar, divider and nav links are tds-shared's `.tds-sitebar*`,
+   shared with the journal and the shop. What stays here is the muted link the
+   tool page's breadcrumb and the 404 page use. It rides the SHARED
+   `.link-underline` primitive rather than a copy: an underline that scales in
+   from the left on hover AND focus-visible, already collapsing under reduced
+   motion.
 
    THE COLOUR HAS TO BE DECLARED HERE, NOT AS A UTILITY IN THE MARKUP, and the
    reason generalises to every shared class in these apps: Tailwind emits its
@@ -117,13 +109,6 @@
 .tnav-link:hover,
 .tnav-link:focus-visible {
   color: var(--color-ink);
-}
-.tnav-link[aria-current="page"] {
-  color: var(--color-primary);
-  font-weight: 600;
-}
-.tnav-link[aria-current="page"]::after {
-  transform: scaleX(1);
 }
 
 /* ---- Hero band ---- */
@@ -324,6 +309,41 @@
 .tool-related {
   margin-top: 3.5rem;
 }
+
+/* ---- Tool page columns ----
+   The page runs on the full-width shell, like the catalog. In one column that
+   wide the guide stops at 68ch beside a screen's width of nothing, so from
+   80rem the tool, the ad and the guide keep the main column and the related
+   tools and the service note move into a column beside them. Below that it is
+   the single column it always was, in the same order: the DOM order is the
+   reading and tab order at every width.
+
+   After `.service-note` and `.tool-related` in this file on purpose — the
+   aside resets their margin-top at the same specificity, so source order is
+   what lets it win. */
+.tool-layout,
+.tool-main,
+.tool-aside {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  min-width: 0;
+}
+@media (min-width: 80rem) {
+  .tool-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) clamp(18rem, 22vw, 24rem);
+    align-items: start;
+    gap: 1.5rem clamp(2rem, 3vw, 3.5rem);
+  }
+  .tool-aside {
+    gap: 2.5rem;
+  }
+  .tool-aside > * {
+    margin-top: 0;
+  }
+}
+
 .tool-guide__h2 {
   margin: 0;
   font-family: var(--font-display);
