@@ -42,6 +42,8 @@ export interface SiteCopy {
   cta: string;
   skipToContent: string;
   emptyCatalog: string;
+  /** Heading above the catalog grid; the tool count sits beside it. */
+  catalogHeading: string;
   toolCount: (n: number) => string;
   guideHeading: string;
   guideUseCases: string;
@@ -98,6 +100,7 @@ export const copy = {
     cta: "Unverbindlich anfragen",
     skipToContent: "Zum Inhalt springen",
     emptyCatalog: "Zurzeit sind keine Tools verfügbar.",
+    catalogHeading: "Alle Werkzeuge",
     toolCount: (n: number) => `${n} ${n === 1 ? "Werkzeug" : "Werkzeuge"}`,
     guideHeading: "Ratgeber",
     guideUseCases: "Typische Anwendungsfälle",
@@ -154,6 +157,7 @@ export const copy = {
     cta: "Get in touch",
     skipToContent: "Skip to content",
     emptyCatalog: "No tools are available at the moment.",
+    catalogHeading: "All tools",
     toolCount: (n: number) => `${n} ${n === 1 ? "tool" : "tools"}`,
     guideHeading: "Guide",
     guideUseCases: "Typical use cases",

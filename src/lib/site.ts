@@ -70,8 +70,8 @@ export const categoryLabels: Record<ToolCategory, string> = labels.de;
  *
  * A helper rather than an inline ternary in the template because German
  * pluralisation is the kind of thing that reads as correct in a diff and wrong
- * on the page — and because the catalog genuinely produces categories of one
- * (five of the six sections hold one or two tools).
+ * on the page — and because the admin can switch the catalog down to a single
+ * tool, which the counter beside the catalog heading then has to say right.
  */
 export const toolCountLabel = (n: number): string => copy.de.toolCount(n);
 

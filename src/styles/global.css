@@ -123,20 +123,12 @@
   color: #fff;
 }
 
-/* ---- Category sections ---- */
-/* The catalog is grouped by category (each `ToolDef` carries one), and with 7
-   tools over 6 categories the sections run 1-2 cards each. What separates them
-   is RHYTHM plus a display heading and a 2px accent bar — the flat kit's own
-   device — never a hairline: this surface draws almost no borders, so five of
-   them would be the heaviest thing on the page.
-   `.tds-brandbar` was the obvious candidate for the accent mark and is wrong
-   here: it is punctuation, and five per page is wallpaper. */
-.cat-section {
-  margin-bottom: 4rem;
-}
-.cat-section:last-child {
-  margin-bottom: 0;
-}
+/* ---- Catalog heading ---- */
+/* One display heading + a mono tool counter over a 2px accent bar — the flat
+   kit's own device — above the single catalog grid. The same mark also opens
+   the premium block. Never a hairline: this surface draws almost no borders.
+   `.tds-brandbar` is wrong here: it is punctuation, not a section marker.
+   (Until 0.23.0 this pair headed one section per category.) */
 .cat-head {
   display: flex;
   align-items: baseline;
@@ -256,6 +248,62 @@
   text-wrap: pretty;
 }
 
+/* The category label. Mono and small like the heading counter: a label, not a
+   second title. */
+.tool-card__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  line-height: 1.2;
+  color: var(--color-muted);
+}
+.tool-card__icon {
+  display: inline-flex;
+  flex: none;
+}
+/* "This goes somewhere": hidden at rest, it appears on hover and on keyboard
+   focus. It only SLIDES when motion is welcome — under reduced motion it
+   simply appears. */
+.tool-card__arrow {
+  display: inline-flex;
+  flex: none;
+  margin-left: auto;
+  color: var(--color-accent);
+  opacity: 0;
+}
+.tool-card:focus-visible .tool-card__arrow {
+  opacity: 1;
+}
+@media (hover: hover) {
+  .tool-card:hover .tool-card__arrow {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .tool-card__icon {
+    transition: transform var(--tds-dur-slow) var(--tds-ease-out);
+  }
+  .tool-card__arrow {
+    transform: translateX(-0.5rem);
+    transition:
+      opacity var(--tds-dur-base) var(--tds-ease-out),
+      transform var(--tds-dur-slow) var(--tds-ease-out);
+  }
+  .tool-card:focus-visible .tool-card__arrow {
+    transform: none;
+  }
+  .tool-card:focus-visible .tool-card__icon {
+    transform: translateY(-0.125rem) scale(1.1);
+  }
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .tool-card:hover .tool-card__arrow {
+    transform: none;
+  }
+  .tool-card:hover .tool-card__icon {
+    transform: translateY(-0.125rem) scale(1.1);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   /* Reset the END state rather than only shortening the duration — a
      transform that still runs at 0.01ms is still motion. */
@@ -263,6 +311,126 @@
   .tool-card::before,
   .tool-card__title {
     transition: none;
+  }
+}
+
+/* ---- Catalog grid ----
+   Every enabled tool in ONE intrinsic grid (`.tds-grid-auto`, auto-fill) over
+   the full viewport width, laid out as a CLOSED SURFACE: no white page shows
+   between the cards, and a short last row leaves card-coloured room rather
+   than a hole.
+
+   How the seams are drawn, and why not the obvious way:
+   - The GRID carries the card colour; cards inside it are transparent and
+     draw a 1px seam on their own right and bottom edge (inset shadow, so it
+     takes no space and never doubles).
+   - NOT `gap: 1px` over a `--color-line` background: `auto-fill` keeps empty
+     tracks, and each would show as a grey block of line colour. (The journal's
+     mosaic gets away with a gap because its ground is the page colour.)
+   - The seams that land on the grid's OUTER right and bottom edge are covered
+     by `::after` in the surface colour, so the block has the same clean edge
+     beside a card and beside free room. The active cell rises above it
+     (z-index 2), which is also what lets a tilted card overlap its
+     neighbours.
+
+   Scoped to `.tool-grid` throughout: `RelatedTools.astro` renders
+   `.tool-card` too and keeps its own gapped, non-tilting layout.
+   After the `.tool-card` rules on purpose — `.tool-grid .tool-card:hover`
+   has to restate the fill at the same specificity as the transparent rest
+   state, so source order decides. */
+:root {
+  --tool-glare: rgb(255 255 255 / 0.3);
+}
+:root[data-theme="dark"] {
+  --tool-glare: rgb(255 255 255 / 0.07);
+}
+.tool-grid {
+  position: relative;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background: var(--color-soft);
+}
+.tool-grid::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  box-shadow: inset -1px -1px 0 var(--color-soft);
+}
+.tool-grid__cell {
+  position: relative;
+  min-width: 0;
+}
+.tool-grid__cell:hover,
+.tool-grid__cell:focus-within {
+  z-index: 2;
+}
+.tool-grid .tool-card {
+  background: transparent;
+  box-shadow: inset -1px -1px 0 var(--color-line);
+}
+.tool-grid .tool-card:hover,
+.tool-grid .tool-card:focus-within {
+  background: var(--tds-flat-hover);
+}
+/* Measured, not chosen: `--color-muted` (#6b6b66) reaches 4.66:1 on the soft
+   surface but only 4.49:1 on the hover fill — under AA on exactly the card
+   the visitor is pointing at. Ink mixed into the surface is the journal's own
+   answer to the same problem (`--jnl-muted`), and it holds in both themes. */
+.tool-grid {
+  --tool-muted: color-mix(in srgb, var(--color-ink) 72%, var(--color-soft));
+}
+.tool-grid .tool-card__eyebrow,
+.tool-grid .tool-card__desc {
+  color: var(--tool-muted);
+}
+
+/* The tilt (`lib/cardTilt.ts` writes --tilt-x/-y, --glare-x/-y and
+   `data-tilting`). Only for a fine hovering pointer and only when motion is
+   welcome — the script checks the same two queries, so neither half can run
+   without the other.
+   The transform exists ONLY while tilting: a permanent 3D identity transform
+   would promote all twenty cards to their own layers for nothing. Removing
+   the flag hands the card back to the slow transition, which is the return to
+   rest. No drop shadow — this surface elevates nothing; depth comes from the
+   turn and the glare alone. */
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .tool-grid .tool-card {
+    transition:
+      background-color var(--tds-dur-base) var(--tds-ease-out),
+      transform var(--tds-dur-slow) var(--tds-ease-out);
+  }
+  .tool-grid .tool-card[data-tilting] {
+    transform: perspective(60rem) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg)) scale(1.025);
+    /* Short while following the pointer, so the card tracks it without lag
+       and without the jitter of no transition at all. */
+    transition:
+      background-color var(--tds-dur-base) var(--tds-ease-out),
+      transform 90ms linear;
+    will-change: transform;
+  }
+  /* Glare. `z-index: -1` inside the card's own stacking context (the
+     transform creates one) puts it above the hover fill and BELOW the text,
+     so it never washes out the description it passes over. */
+  .tool-grid .tool-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background: radial-gradient(
+      circle at var(--glare-x, 50%) var(--glare-y, 50%),
+      var(--tool-glare),
+      transparent 65%
+    );
+    opacity: 0;
+    transition: opacity var(--tds-dur-base) var(--tds-ease-out);
+  }
+  .tool-grid .tool-card[data-tilting]::after {
+    opacity: 1;
   }
 }
 

@@ -11,7 +11,7 @@ import AdSlot from "~/components/AdSlot.astro";
 import ServiceNote from "~/components/ServiceNote.astro";
 import { enabledTools, adsConfig } from "~/lib/catalog";
 import { site, links, categoryOrder } from "~/lib/site";
-import { categoryLabels, t, toolCopyFor } from "~/lib/i18n";
+import { t, toolCopyFor } from "~/lib/i18n";
 import { localizedPath, type Lang } from "~/lib/seo";
 import {
   asGraph,
@@ -28,16 +28,21 @@ interface Props {
 
 const { lang } = Astro.props;
 const s = t(lang);
-const labels = categoryLabels[lang];
 const base = lang === "de" ? "" : "/en";
 
 const tools = await enabledTools();
 const ads = await adsConfig();
 
-// Group enabled tools by category, in the site's stable category order.
-const groups = categoryOrder
-  .map((cat) => ({ cat, tools: tools.filter((tool) => tool.category === cat) }))
-  .filter((group) => group.tools.length > 0);
+// One grid, still in the site's stable category order: the category that used
+// to be a section heading is now a label on each card. `sort` is stable, so
+// tools keep their manifest order inside a category. A category missing from
+// `categoryOrder` sorts last rather than vanishing (`site.test.ts` keeps the
+// two lists equal anyway).
+const rank = (cat: ToolCategory): number => {
+  const index = categoryOrder.indexOf(cat);
+  return index === -1 ? categoryOrder.length : index;
+};
+const orderedTools = [...tools].sort((a, b) => rank(a.category) - rank(b.category));
 
 /* One `@graph`, not four sibling script blocks: inside a graph the nodes
    reference each other by `@id`, so the organization is DESCRIBED once here
@@ -107,28 +112,39 @@ const jsonLd = asGraph(
     </div>
   </section>
 
-  <div class="tds-shell py-12">
+  {/* The catalog body runs the FULL viewport width, gutter aside: the grid
+      answers a wider screen with more columns. The ceiling is lifted through
+      the token, never a utility — `.tds-shell` is unlayered and would beat
+      one. The header and the hero keep the shared 120rem. The notes below the
+      grid share this wrapper so their edges stay flush with it; their text
+      keeps its own 68ch measure. */}
+  <div class="tds-shell py-12" style="--tds-shell-max: none;">
     {ads.enabled && ads.slotCatalog && <AdSlot client={ads.publisherId} slot={ads.slotCatalog} lang={lang} />}
 
-    {groups.length === 0 ? (
+    {orderedTools.length === 0 ? (
       <p class="text-[color:var(--color-muted)]">{s.emptyCatalog}</p>
     ) : (
-      groups.map(({ cat, tools: catTools }) => (
-        <section id={`kategorie-${cat}`} class="cat-section">
-          <div class="cat-head">
-            <h2 class="cat-head__label">{labels[cat as ToolCategory]}</h2>
-            <span class="cat-head__count">{s.toolCount(catTools.length)}</span>
-          </div>
-          <span aria-hidden="true" class="cat-head__mark"></span>
-          {/* The intrinsic grid, not a fixed `lg:grid-cols-3`: three columns in a
-              120rem shell stretched every card to 600px. `auto-fill` answers the
-              width with more columns instead, and keeps a lone card one column
-              wide rather than full width. */}
-          <div class="tds-grid-auto" style="--tds-grid-min: 17rem; gap: 1rem;">
-            {catTools.map((tool) => <ToolCard tool={tool} lang={lang} base={base} />)}
-          </div>
-        </section>
-      ))
+      <section aria-labelledby="catalog-heading">
+        <div class="cat-head">
+          <h2 id="catalog-heading" class="cat-head__label">{s.catalogHeading}</h2>
+          <span class="cat-head__count">{s.toolCount(orderedTools.length)}</span>
+        </div>
+        <span aria-hidden="true" class="cat-head__mark"></span>
+        {/* ONE intrinsic grid for every tool, laid out as a closed surface:
+            `auto-fill` derives the column count from the width, the grid
+            itself carries the card colour, and each card draws a 1px seam —
+            so a short last row leaves card-coloured room, never white page.
+            It used to be one small grid per category, which with 1–3 tools
+            each left most rows half empty. Why the seams are drawn the way
+            they are: the `.tool-grid` block in global.css. */}
+        <ul class="tds-grid-auto tool-grid" style="--tds-grid-min: 17rem;" data-tool-grid>
+          {orderedTools.map((tool) => (
+            <li class="tool-grid__cell">
+              <ToolCard tool={tool} lang={lang} base={base} />
+            </li>
+          ))}
+        </ul>
+      </section>
     )}
 
     <PremiumNote tools={tools} lang={lang} base={base} />
@@ -136,3 +152,13 @@ const jsonLd = asGraph(
     <ServiceNote lang={lang} />
   </div>
 </Layout>
+
+<script>
+  // Bundled, NOT `is:inline`: an inline script is not processed, so the import
+  // would reach the browser as an unresolved specifier.
+  import { mountCardTilt } from "~/lib/cardTilt";
+
+  for (const grid of document.querySelectorAll<HTMLElement>("[data-tool-grid]")) {
+    mountCardTilt(grid);
+  }
+</script>

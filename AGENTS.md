@@ -286,19 +286,40 @@ is describing the shape, not the runtime.
     and the footer restates the `TD` `sr-only`. Without them the brand
     announces as the bare word "Tools". `components/header.test.ts` pins both
     halves plus the absence of a written-out `TD`/`TDS` beside the mark.
-- **Category sections are strengthened typographically, not structurally.** Every
-  `ToolDef` has always carried a `category` and `index.astro` has always grouped
-  by it; with 7 tools over 6 categories those sections run 1–2 cards and the page
-  read as one long list with headings in it. The heading is a **display** heading
-  in the journal's 800 voice (fluid — at that weight and tracking a fixed
-  1.875rem runs to the edge of a 375px phone once the counter sits beside it) +
-  a mono tool counter (`toolCountLabel` in `lib/site.ts`, because four of the six
-  sections hold exactly one tool) over a short accent **fill** bar, with a wider
-  gap between sections. Deliberately no rule under the heading: this surface
-  draws almost no borders, so five hairlines would be the heaviest thing on the
-  page. `.tds-brandbar` is also wrong here — it is punctuation, and five per page
-  is wallpaper. (Until 2026-08-17 the heading was a small uppercase eyebrow in
-  the panel accent, which read as a label rather than as a section.)
+- **The catalog is ONE grid over the full viewport width, laid out as a closed
+  surface (since 0.23.0).** It used to be one small grid per category; with
+  1–3 tools in most categories every row ran half empty and white page showed
+  between and beside the cards. Now `CatalogPage.astro` renders a single
+  `.tds-grid-auto.tool-grid` (`--tds-grid-min: 17rem`) in stable
+  `categoryOrder`, the category rides on each card as a mono eyebrow, and one
+  display heading + mono counter (`toolCount`) + accent fill bar sits above
+  it. The body wrapper lifts the shell ceiling through the token
+  (`--tds-shell-max: none`); header and hero keep 120rem.
+  - **The seams are NOT a `gap: 1px` over a line-coloured grid.** `auto-fill`
+    keeps empty tracks, and each would render as a grey block. The grid
+    carries `--color-soft`, cards inside it are transparent and draw an inset
+    1px seam on their right and bottom edge, and `.tool-grid::after` covers the
+    seams on the grid's OUTER edge in the surface colour — so a short last row
+    ends in card-coloured room with the same clean edge as a full one. The
+    hovered cell rises above that cover (z-index 2). Judge a change here in a
+    browser at several widths with a short last row, not in the diff.
+  - **The hover tilt (`lib/cardTilt.ts`) runs only for a fine hovering pointer
+    and never under `prefers-reduced-motion`** — the CSS media query and the
+    script check the same two conditions. The rect is read from the
+    untransformed `<li>`, once per hover (a transformed card's
+    `getBoundingClientRect()` is its tilted box and would feed back into the
+    angle), and there is deliberately no `setPointerCapture`, which would eat
+    the click on a card that is a link. The transform exists only while
+    `data-tilting` is set; no drop shadow, because this surface elevates
+    nothing.
+  - **Muted text inside the grid is `--tool-muted` (ink 72 % in soft), not
+    `--color-muted`.** The latter measures 4.66:1 on the surface but 4.49:1 on
+    the hover fill. Measure contrast with transitions disabled: a theme flip
+    read mid-transition reported the dark titles at 1.1:1, which they are not.
+  - `RelatedTools.astro` renders `.tool-card` too and is deliberately left out:
+    every grid/tilt rule is scoped to `.tool-grid`.
+  - The `#kategorie-*` section anchors went with the sections; no property
+    linked to them.
 - **The two sibling properties are linked by name, from three places.** The
   header nav, the hero band and the footer all carry *Blog*
   (`blog.tracht-digital.de`) and *Startseite* (`tracht-digital.de`); the URLs

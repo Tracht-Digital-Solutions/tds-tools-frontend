@@ -1,6 +1,6 @@
 ---
 import Icon from "~/components/Icon.astro";
-import { toolCopyFor } from "~/lib/i18n";
+import { categoryLabels, toolCopyFor } from "~/lib/i18n";
 import { site } from "~/lib/site";
 import type { Lang } from "~/lib/seo";
 import type { ResolvedTool } from "~/lib/catalog";
@@ -16,6 +16,9 @@ const { tool, lang = "de", base = "" } = Astro.props;
 // German comes from the pack manifest, English from `lib/i18n` — a catalog
 // card must speak the page's language, not the manifest's.
 const copy = toolCopyFor(lang, tool, site.name);
+// The catalog is ONE grid now, so the category that used to be a section
+// heading rides on the card itself.
+const category = categoryLabels[lang][tool.category];
 const badges = lang === "de"
   ? { premium: "Premium", login: "Login" }
   : { premium: "Premium", login: "Sign-in" };
@@ -23,7 +26,10 @@ const badges = lang === "de"
 
 {/* The journal's flat card (`.tool-card`, this repo's global.css): a
     `--color-soft` colour block with no border, no radius and no shadow, plus
-    the 2px accent bar that grows down its left edge on hover/focus.
+    the 2px accent bar that grows down its left edge on hover/focus. Inside the
+    catalog's `.tool-grid` it goes transparent and draws its own 1px seam, and
+    a fine pointer tilts it — see the grid block in global.css and
+    `lib/cardTilt.ts`.
     NOT `.tds-card` any more — that is the bordered, filled card primitive, and
     stacking it under a flat colour block gave the catalog a second fill and an
     outline the surface does not want. It still wraps the tool BODY on
@@ -34,9 +40,15 @@ const badges = lang === "de"
     geometry, which then kept the marketing pill shape on a surface that rounds
     nothing. */}
 <a href={`${base}/tools/${tool.slug}`} class="tool-card">
+  <span class="tool-card__eyebrow">{category}</span>
   <span class="tool-card__title">
-    <Icon name={tool.icon} class="h-5 w-5 text-[color:var(--color-accent)]" />
+    <span class="tool-card__icon">
+      <Icon name={tool.icon} class="h-5 w-5 text-[color:var(--color-accent)]" />
+    </span>
     {copy.name}
+    <span class="tool-card__arrow" aria-hidden="true">
+      <Icon name="arrow-right" class="h-4 w-4" />
+    </span>
   </span>
   <p class="tool-card__desc">{copy.description}</p>
   {(tool.isPremium || tool.requiresLogin) && (
