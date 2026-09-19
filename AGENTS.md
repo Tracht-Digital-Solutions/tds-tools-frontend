@@ -36,6 +36,15 @@ is describing the shape, not the runtime.
 
 ## Gotchas (repo-wide conventions apply — see root CLAUDE.md)
 
+- **Page transitions (tds-shared ≥ 0.38.5).** `global.css` imports tds-shared's
+  `page-transitions.css`: two pages of this site cross-fade (opacity only, off
+  under reduced motion). No scroll reveal — this site shares the blog surface,
+  whose rule is no decorative motion; the catalog tilt stays the one hover
+  effect. `motion` is bundled into the server build via `motionSsrNoExternal`.
+  When checking it with Playwright, hover before clicking: an instant click
+  with no prior pointer movement makes Chrome abort the cross-document
+  transition; real hover-clicks and touch taps run it.
+
 - **A tool page's `<title>` comes through `mergeCopy`, and it used to be lost
   there.** `ToolPage.astro` hands `copy.seoTitle` straight to the layout, and
   `mergeCopy` returned `undefined` for that field whenever the panel supplied

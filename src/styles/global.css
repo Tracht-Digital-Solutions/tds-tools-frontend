@@ -46,6 +46,9 @@
 @import "@tracht-digital-solutions/tds-shared/styles/base.css";
 @import "@tracht-digital-solutions/tds-shared/styles/primitives.css";
 @import "@tracht-digital-solutions/tds-shared/styles/surfaces/blog.css";
+/* Cross-page fade between two pages of the tools site — no script, opacity
+   only, off under reduced motion. */
+@import "@tracht-digital-solutions/tds-shared/styles/page-transitions.css";
 
 /* Scan the composed tool packages (in node_modules) for Tailwind utility
    classes. Tailwind ignores node_modules by default, so without this the

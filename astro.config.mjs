@@ -3,7 +3,7 @@ import node from "@astrojs/node";
 import react from "@astrojs/react";
 // Shared CSS minify settings (incl. the cssTarget that keeps lightningcss
 // from dropping the header backdrop-filter prefix). See tds-shared#10.
-import { tdsViteBuild } from "@tracht-digital-solutions/tds-shared/astro";
+import { motionSsrNoExternal, tdsViteBuild } from "@tracht-digital-solutions/tds-shared/astro";
 import { toolHost } from "@tracht-digital-solutions/tds-tools-contract/astro";
 
 // The tool packs composed into this build. Adding a `tds-tool-*` package here
@@ -73,7 +73,9 @@ export default defineConfig({
       // and is not installed — the entry was copied from tds-blog, where the
       // markdown renderer does need it. A noExternal name nothing imports is a
       // silent no-op, which is exactly why it survived.
-      noExternal: [/^@tracht-digital-solutions\//, "zod"],
+      // `motion` (lazily imported by tds-shared's panel components)
+      // is bundled so the release tree never needs a copy; tds-shared owns the list.
+      noExternal: [/^@tracht-digital-solutions\//, "zod", ...motionSsrNoExternal],
       // Native addons cannot be bundled.
       external: ["sharp"],
     },
