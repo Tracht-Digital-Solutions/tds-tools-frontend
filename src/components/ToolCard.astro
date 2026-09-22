@@ -25,9 +25,9 @@ const badges = lang === "de"
 ---
 
 {/* The journal's flat card (`.tool-card`, this repo's global.css): a
-    `--color-soft` colour block with no border, no radius and no shadow, plus
+    `--color-soft` colour block with no border, no radius and a hard 2D offset (global.css), plus
     the 2px accent bar that grows down its left edge on hover/focus. Inside the
-    catalog's `.tool-grid` it goes transparent and draws its own 1px seam, and
+    catalog's `.tool-grid` it draws its own 1px seam (and, since 2026-09-22, stays opaque so the next card covers its shadow), and
     a fine pointer tilts it — see the grid block in global.css and
     `lib/cardTilt.ts`.
     NOT `.tds-card` any more — that is the bordered, filled card primitive, and

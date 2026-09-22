@@ -319,8 +319,8 @@ is describing the shape, not the runtime.
     `getBoundingClientRect()` is its tilted box and would feed back into the
     angle), and there is deliberately no `setPointerCapture`, which would eat
     the click on a card that is a link. The transform exists only while
-    `data-tilting` is set; no drop shadow, because this surface elevates
-    nothing.
+    `data-tilting` is set; no BLURRED shadow — the only shadow is the fixed
+    hard 2D offset every card carries (see "Hard 2D shadows" below).
   - **Muted text inside the grid is `--tool-muted` (ink 72 % in soft), not
     `--color-muted`.** The latter measures 4.66:1 on the surface but 4.49:1 on
     the hover fill. Measure contrast with transitions disabled: a theme flip
@@ -792,3 +792,18 @@ factory, a `bin` entry for the release packer). Deliberately **not** done in
 they did not otherwise need, and a `tds-shared` minor then forces repinning
 every consumer. Kept as a named follow-up rather than a silent divergence — if
 you fix a bug in any of the six, fix it in all three repos.
+
+## Hard 2D shadows (2026-09-22, tds-shared ≥ 0.42)
+
+Every box and control of the public sites carries a fixed, unblurred offset
+(`--tds-shadow-hard*`, set by the blog surface; `.tds-card`, the buttons, the
+account dropdown and the cookie notice take it in tds-shared). Here:
+
+- **The catalogue grid has no gap, so each card carries the offset and an
+  OPAQUE fill** (`--color-soft`): every later cell paints over its
+  predecessor's shadow, and only the outer edge of the block shows it —
+  following the cards, including a short last row. The grid itself has no
+  fill any more, so the empty tracks show the page ground. The active cell
+  (z-index 2) shows its whole offset.
+- `.tool-card` outside the grid and `.service-note` take the large offset.
+- Never transition a `box-shadow`.
