@@ -807,3 +807,6 @@ account dropdown and the cookie notice take it in tds-shared). Here:
   (z-index 2) shows its whole offset.
 - `.tool-card` outside the grid and `.service-note` take the large offset.
 - Never transition a `box-shadow`.
+- **Hover lifts a card** 2px up-left while its offset grows by 2px
+  (`--tds-shadow-hard-hover`, 2026-09-26). The tilt keeps `transform`, the
+  lift uses `translate`, so neither overwrites the other.

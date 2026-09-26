@@ -725,3 +725,25 @@
 .tool-grid {
   background: transparent;
 }
+
+/* Hover LIFTS a card toward the pointer (2026-09-26): 2px up-left while its
+   offset grows by the same 2px. In the catalogue the active cell already
+   rises above its neighbours (z-index 2), so the whole offset shows; the
+   tilt keeps `transform`, the lift uses `translate`. */
+.tool-card:is(:hover, :focus-within) {
+  translate: -2px -2px;
+  box-shadow: var(--tds-shadow-hard-hover);
+}
+.tool-grid .tool-card:is(:hover, :focus-within) {
+  box-shadow:
+    inset -1px -1px 0 var(--color-line),
+    var(--tds-shadow-hard-hover);
+}
+.tool-card {
+  transition-property: background-color, translate, transform;
+}
+@media (prefers-reduced-motion: reduce) {
+  .tool-card:is(:hover, :focus-within) {
+    translate: none;
+  }
+}
