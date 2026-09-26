@@ -1,0 +1,1 @@
+var e=[.2,.8,.2,1],t={out:`cubic-bezier(${e.join(`, `)})`,inOut:`cubic-bezier(${[.4,0,.2,1].join(`, `)})`},n={fast:160,base:200,slow:320},r={fast:{duration:n.fast/1e3,ease:e},base:{duration:n.base/1e3,ease:e},slow:{duration:n.slow/1e3,ease:e}},i={type:`spring`,bounce:0,visualDuration:n.slow/1e3};r.base,r.fast,r.base,r.fast;export{i as n,r,t};
