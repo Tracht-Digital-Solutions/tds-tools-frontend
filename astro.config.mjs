@@ -49,6 +49,25 @@ export default defineConfig({
     // keeps the de/en alternates, which on THIS site really are a pure prefix
     // operation (same slugs in both trees).
   ],
+  /**
+   * Prefetch the page under the pointer (2026-09-29).
+   *
+   * Astro's own prefetch, NOT `<ClientRouter>`: it only fetches the document
+   * into the browser's cache and the click that follows stays an ordinary
+   * navigation, so the SSR page cache, the theme bootstrap and the cross-page
+   * view transitions keep working as they do.
+   *
+   * It pays off most here of the four sites: the catalogue is a grid of links to
+   * tool pages, and a visitor hovering a card is deciding whether to open it.
+   *
+   * `hover` rather than `viewport` all the same — the catalogue holds dozens of
+   * tools, and `viewport` would fetch every one on screen.
+   */
+  prefetch: {
+    prefetchAll: true,
+    defaultStrategy: "hover",
+  },
+
   trailingSlash: "ignore",
   build: {
     format: "directory",
