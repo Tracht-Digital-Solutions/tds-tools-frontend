@@ -29,7 +29,8 @@ export const prerender = true;
   lang="de"
   noindex
 >
-  <main class="tds-shell">
+  {/* A <div>: the layout already renders the page's one <main>. */}
+  <div class="tds-shell">
     <InstallWizard client:load profile={tools} />
-  </main>
+  </div>
 </Layout>

@@ -18,7 +18,6 @@ describe("cacheEvents", () => {
     expect(await paths([{ type: "tool", id: "qr-code-generator", lang: "de" }])).toEqual([
       "/",
       "/sitemap-0.xml",
-      "/tools-catalog.json",
       "/tools/qr-code-generator",
     ]);
   });
@@ -36,7 +35,6 @@ describe("cacheEvents", () => {
       "/",
       "/en/",
       "/sitemap-0.xml",
-      "/tools-catalog.json",
     ]);
   });
 

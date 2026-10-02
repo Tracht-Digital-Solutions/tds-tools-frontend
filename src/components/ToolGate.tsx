@@ -3,12 +3,48 @@ import { runtimeSetting } from "@tracht-digital-solutions/tds-shared/api";
 
 interface Props {
   toolId: string;
-  requiresLogin: boolean;
   isPremium: boolean;
   priceCents: number;
   /** CSS selector of the (initially hidden) tool body to reveal on access. */
   bodySelector: string;
+  /** The page language. Every string here was German, on `/en/` pages too. */
+  lang?: "de" | "en";
 }
+
+const TX = {
+  de: {
+    checking: "Zugang wird geprüft …",
+    premium: "Premium-Tool",
+    loginRequired: "Anmeldung erforderlich",
+    loginPremium: "Melde dich an, um dieses Premium-Tool freizuschalten.",
+    loginFree: "Bitte melde dich an, um dieses Tool zu nutzen.",
+    login: "Anmelden",
+    unlockTitle: "Dieses Tool freischalten",
+    once: (price: string) => `Einmalig ${price} — danach dauerhaft nutzbar.`,
+    redirecting: "Weiterleitung …",
+    unlock: "Jetzt freischalten",
+    httpError: (status: number) => `Fehler (HTTP ${status}).`,
+    payFailed: "Zahlung konnte nicht gestartet werden.",
+    failed: "Der Zugang konnte nicht geprüft werden. Bitte später erneut versuchen.",
+    locale: "de-DE",
+  },
+  en: {
+    checking: "Checking access …",
+    premium: "Premium tool",
+    loginRequired: "Sign-in required",
+    loginPremium: "Sign in to unlock this premium tool.",
+    loginFree: "Please sign in to use this tool.",
+    login: "Sign in",
+    unlockTitle: "Unlock this tool",
+    once: (price: string) => `One-off ${price} — yours to use from then on.`,
+    redirecting: "Redirecting …",
+    unlock: "Unlock now",
+    httpError: (status: number) => `Error (HTTP ${status}).`,
+    payFailed: "The payment could not be started.",
+    failed: "Access could not be checked. Please try again later.",
+    locale: "en-GB",
+  },
+} as const;
 
 /**
  * Build-time fallbacks. A host configured with `/install/` overrides
@@ -46,7 +82,8 @@ type State = "checking" | "login" | "buy" | "granted" | "error";
  * a convenience/paywall gate, not DRM. The value is the polished UI + the
  * purchase flow, not withholding the bundle.
  */
-export default function ToolGate({ toolId, requiresLogin, isPremium, priceCents, bodySelector }: Props) {
+export default function ToolGate({ toolId, isPremium, priceCents, bodySelector, lang = "de" }: Props) {
+  const t = TX[lang];
   const [state, setState] = useState<State>("checking");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -84,7 +121,15 @@ export default function ToolGate({ toolId, requiresLogin, isPremium, priceCents,
         const res = await fetch(`${api}/tools/entitlement?tool=${encodeURIComponent(toolId)}`, {
           credentials: "include",
         }).catch(() => null);
-        const ent = res && res.ok ? await res.json() : null;
+        // A failed check is an ERROR, not "not entitled": offering the purchase
+        // on a network blip asked somebody who had already paid to pay again.
+        // Still closed either way. Only an answer (403, or `entitled: false`)
+        // means the tool has not been bought.
+        if (!res || (!res.ok && res.status !== 403)) {
+          if (!cancelled) setState("error");
+          return;
+        }
+        const ent = res.ok ? await res.json() : null;
         if (cancelled) return;
         if (ent?.entitled) {
           reveal();
@@ -122,9 +167,9 @@ export default function ToolGate({ toolId, requiresLogin, isPremium, priceCents,
         window.location.href = data.url;
         return;
       }
-      setError(data?.error ?? `Fehler (HTTP ${res.status}).`);
+      setError(data?.error ?? t.httpError(res.status));
     } catch {
-      setError("Zahlung konnte nicht gestartet werden.");
+      setError(t.payFailed);
     } finally {
       setBusy(false);
     }
@@ -139,20 +184,16 @@ export default function ToolGate({ toolId, requiresLogin, isPremium, priceCents,
   const box = "tds-card p-6 text-center";
 
   if (state === "checking") {
-    return <div className={box}><p className="text-[color:var(--color-muted)]">Zugang wird geprüft …</p></div>;
+    return <div className={box}><p className="text-[color:var(--color-muted)]">{t.checking}</p></div>;
   }
 
   if (state === "login") {
     return (
       <div className={box}>
-        <p className="mb-1 text-lg font-semibold">{isPremium ? "Premium-Tool" : "Anmeldung erforderlich"}</p>
-        <p className="mb-4 text-sm text-[color:var(--color-muted)]">
-          {isPremium
-            ? "Melde dich an, um dieses Premium-Tool freizuschalten."
-            : "Bitte melde dich an, um dieses Tool zu nutzen."}
-        </p>
+        <p className="mb-1 text-lg font-semibold">{isPremium ? t.premium : t.loginRequired}</p>
+        <p className="mb-4 text-sm text-[color:var(--color-muted)]">{isPremium ? t.loginPremium : t.loginFree}</p>
         <a href={loginHref} className="btn btn-primary no-underline">
-          Anmelden
+          {t.login}
         </a>
       </div>
     );
@@ -162,13 +203,13 @@ export default function ToolGate({ toolId, requiresLogin, isPremium, priceCents,
     return (
       <div className={box}>
         <span className="chip chip--warning mb-2 inline-flex">Premium</span>
-        <p className="mb-1 text-lg font-semibold">Dieses Tool freischalten</p>
+        <p className="mb-1 text-lg font-semibold">{t.unlockTitle}</p>
         <p className="mb-4 text-sm text-[color:var(--color-muted)]">
-          Einmalig {(priceCents / 100).toLocaleString("de-DE", { style: "currency", currency: "EUR" })} — danach dauerhaft nutzbar.
+          {t.once((priceCents / 100).toLocaleString(t.locale, { style: "currency", currency: "EUR" }))}
         </p>
         {error && <p className="tds-alert tds-alert--danger mb-3">{error}</p>}
         <button type="button" className="btn btn-primary" onClick={buy} disabled={busy}>
-          {busy ? "Weiterleitung …" : "Jetzt freischalten"}
+          {busy ? t.redirecting : t.unlock}
         </button>
       </div>
     );
@@ -176,7 +217,7 @@ export default function ToolGate({ toolId, requiresLogin, isPremium, priceCents,
 
   return (
     <div className={box}>
-      <p className="text-[color:var(--color-muted)]">Der Zugang konnte nicht geprüft werden. Bitte später erneut versuchen.</p>
+      <p className="text-[color:var(--color-muted)]">{t.failed}</p>
     </div>
   );
 }

@@ -30,9 +30,15 @@ export const contentCache = createGenerationCache();
 /** Language-tree prefix. German lives at the root. */
 const prefix = (lang: "de" | "en") => (lang === "de" ? "" : "/en");
 
-/** The catalog pages plus the sitemap — everything a tool appears on. */
+/**
+ * The catalog pages plus the sitemap — everything a tool appears on.
+ *
+ * Not `/tools-catalog.json`: it is PRERENDERED from the composed packages, a
+ * build-time constant, so a rebuild has nothing to re-render there and listing
+ * it only produced a failed entry on every tool event.
+ */
 function catalogPages(lang: "de" | "en"): string[] {
-  return [`${prefix(lang)}/`, "/sitemap-0.xml", "/tools-catalog.json"];
+  return [`${prefix(lang)}/`, "/sitemap-0.xml"];
 }
 
 /**
@@ -74,5 +80,4 @@ export const alwaysPaths = [
   "/en/",
   "/sitemap-0.xml",
   "/sitemap-index.xml",
-  "/tools-catalog.json",
 ];

@@ -1,14 +1,12 @@
 import type { APIRoute, GetStaticPaths } from "astro";
 import { renderToolOgPng } from "~/og/render";
-import { enabledTools } from "~/lib/catalog";
+import { toolsData, type ResolvedTool } from "~/lib/catalog";
 import { categoryLabels } from "~/lib/site";
 
 /**
  * One OG card per enabled tool, emitted as `/og/tools/<slug>.png`.
  *
- * Keyed off the same `enabledTools()` the routes are, so a tool the admin
- * catalog switches off gets no page AND no orphan image. The tool page
- * references it explicitly; the catalog keeps the default card.
+ * The tool page references it explicitly; the catalog keeps the default card.
  */
 /**
  * Prerendered, and it has to stay that way: the renderer pulls in satori and
@@ -23,13 +21,17 @@ import { categoryLabels } from "~/lib/site";
  */
 export const prerender = true;
 
+// EVERY composed tool, not only the enabled ones. The page references its card
+// unconditionally, and a tool switched off at deploy time and back on in the
+// panel afterwards would otherwise advertise an og:image that 404s until the
+// next deploy. A card for a disabled tool is harmless: nothing links to it.
 export const getStaticPaths = (async () => {
-  const tools = await enabledTools();
+  const { tools } = await toolsData();
   return tools.map((tool) => ({ params: { slug: tool.slug }, props: { tool } }));
 }) satisfies GetStaticPaths;
 
 export const GET: APIRoute = async ({ props }) => {
-  const tool = props.tool as Awaited<ReturnType<typeof enabledTools>>[number];
+  const tool = props.tool as ResolvedTool;
   const png = await renderToolOgPng({
     name: tool.name,
     category: categoryLabels[tool.category],

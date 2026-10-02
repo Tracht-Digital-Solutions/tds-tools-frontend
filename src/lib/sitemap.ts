@@ -23,6 +23,7 @@
  */
 
 import { enabledTools } from "./catalog";
+import { guideUpdatedAt } from "./guides";
 import { EN_ENABLED, localizedPath, type Lang } from "./seo";
 import { site } from "./site";
 
@@ -30,6 +31,12 @@ export interface SitemapUrl {
   path: string;
   changefreq: "weekly" | "monthly";
   priority: number;
+  /**
+   * When the page last really changed (YYYY-MM-DD), or absent. Every URL used
+   * to report the render date, which tells a crawler the whole site changed on
+   * every visit — the same as telling it nothing.
+   */
+  lastmod?: string;
 }
 
 function escapeXml(value: string): string {
@@ -53,23 +60,28 @@ export function absolute(path: string): string {
  * alternates depend on.
  */
 export async function sitemapPaths(): Promise<SitemapUrl[]> {
-  const tools = await enabledTools();
-  return [
-    { path: "/", changefreq: "weekly", priority: 1.0 },
-    ...tools.map((tool) => ({
-      path: `/tools/${tool.slug}`,
-      changefreq: "monthly" as const,
-      priority: 0.8,
-    })),
-  ];
+  const tools = (await enabledTools()).map((tool) => ({
+    path: `/tools/${tool.slug}`,
+    changefreq: "monthly" as const,
+    priority: 0.8,
+    lastmod: guideUpdatedAt(tool.slug),
+  }));
+  // The catalog lists every tool, so it changed when the newest guide did.
+  const newest = tools
+    .map((t) => t.lastmod)
+    .filter((d): d is string => Boolean(d))
+    .sort()
+    .at(-1);
+  return [{ path: "/", changefreq: "weekly", priority: 1.0, lastmod: newest }, ...tools];
 }
 
-export function renderUrlset(paths: SitemapUrl[], lastmod: string): string {
+export function renderUrlset(paths: SitemapUrl[], fallbackLastmod?: string): string {
   const langs: Lang[] = EN_ENABLED ? ["de", "en"] : ["de"];
 
   const body = paths
     .flatMap((entry) =>
       langs.map((lang) => {
+        const lastmod = entry.lastmod ?? fallbackLastmod;
         const alternates = EN_ENABLED
           ? [
               `<xhtml:link rel="alternate" hreflang="de-DE" href="${escapeXml(absolute(localizedPath(entry.path, "de")))}"/>`,
@@ -81,7 +93,7 @@ export function renderUrlset(paths: SitemapUrl[], lastmod: string): string {
           "<url>",
           `<loc>${escapeXml(absolute(localizedPath(entry.path, lang)))}</loc>`,
           alternates,
-          `<lastmod>${escapeXml(lastmod)}</lastmod>`,
+          lastmod ? `<lastmod>${escapeXml(lastmod)}</lastmod>` : "",
           `<changefreq>${entry.changefreq}</changefreq>`,
           `<priority>${entry.priority.toFixed(1)}</priority>`,
           "</url>",
@@ -103,13 +115,13 @@ export function renderUrlset(paths: SitemapUrl[], lastmod: string): string {
  * The index document — the filename `public/robots.txt` advertises and Search
  * Console already knows. `@astrojs/sitemap` produced this exact pair.
  */
-export function renderSitemapIndex(lastmod: string): string {
+export function renderSitemapIndex(lastmod?: string): string {
   return (
     '<?xml version="1.0" encoding="UTF-8"?>' +
     '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' +
     "<sitemap>" +
     `<loc>${escapeXml(absolute("/sitemap-0.xml"))}</loc>` +
-    `<lastmod>${escapeXml(lastmod)}</lastmod>` +
+    (lastmod ? `<lastmod>${escapeXml(lastmod)}</lastmod>` : "") +
     "</sitemap>" +
     "</sitemapindex>"
   );

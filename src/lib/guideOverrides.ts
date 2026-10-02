@@ -14,8 +14,7 @@
  * bearing, not decoration.
  */
 
-import { assertKeyAccepted, siteKeyHeaders } from "./siteKey";
-import { contentCache } from "./cache";
+import { memoisedOr, readContentJson } from "./contentFetch";
 import { guideFor, type ToolGuide } from "./guides";
 import type { Lang } from "./seo";
 import { apiBase } from "./connection";
@@ -47,25 +46,17 @@ export type GuideOverrides = Record<string, ToolCopyOverride>;
 export async function guideOverrides(lang: Lang): Promise<GuideOverrides> {
   if (import.meta.env.PUBLIC_DEMO_MODE === "true") return {};
 
-  return contentCache.get(`tool-guides:${lang}`, async () => {
-    try {
+  return memoisedOr(
+    `tool-guides:${lang}`,
+    async () => {
       const url = new URL(`${apiBase()}/tools/guides`);
       url.searchParams.set("lang", lang);
-      const res = await fetch(url, {
-        headers: siteKeyHeaders(),
-        // A hanging API host must not hold a render open; the committed text
-        // is a perfectly good answer.
-        signal: AbortSignal.timeout(10_000),
-      });
-      assertKeyAccepted(res, url);
-      if (!res.ok) return {};
-      const data = (await res.json()) as { guides?: GuideOverrides };
+      const data = await readContentJson<{ guides?: GuideOverrides }>(url);
       return data.guides ?? {};
-    } catch (err) {
-      console.warn("[tds-tools] tool guides fetch failed, using committed text:", err);
-      return {};
-    }
-  });
+    },
+    () => ({}),
+    `tool guides (${lang}, committed text)`,
+  );
 }
 
 /** True for an override value worth using — a present, non-empty one. */

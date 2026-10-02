@@ -38,9 +38,8 @@
 
 import { catalog as composed } from "virtual:tools-catalog";
 import type { ToolDef } from "@tracht-digital-solutions/tds-tools-contract";
-import { assertKeyAccepted, siteKeyHeaders } from "./siteKey";
-import { contentCache } from "./cache";
 import { apiBase } from "./connection";
+import { memoisedOr, readContentJson } from "./contentFetch";
 
 /** A tool with its admin-resolved runtime flags folded onto the manifest def. */
 export interface ResolvedTool extends ToolDef {
@@ -109,37 +108,24 @@ function fallback(): { tools: ResolvedTool[]; ads: AdsConfig } {
   return { tools: composed.tools.map((t) => resolve(t, undefined)), ads: ADS_OFF };
 }
 
+/** Throws on any failure — `toolsData` decides what that renders as. */
 async function load(): Promise<{ tools: ResolvedTool[]; ads: AdsConfig }> {
-  if (DEMO_MODE) return fallback();
-  try {
-    // The timeout is the point: every other failure mode here already falls
-    // back, but a HANGING api host (not refusing, not erroring) would block
-    // the release build until the job timeout — the one path that could
-    // actually leave the live site stale.
-    const url = `${apiBase()}/tools/catalog`;
-    const res = await fetch(url, { headers: siteKeyHeaders(), signal: AbortSignal.timeout(10_000) });
-    assertKeyAccepted(res, url);
-    if (!res.ok) return fallback();
-    const data = (await res.json()) as CatalogApiResponse;
-    const byId = new Map((data.tools ?? []).map((r) => [r.id, r]));
-    const tools = composed.tools.map((t) => resolve(t, byId.get(t.id)));
+  const data = await readContentJson<CatalogApiResponse>(`${apiBase()}/tools/catalog`);
+  const byId = new Map((data.tools ?? []).map((r) => [r.id, r]));
+  const tools = composed.tools.map((t) => resolve(t, byId.get(t.id)));
 
-    const a = data.ads;
-    const ads: AdsConfig =
-      a && a.enabled === true && typeof a.publisherId === "string" && a.publisherId
-        ? {
-            enabled: true,
-            publisherId: a.publisherId,
-            slotCatalog: typeof a.slotCatalog === "string" ? a.slotCatalog : "",
-            slotTool: typeof a.slotTool === "string" ? a.slotTool : "",
-          }
-        : ADS_OFF;
+  const a = data.ads;
+  const ads: AdsConfig =
+    a && a.enabled === true && typeof a.publisherId === "string" && a.publisherId
+      ? {
+          enabled: true,
+          publisherId: a.publisherId,
+          slotCatalog: typeof a.slotCatalog === "string" ? a.slotCatalog : "",
+          slotTool: typeof a.slotTool === "string" ? a.slotTool : "",
+        }
+      : ADS_OFF;
 
-    return { tools, ads };
-  } catch (err) {
-    console.warn("[tds-tools] catalog API unreachable — using manifest defaults, ads off:", err);
-    return fallback();
-  }
+  return { tools, ads };
 }
 
 /**
@@ -152,7 +138,8 @@ async function load(): Promise<{ tools: ResolvedTool[]; ads: AdsConfig }> {
  * a tool off in the panel would never reach a visitor, and nothing would log.
  */
 export function toolsData(): Promise<{ tools: ResolvedTool[]; ads: AdsConfig }> {
-  return contentCache.get("tools:catalog", load);
+  if (DEMO_MODE) return Promise.resolve(fallback());
+  return memoisedOr("tools:catalog", load, fallback, "catalog API (manifest defaults, ads off)");
 }
 
 /** Enabled tools only (what the catalog + routes should surface). */

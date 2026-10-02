@@ -64,6 +64,13 @@ const altOgLocale = lang === "de" ? ogLocale.en : ogLocale.de;
 // inject the loader only after "granted". Off when absent / demo / API down.
 const ads = await adsConfig();
 const adsActive = ads.enabled && !!ads.publisherId;
+
+/**
+ * The structured data, serialised with `<` escaped. Panel-authored guide text
+ * flows into it, and a literal `</script>` would end the element early and run
+ * whatever followed as markup.
+ */
+const jsonLdText = jsonLd ? JSON.stringify(jsonLd).replace(/</g, "\\u003c") : null;
 ---
 
 <!DOCTYPE html>
@@ -193,9 +200,7 @@ const adsActive = ads.enabled && !!ads.publisherId;
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImageAbs} />
 
-    {jsonLd && (
-      <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />
-    )}
+    {jsonLdText && <script type="application/ld+json" is:inline set:html={jsonLdText} />}
   </head>
   <body>
     <a href="#main" class="absolute -top-full left-0 z-50 px-6 py-3 bg-[var(--color-surface-navy)] text-white text-sm font-semibold focus:top-0 transition-all">

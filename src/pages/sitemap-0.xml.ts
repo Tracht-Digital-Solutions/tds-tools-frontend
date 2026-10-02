@@ -9,6 +9,6 @@ import { renderUrlset, sitemapPaths } from "~/lib/sitemap";
 export const prerender = false;
 
 export const GET: APIRoute = async () =>
-  new Response(renderUrlset(await sitemapPaths(), new Date().toISOString().slice(0, 10)), {
+  new Response(renderUrlset(await sitemapPaths()), {
     headers: { "content-type": "application/xml; charset=utf-8" },
   });

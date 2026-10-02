@@ -135,7 +135,7 @@ const jsonLd = asGraph(
 
 <Layout
   title={copy.seoTitle}
-  description={copy.description}
+  description={copy.seoDescription ?? copy.description}
   lang={lang}
   ogImage={lang === "de" ? `/og/tools/${tool.slug}.png` : `/og/en/tools/${tool.slug}.png`}
   jsonLd={jsonLd}
@@ -203,8 +203,8 @@ const jsonLd = asGraph(
           <ToolGate
             client:load
             toolId={tool.id}
-            requiresLogin={tool.requiresLogin}
             isPremium={tool.isPremium}
+            lang={lang}
             priceCents={tool.priceCents}
             bodySelector="#tool-body"
           />

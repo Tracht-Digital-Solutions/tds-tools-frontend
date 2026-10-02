@@ -34,7 +34,6 @@ function renderGate(props: Partial<React.ComponentProps<typeof ToolGate>> = {}) 
   return render(
     <ToolGate
       toolId="pdf-tools"
-      requiresLogin={true}
       isPremium={false}
       priceCents={0}
       bodySelector="#tool-body"
@@ -198,13 +197,31 @@ describe("premium entitlement", () => {
     expect(body().hidden).toBe(true);
   });
 
-  it("offers the purchase when the entitlement call fails", async () => {
+  it("shows an error, not the purchase, when the entitlement call fails", async () => {
     // Closed by default: an unreachable entitlement API must not grant access.
+    // Nor may it offer the purchase — somebody who already paid would be
+    // asked to pay again.
     fetchMock.mockResolvedValueOnce(res(200)).mockRejectedValueOnce(new TypeError("offline"));
     renderGate(premium);
 
-    expect(await screen.findByRole("button", { name: "Jetzt freischalten" })).toBeDefined();
+    expect(await screen.findByText(/konnte nicht geprüft werden/)).toBeDefined();
+    expect(screen.queryByRole("button", { name: "Jetzt freischalten" })).toBeNull();
     expect(body().hidden).toBe(true);
+  });
+
+  it("shows an error on a 5xx entitlement answer", async () => {
+    fetchMock.mockResolvedValueOnce(res(200)).mockResolvedValueOnce(res(503));
+    renderGate(premium);
+
+    expect(await screen.findByText(/konnte nicht geprüft werden/)).toBeDefined();
+  });
+
+  it("speaks English on an English page", async () => {
+    fetchMock.mockResolvedValueOnce(res(200)).mockResolvedValueOnce(res(200, { entitled: false }));
+    renderGate({ ...premium, lang: "en" });
+
+    expect(await screen.findByRole("button", { name: "Unlock now" })).toBeDefined();
+    expect(screen.getByText(/One-off/).textContent).toContain("€5.00");
   });
 
   it("offers the purchase when the entitlement response is a 403", async () => {
