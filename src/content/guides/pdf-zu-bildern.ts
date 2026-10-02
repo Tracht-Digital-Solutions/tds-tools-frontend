@@ -1,6 +1,7 @@
 import type { ToolGuideSet } from "~/lib/guides";
 
 const guide: ToolGuideSet = {
+  updatedAt: "2026-08-18",
   de: {
     intro: [
       "Manchmal ist ein PDF das falsche Format. In eine Präsentation lässt es sich nicht einfügen, in einem Social-Media-Beitrag zeigt es niemand an, und für eine Vorschau auf der eigenen Website braucht es ohnehin ein Bild. Dann hilft der umgekehrte Weg: die gewünschte Seite als PNG oder JPG herausrechnen und wie jedes andere Bild weiterverwenden.",

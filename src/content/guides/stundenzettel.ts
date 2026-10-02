@@ -1,6 +1,7 @@
 import type { ToolGuideSet } from "~/lib/guides";
 
 const guide: ToolGuideSet = {
+  updatedAt: "2026-08-18",
   de: {
     intro: [
       "Arbeitszeiten müssen aufgezeichnet werden, und in vielen kleinen Betrieben passiert das bis heute auf einem Zettel im Fahrzeug oder in einer Tabelle, die jeden Monat neu zusammenkopiert wird. Beides funktioniert, solange niemand nachfragt — und beides ist mühsam in genau dem Moment, in dem jemand nachfragt.",

@@ -1,6 +1,7 @@
 import type { ToolGuideSet } from "~/lib/guides";
 
 const guide: ToolGuideSet = {
+  updatedAt: "2026-08-18",
   de: {
     intro: [
       "Ein Wasserzeichen sagt einem Dokument an, was es ist. „Entwurf“ quer über der Seite verhindert, dass eine Zwischenfassung als endgültige Rechnung durchgeht; „Kopie“ trennt das Zweitexemplar vom Original; ein Firmenname über einem Angebot macht sichtbar, von wem es stammt, auch wenn nur eine einzelne Seite ausgedruckt weitergereicht wird.",

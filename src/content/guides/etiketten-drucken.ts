@@ -1,6 +1,7 @@
 import type { ToolGuideSet } from "~/lib/guides";
 
 const guide: ToolGuideSet = {
+  updatedAt: "2026-08-18",
   de: {
     intro: [
       "Etikettenbogen sind billig, das Beschriften ist es nicht. Wer einmal versucht hat, dreißig Adressen in einer Textverarbeitung so auf ein Raster zu bringen, dass sie nach dem Druck auch auf den Aufklebern landen, kennt das Ergebnis: zwei verschwendete Bogen und eine Tabelle, die beim nächsten Mal niemand mehr wiederfindet.",

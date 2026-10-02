@@ -1,8 +1,146 @@
+# Every group below is INDEPENDENT: a crawler obeys only the group that names
+# it, and ignores the "*" group entirely. So the Disallow rules have to be
+# repeated in each group — a single Disallow in the "*" group would leave the
+# host-side setup wizard and the host-control endpoints crawlable by every
+# named bot here.
+#
+# Three paths are closed everywhere:
+#   /install/            the host-side setup wizard
+#   /tds/                token-gated host control (/tds/cache/*, /tds/connect) —
+#                        no index value. Prefix-safe: it does not touch
+#                        /tds-runtime.json.
+#   /tools-catalog.json  the internal registry shape the setup wizard syncs
+#                        from. It carries ids and flags, not the catalogue a
+#                        reader sees, and an engine could quote it as if it
+#                        were. The public list is the catalogue page and
+#                        /llms.txt.
+#
+# AI search and answer engines are welcome — the content is meant to be found
+# and cited. Per vendor there is a training crawler, a search index and an agent
+# that fetches a page when someone asks about it. Blocking the search or the
+# fetch agent takes the site out of that engine's answers (robotsTxt.test.ts).
+#
+# Dataset-only crawlers (CCBot, Bytespider, Amazonbot, Diffbot, YouBot, …) are
+# deliberately NOT named. They feed no answer surface this site's readers use,
+# every added group has to repeat the whole Disallow set, and the permissive
+# "*" group already governs them.
+
 User-agent: *
 Allow: /
-# The host-side setup wizard. It is admin-gated and sends X-Robots-Tag: noindex
-# itself; this keeps it out of crawl budgets and out of any index that ignores
-# the header.
 Disallow: /install/
+Disallow: /tds/
+Disallow: /tools-catalog.json
+
+# ── OpenAI ────────────────────────────────────────────────────────────────
+User-agent: GPTBot
+Allow: /
+Disallow: /install/
+Disallow: /tds/
+Disallow: /tools-catalog.json
+
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /install/
+Disallow: /tds/
+Disallow: /tools-catalog.json
+
+User-agent: ChatGPT-User
+Allow: /
+Disallow: /install/
+Disallow: /tds/
+Disallow: /tools-catalog.json
+
+# ── Anthropic ─────────────────────────────────────────────────────────────
+User-agent: ClaudeBot
+Allow: /
+Disallow: /install/
+Disallow: /tds/
+Disallow: /tools-catalog.json
+
+User-agent: Claude-SearchBot
+Allow: /
+Disallow: /install/
+Disallow: /tds/
+Disallow: /tools-catalog.json
+
+User-agent: Claude-User
+Allow: /
+Disallow: /install/
+Disallow: /tds/
+Disallow: /tools-catalog.json
+
+# Retired Anthropic names, kept so an old crawler still reads the same rules.
+User-agent: Claude-Web
+Allow: /
+Disallow: /install/
+Disallow: /tds/
+Disallow: /tools-catalog.json
+
+User-agent: anthropic-ai
+Allow: /
+Disallow: /install/
+Disallow: /tds/
+Disallow: /tools-catalog.json
+
+# ── Perplexity ────────────────────────────────────────────────────────────
+User-agent: PerplexityBot
+Allow: /
+Disallow: /install/
+Disallow: /tds/
+Disallow: /tools-catalog.json
+
+User-agent: Perplexity-User
+Allow: /
+Disallow: /install/
+Disallow: /tds/
+Disallow: /tools-catalog.json
+
+# ── Google, Apple ─────────────────────────────────────────────────────────
+# Google-Extended covers Gemini; Search and AI Overviews crawl as Googlebot,
+# which the "*" group already allows. Applebot-Extended covers Apple
+# Intelligence.
+User-agent: Google-Extended
+Allow: /
+Disallow: /install/
+Disallow: /tds/
+Disallow: /tools-catalog.json
+
+User-agent: Applebot-Extended
+Allow: /
+Disallow: /install/
+Disallow: /tds/
+Disallow: /tools-catalog.json
+
+# ── Meta AI ───────────────────────────────────────────────────────────────
+# Meta AI answers inside WhatsApp and Instagram, which is where a good part of
+# this audience already asks its questions. -agent trains, -fetcher retrieves
+# a page for one answer.
+User-agent: meta-externalagent
+Allow: /
+Disallow: /install/
+Disallow: /tds/
+Disallow: /tools-catalog.json
+
+User-agent: meta-externalfetcher
+Allow: /
+Disallow: /install/
+Disallow: /tds/
+Disallow: /tools-catalog.json
+
+# ── DuckDuckGo, Mistral ───────────────────────────────────────────────────
+User-agent: DuckAssistBot
+Allow: /
+Disallow: /install/
+Disallow: /tds/
+Disallow: /tools-catalog.json
+
+User-agent: MistralAI-User
+Allow: /
+Disallow: /install/
+Disallow: /tds/
+Disallow: /tools-catalog.json
+
+# Legal pages stay out of indexes via per-page meta robots; no
+# need to disallow here.
 
 Sitemap: https://tools.tracht-digital.de/sitemap-index.xml

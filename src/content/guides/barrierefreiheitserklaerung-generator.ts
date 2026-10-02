@@ -1,6 +1,7 @@
 import type { ToolGuideSet } from "~/lib/guides";
 
 const guide: ToolGuideSet = {
+  updatedAt: "2026-09-02",
   de: {
     intro: [
       "Seit dem 28. Juni 2025 gilt das Barrierefreiheitsstärkungsgesetz. Es verpflichtet Unternehmen, die bestimmte Dienstleistungen an Verbraucher erbringen — Onlineshops, Buchungs- und Terminsysteme, Bankdienste, Personenbeförderung —, ihre digitalen Angebote barrierefrei zu gestalten und darüber öffentlich Auskunft zu geben. Öffentliche Stellen trifft dieselbe Auskunftspflicht schon länger, allerdings über einen anderen Weg: § 12b des Behindertengleichstellungsgesetzes und die Barrierefreie-Informationstechnik-Verordnung.",

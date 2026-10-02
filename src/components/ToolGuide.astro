@@ -16,16 +16,37 @@
  */
 import type { ToolGuide } from "~/lib/guides";
 import { t } from "~/lib/i18n";
-import type { Lang } from "~/lib/seo";
+import { seoConfig, type Lang } from "~/lib/seo";
+import { links } from "~/lib/site";
 
 interface Props {
   guide: ToolGuide;
   toolName: string;
   lang?: Lang;
+  /**
+   * ISO date of the guide's last change (`ToolGuideSet.updatedAt`).
+   *
+   * It sits on the set rather than on the guide object, so it arrives as its
+   * own prop. The page's `dateModified` repeats this exact value, and the GEO
+   * audit fails a date that exists only in the markup — which is the point:
+   * the freshness signal and the sentence a reader checks are one value.
+   */
+  updatedAt?: string;
 }
 
-const { guide, toolName, lang = "de" } = Astro.props;
+const { guide, toolName, lang = "de", updatedAt } = Astro.props;
 const s = t(lang);
+
+// "Stand: Oktober 2026" — the month, because a guide about file formats or a
+// legal duty does not change on a particular day, and a precise date on slow
+// content reads as churn. The machine date in `datetime` stays exact.
+const stand = updatedAt
+  ? new Intl.DateTimeFormat(lang === "de" ? "de-DE" : "en-GB", {
+      month: "long",
+      year: "numeric",
+      timeZone: "UTC",
+    }).format(new Date(`${updatedAt}T12:00:00Z`))
+  : null;
 ---
 
 {/* `aria-labelledby` rather than an aria-label: the visible heading already
@@ -80,4 +101,21 @@ const s = t(lang);
       </details>
     ))}
   </div>
+
+  {/* Stand and author. Answer engines weigh freshness and a named author, and
+      so does a reader deciding whether a note about a file format or a legal
+      duty still holds. Both values are real: the date is the guide's own
+      `updatedAt`, the author the person the Impressum names. The `<time>`
+      carries the machine date that the page's `dateModified` repeats. */}
+  {stand && (
+    <p class="tool-guide__meta">
+      {lang === "de" ? "Stand" : "Updated"}: <time datetime={updatedAt}>{stand}</time>
+      <span aria-hidden="true"> · </span>
+      {lang === "de" ? "Von" : "By"}{" "}
+      <a href={`${links.main}/#about`} class="tnav-link link-underline">{seoConfig.founder.name}</a>
+      {lang === "de"
+        ? `, ${seoConfig.founder.jobTitle}, ${seoConfig.name}`
+        : `, owner and developer, ${seoConfig.name}`}
+    </p>
+  )}
 </section>

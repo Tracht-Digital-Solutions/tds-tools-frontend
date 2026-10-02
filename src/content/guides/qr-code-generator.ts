@@ -1,6 +1,7 @@
 import type { ToolGuideSet } from "~/lib/guides";
 
 const guide: ToolGuideSet = {
+  updatedAt: "2026-08-18",
   de: {
     intro: [
       "Ein QR-Code ist nichts weiter als eine Adresse in Bildform. Wer ihn mit der Handykamera erfasst, landet direkt auf Ihrer Website, im WLAN Ihres Betriebs oder mit Ihren Kontaktdaten im Adressbuch — ohne dass jemand etwas abtippen muss. Genau da liegt der praktische Nutzen: Jede Ziffer, die ein Kunde selbst eingeben soll, ist eine Gelegenheit, sich zu vertippen und aufzugeben.",
@@ -75,7 +76,7 @@ const guide: ToolGuideSet = {
         a: "Ja, das Werkzeug ist kostenlos und ohne Anmeldung nutzbar, auch geschäftlich. Wenn Sie regelmäßig viele Codes brauchen oder sie aus eigenen Daten erzeugen wollen, lässt sich das automatisieren — sprechen Sie mich an.",
       },
     ],
-    related: ["utm-link-generator", "bild-komprimieren"],
+    related: ["utm-link-generator", "visitenkarten-designer", "bild-komprimieren"],
   },
   en: {
     intro: [
@@ -151,7 +152,7 @@ const guide: ToolGuideSet = {
         a: "Yes, the tool is free and needs no sign-up, commercial use included. If you regularly need many codes, or want to generate them from your own data, that can be automated — get in touch.",
       },
     ],
-    related: ["utm-link-generator", "bild-komprimieren"],
+    related: ["utm-link-generator", "visitenkarten-designer", "bild-komprimieren"],
   },
 };
 

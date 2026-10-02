@@ -1,6 +1,7 @@
 import type { ToolGuideSet } from "~/lib/guides";
 
 const guide: ToolGuideSet = {
+  updatedAt: "2026-09-02",
   de: {
     intro: [
       "Ob Text lesbar ist, entscheidet nicht der Geschmack, sondern der Unterschied zwischen Schrift- und Hintergrundhelligkeit. Die Web-Richtlinien für Barrierefreiheit drücken ihn als Verhältnis aus: 1:1 bedeutet identische Farben, 21:1 ist Schwarz auf Weiß. Ab 4,5:1 gilt normaler Text als ausreichend lesbar, große Schrift ab 3:1 — das ist die Stufe AA. Wer strenger sein will, zielt auf AAA mit 7:1.",

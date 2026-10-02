@@ -1,6 +1,7 @@
 import type { ToolGuideSet } from "~/lib/guides";
 
 const guide: ToolGuideSet = {
+  updatedAt: "2026-08-18",
   de: {
     intro: [
       "Der Scanner steht im Büro, die Belege liegen im Fahrzeug — und abfotografiert ist ein Lieferschein in drei Sekunden. Was danach fehlt, ist die Form: Zwölf einzelne Handybilder sind kein Dokument, sie sind zwölf Anhänge in unklarer Reihenfolge, mit denen in der Buchhaltung niemand etwas anfangen kann.",

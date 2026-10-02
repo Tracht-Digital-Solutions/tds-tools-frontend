@@ -26,7 +26,10 @@ import {
   faqPageSchema,
   howToSchema,
   softwareApplicationSchema,
+  webPageNode,
+  websiteSchema,
 } from "~/lib/jsonld";
+import { guideUpdatedAt } from "~/lib/guides";
 import { mergeCopy, mergeGuide, type GuideOverrides } from "~/lib/guideOverrides";
 import type { ResolvedTool } from "~/lib/catalog";
 
@@ -81,7 +84,26 @@ const guide = mergeGuide(tool.slug, lang, override);
    node the hierarchy was visible to a reader and to nothing else — a search
    result showed the bare URL where it could have shown
    "Alle Tools › QR-Code-Generator". */
+const breadcrumbId = `${toolUrl}#breadcrumb`;
+const updatedAt = guideUpdatedAt(tool.slug);
+
 const jsonLd = asGraph(
+  /* The property itself. The catalog pages declared `WebSite` and the tool
+     pages did not, so a tool page fetched on its own — which is how an answer
+     engine reaches it — named no site it belonged to. */
+  websiteSchema(site.description),
+  /* The PAGE, beside the tool. `WebApplication` describes the thing on the
+     page; this describes the page: who wrote it, who published it, and when
+     its text was last true. `dateModified` is the guide's "Stand" line, and
+     a tool without a guide carries no date rather than a made-up one. */
+  webPageNode({
+    url: toolUrl,
+    name: copy.name,
+    description: copy.description,
+    lang,
+    dateModified: updatedAt,
+    breadcrumbId,
+  }),
   softwareApplicationSchema({
     name: copy.name,
     url: toolUrl,
@@ -92,10 +114,13 @@ const jsonLd = asGraph(
     priceCents: tool.priceCents,
     keywords: tool.keywords,
   }),
-  breadcrumbSchema([
-    { name: s.breadcrumbAll, url: `${site.origin}${base}/` },
-    { name: copy.name, url: toolUrl },
-  ]),
+  breadcrumbSchema(
+    [
+      { name: s.breadcrumbAll, url: `${site.origin}${base}/` },
+      { name: copy.name, url: toolUrl },
+    ],
+    breadcrumbId,
+  ),
   ...(guide
     ? [
         howToSchema(
@@ -208,7 +233,7 @@ const jsonLd = asGraph(
             the heading and the input is the pattern that made recipe sites a
             punchline. It is still on the page, in the DOM, ahead of the footer —
             which is all the crawler needs. */}
-        {guide && <ToolGuide guide={guide} toolName={copy.name} lang={lang} />}
+        {guide && <ToolGuide guide={guide} toolName={copy.name} lang={lang} updatedAt={guideUpdatedAt(tool.slug)} />}
       </div>
 
       <div class="tool-aside">

@@ -1,6 +1,7 @@
 import type { ToolGuideSet } from "~/lib/guides";
 
 const guide: ToolGuideSet = {
+  updatedAt: "2026-09-02",
   de: {
     intro: [
       "Ein Bild, das eine Maschine erzeugt hat, sieht man ihm immer seltener an. Genau deshalb verlangt die KI-Verordnung der Europäischen Union eine Kennzeichnung — und sie verlangt sie zweimal: Wer ein System betreibt, das synthetische Inhalte erzeugt, muss die Ausgabe maschinenlesbar als künstlich erzeugt markieren; wer ein solches Bild veröffentlicht, muss das für die Betrachter offenlegen. Die Transparenzpflichten des Art. 50 greifen ab dem 2. August 2026.",

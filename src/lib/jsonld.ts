@@ -98,14 +98,57 @@ export function websiteSchema(description: string) {
   };
 }
 
+interface WebPageInput {
+  url: string;
+  name: string;
+  description: string;
+  lang: Lang;
+  /** ISO date of the last content change — the same date the page shows. */
+  dateModified?: string;
+  breadcrumbId?: string;
+}
+
+/**
+ * The page itself as an entity: part of this property, published by the
+ * organisation, written by the person the Impressum names, dated.
+ *
+ * Ported from the marketing site, where the service and platform pages have
+ * carried it since 2026-09. A tool page used to declare the TOOL
+ * (`WebApplication`) and the breadcrumb but never the page, so nothing in the
+ * markup said when the text was last true or who stands behind it — the two
+ * things an answer engine weighs besides the content itself.
+ *
+ * Every value here must be visible on the page too: `dateModified` is the
+ * guide's "Stand" line, the author the byline beside it.
+ */
+export function webPageNode(input: WebPageInput): object {
+  return {
+    "@type": "WebPage",
+    "@id": `${input.url}#webpage`,
+    url: input.url,
+    name: input.name,
+    description: input.description,
+    inLanguage: input.lang === "de" ? "de-DE" : "en-GB",
+    isPartOf: { "@id": WEBSITE_ID },
+    publisher: { "@id": ORG_ID },
+    author: { "@id": PERSON_ID },
+    ...(input.dateModified ? { dateModified: input.dateModified } : {}),
+    ...(input.breadcrumbId ? { breadcrumb: { "@id": input.breadcrumbId } } : {}),
+  };
+}
+
 /**
  * BreadcrumbList — emitted on every tool page. The page has always DRAWN a
  * breadcrumb ("Alle Tools / QR-Code-Generator") and never declared one, so
  * the hierarchy was visible to a reader and invisible to everything else.
  */
-export function breadcrumbSchema(items: { name: string; url: string }[]) {
+export function breadcrumbSchema(items: { name: string; url: string }[], id?: string) {
   return {
     "@type": "BreadcrumbList",
+    // Optional so the page node can point at it by `@id`. Without one the
+    // `WebPage.breadcrumb` reference would dangle, which the GEO audit warns
+    // about and which tells a parser the list belongs to nothing.
+    ...(id ? { "@id": id } : {}),
     itemListElement: items.map((item, i) => ({
       "@type": "ListItem",
       position: i + 1,

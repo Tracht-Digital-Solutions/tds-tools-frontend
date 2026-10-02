@@ -360,6 +360,16 @@ export const toolCopyEn: Record<string, ToolCopy> = {
       "Label AI images as required: burn a visible badge into the picture and embed a machine-readable note in the PNG or JPEG. All in your browser.",
     seoTitle: "Label AI images — badge and metadata",
   },
+  // Missing until 2026-10-02, which is not a cosmetic gap: without an entry
+  // `toolCopyFor` falls through to the pack manifest, so the English page
+  // served the GERMAN title and description. Two pages then shared one title
+  // and one description, which is what `audit:geo` fails on.
+  "visitenkarten-designer": {
+    name: "Business Card Designer",
+    description:
+      "Design a business card in the browser: accent colour, surface, corners, shadow and layout, with a live preview. PNG download at 85 × 55 mm, 300 dpi.",
+    seoTitle: "Business Card Designer — design and download as PNG",
+  },
 };
 
 /**

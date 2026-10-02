@@ -18,6 +18,7 @@ import impressumGenerator from "~/content/guides/impressum-generator";
 import datenschutzerklaerungGenerator from "~/content/guides/datenschutzerklaerung-generator";
 import barrierefreiheitserklaerungGenerator from "~/content/guides/barrierefreiheitserklaerung-generator";
 import kiKennzeichnungBilder from "~/content/guides/ki-kennzeichnung-bilder";
+import visitenkartenDesigner from "~/content/guides/visitenkarten-designer";
 
 /**
  * The long-form guide rendered under each tool.
@@ -57,7 +58,24 @@ export interface ToolGuide {
  * a missing translation must degrade to the German text rather than to an
  * empty page. `guides.test.ts` pins the pairing against `EN_ENABLED`.
  */
-export type ToolGuideSet = Partial<Record<Lang, ToolGuide>> & { de: ToolGuide };
+export type ToolGuideSet = Partial<Record<Lang, ToolGuide>> & {
+  de: ToolGuide;
+  /**
+   * ISO date (`YYYY-MM-DD`) of the last change to this guide's content.
+   *
+   * Rendered as the "Stand" line under the guide and published as the page's
+   * `dateModified`. Answer engines weigh freshness, and a reader deciding
+   * whether a note about file formats or a legal duty is still true needs the
+   * same thing. It sits on the SET rather than on each language: the date
+   * belongs to the guide, and a translation that lands later does not make the
+   * German text newer.
+   *
+   * Seeded from each file's real last commit date. Raise it by hand when the
+   * copy changes — `guides.test.ts` checks the format, not the truth, so this
+   * is the one value here that nothing can verify for you.
+   */
+  updatedAt: string;
+};
 
 export const guides: Record<string, ToolGuideSet> = {
   "qr-code-generator": qrCodeGenerator,
@@ -78,6 +96,7 @@ export const guides: Record<string, ToolGuideSet> = {
   "datenschutzerklaerung-generator": datenschutzerklaerungGenerator,
   "barrierefreiheitserklaerung-generator": barrierefreiheitserklaerungGenerator,
   "ki-kennzeichnung-bilder": kiKennzeichnungBilder,
+  "visitenkarten-designer": visitenkartenDesigner,
 };
 
 /**
@@ -92,6 +111,17 @@ export function guideFor(slug: string, lang: Lang = "de"): ToolGuide | undefined
   const set = guides[slug];
   if (!set) return undefined;
   return set[lang] ?? set.de;
+}
+
+/**
+ * When this tool's guide last changed, or `undefined` for a tool without one.
+ *
+ * Separate from {@link guideFor} because the date lives on the set, not on a
+ * language. A page that has no date shows no "Stand" line and publishes no
+ * `dateModified` — better than a date the page cannot stand behind.
+ */
+export function guideUpdatedAt(slug: string): string | undefined {
+  return guides[slug]?.updatedAt;
 }
 
 /** Rough word count of a guide — used by the tests to pin the minimum depth. */
