@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
+import businesscard from "@tracht-digital-solutions/tds-tool-businesscard";
 import devkit from "@tracht-digital-solutions/tds-tool-devkit";
 import media from "@tracht-digital-solutions/tds-tool-media";
 import pdf from "@tracht-digital-solutions/tds-tool-pdf";
@@ -35,7 +36,7 @@ import { categoryLabels, categoryOrder, site, toolCountLabel } from "./site";
 const RENDERED = 160;
 const MIN_USEFUL = 80;
 
-const packs = [qr, textkit, devkit, media, pdf, office, legal];
+const packs = [qr, textkit, devkit, media, pdf, office, legal, businesscard];
 const tools = packs.flatMap((p) => p.tools);
 
 describe("the site-level description", () => {

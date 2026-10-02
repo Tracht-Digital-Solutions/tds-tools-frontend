@@ -1,6 +1,7 @@
 import type { ToolGuideSet } from "~/lib/guides";
 
 const guide: ToolGuideSet = {
+  updatedAt: "2026-08-18",
   de: {
     intro: [
       "Ein PDF wird fast nie vom Text groß, sondern von den Bildern darin. Ein eingescannter Vertrag, ein Angebot mit Produktfotos, ein bebildertes Protokoll — der Text darin wiegt ein paar Kilobyte, die Fotos einige Megabyte. Genau dort setzt dieses Werkzeug an: Es sucht die eingebetteten Bilder, rechnet sie in der von Ihnen gewählten Qualität neu und schreibt sie an dieselbe Stelle zurück.",

@@ -1,6 +1,7 @@
 import type { ToolGuideSet } from "~/lib/guides";
 
 const guide: ToolGuideSet = {
+  updatedAt: "2026-08-18",
   de: {
     intro: [
       "Ein abfotografierter Beleg ist für einen Computer ein Bild und sonst nichts. Der Betrag darauf ist nicht suchbar, die Adresse nicht kopierbar, die Rechnungsnummer nicht in ein Formular zu übernehmen — obwohl alles davon gut lesbar vor einem liegt. Texterkennung schließt diese Lücke: Sie liest die Buchstaben aus dem Bild heraus und gibt sie als Text zurück.",

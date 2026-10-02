@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 
+import businesscard from "@tracht-digital-solutions/tds-tool-businesscard";
 import devkit from "@tracht-digital-solutions/tds-tool-devkit";
 import media from "@tracht-digital-solutions/tds-tool-media";
 import pdf from "@tracht-digital-solutions/tds-tool-pdf";
@@ -26,7 +27,20 @@ import { guideFor, guideWordCount, guides, type ToolGuide } from "./guides";
  * even anonymised as a "case study".
  */
 
-const tools = [qr, textkit, devkit, media, pdf, office, legal].flatMap((p) => p.tools);
+/**
+ * The composed packs — the same list `astro.config.mjs` passes to `toolHost`.
+ *
+ * It is a second copy of that list, and it was wrong: `businesscard` was
+ * missing here from the day the pack was composed, which is precisely why
+ * "has a guide for every composed tool" passed while
+ * `visitenkarten-designer` had no guide for weeks. The test that existed to
+ * prevent a thin tool page could not see the thin tool page.
+ *
+ * So the list below is guarded against the config by `composedPacks.test.ts`,
+ * which fails when any test file that reads a pack misses one.
+ */
+const packs = [qr, textkit, devkit, media, pdf, office, legal, businesscard];
+const tools = packs.flatMap((p) => p.tools);
 const entries = Object.entries(guides);
 const allDe = entries.map(([slug, set]) => [slug, set.de] as const);
 
@@ -39,6 +53,16 @@ describe("coverage", () => {
     // pack from silently reintroducing one.
     for (const tool of tools) {
       expect(guideFor(tool.slug), `no guide for ${tool.slug}`).toBeDefined();
+    }
+  });
+
+  it("dates every guide", () => {
+    // The visible "Stand" line and the page's `dateModified` both read this.
+    // The format is checkable here; whether the date is TRUE is not, which is
+    // why it is seeded from each file's real last commit and raised by hand.
+    for (const [slug, set] of entries) {
+      expect(set.updatedAt, `${slug} has no updatedAt`).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+      expect(Number.isNaN(Date.parse(set.updatedAt)), `${slug}: ${set.updatedAt}`).toBe(false);
     }
   });
 
@@ -63,7 +87,7 @@ describe("coverage", () => {
     // not). The fallback exists for the gap between a pack adding a tool and
     // its translation landing — a visibly German page beats an empty one.
     const set = guides["qr-code-generator"]!;
-    const untranslated: typeof set = { de: set.de };
+    const untranslated: typeof set = { de: set.de, updatedAt: set.updatedAt };
     expect(untranslated.en ?? untranslated.de).toBe(set.de);
   });
 

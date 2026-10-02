@@ -1,6 +1,7 @@
 import type { ToolGuideSet } from "~/lib/guides";
 
 const guide: ToolGuideSet = {
+  updatedAt: "2026-09-02",
   de: {
     intro: [
       "Ein Impressum ist keine Höflichkeit, sondern eine Auskunft: Wer betreibt diese Seite, und wo ist diese Person erreichbar, wenn etwas zu klären ist? § 5 des Digitale-Dienste-Gesetzes verlangt diese Angaben von jedem, der eine Website geschäftsmäßig betreibt — und „geschäftsmäßig“ beginnt deutlich früher, als die meisten annehmen. Eine Seite, auf der eine Leistung beschrieben und eine Telefonnummer genannt wird, ist bereits erfasst.",

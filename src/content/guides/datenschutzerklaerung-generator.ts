@@ -1,6 +1,7 @@
 import type { ToolGuideSet } from "~/lib/guides";
 
 const guide: ToolGuideSet = {
+  updatedAt: "2026-09-02",
   de: {
     intro: [
       "Eine Datenschutzerklärung beantwortet eine einzige Frage, und zwar für jede Verarbeitung einzeln: Was passiert mit meinen Daten, und mit welchem Recht? Genau daran scheitern die meisten frei verfügbaren Muster. Sie zählen auf, welche Dienste eine Website einsetzt, nennen aber weder den Zweck noch die Rechtsgrundlage — und damit erfüllen sie Art. 13 der Datenschutz-Grundverordnung nicht, obwohl der Text vollständig aussieht.",

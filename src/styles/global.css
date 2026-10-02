@@ -556,6 +556,16 @@
 .tool-guide__privacy {
   margin-bottom: 0;
 }
+/* "Stand: Oktober 2026 · Von Julian Tracht, …" — the freshness and author
+   line that closes the guide. Muted and small: it is evidence, not content. */
+.tool-guide__meta {
+  max-width: 68ch;
+  margin: 1.75rem 0 0;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--color-muted);
+  text-wrap: pretty;
+}
 .tool-guide__cases {
   display: grid;
   gap: 1.25rem 2rem;
