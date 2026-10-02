@@ -767,31 +767,23 @@ Node application's environment (alongside the document root and startup file),
 so the running server has it. Until then, leave enforcement below `enforce`.
 See `tds-gateway-api/DEPLOY-PLESK.md` §3.2.
 
-## Duplicated with the sibling public sites
+## What the public sites share (tds-shared ≥ 0.46)
 
-Six files are byte-identical (or two log-prefix lines apart) across
-`tds-tools-frontend`, `tds-blog-frontend` and `tds-landingpage-frontend`:
+The copies this section used to list are gone:
 
-| File | Delta |
+| Was a copy | Now |
 |---|---|
-| `scripts/pack-release.mjs` (320 lines) | identical |
-| `app.cjs` | identical |
-| `src/middleware.ts` | identical |
-| `public/.htaccess` | two comment hunks |
-| `src/lib/siteKey.ts` | two log-prefix strings |
-| `src/lib/pageCache.ts` | two log-prefix strings |
+| `scripts/pack-release.mjs` | tds-shared's, run as `postbuild` (the sites' copies had drifted: only the landing page had the import-scan fix) |
+| `src/lib/siteKey.ts` | a thin binding of `createSiteKeyGuard` from `tds-shared/site` |
+| the middleware's stale-key guard | `guardSiteKey` from `tds-shared/site` |
+| `contentFetch.ts` (reader + success-only memo) | `createContentReader` / `memoisedOr` from `tds-shared/site` |
+| sitemap `escapeXml`, JSON-LD serialisation | `escapeXml`, `serializeJsonLd` from `tds-shared/site` |
 
-`src/components/AdSlot.astro` is a seventh, and it is the cautionary one: it was
-copied from the blog **without** the `lang` prop the original has, so `/en/`
-pages labelled their ad units in German until 0.20.0. A copy does not stay a
-copy.
-
-The shared home would be `tds-shared` (`siteKey({ prefix })`, a `pageCache`
-factory, a `bin` entry for the release packer). Deliberately **not** done in
-0.20.0: it drags `tds-shared-pkg` plus both sibling sites into a release cycle
-they did not otherwise need, and a `tds-shared` minor then forces repinning
-every consumer. Kept as a named follow-up rather than a silent divergence — if
-you fix a bug in any of the six, fix it in all three repos.
+Still per site, on purpose: `app.cjs` (byte-identical to tds-shared's, kept so
+`npm start` works from the checkout), `public/.htaccess`, `src/lib/pageCache.ts`
+(configuration, not logic), `src/components/AdSlot.astro`. That last one is
+the cautionary tale: copied from the blog without the original's `lang` prop,
+it labelled `/en/` ad units in German until 0.20.0. A copy does not stay a copy.
 
 ## Hard 2D shadows (2026-09-22, tds-shared ≥ 0.42)
 

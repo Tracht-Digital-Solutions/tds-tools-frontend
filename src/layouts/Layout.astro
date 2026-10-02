@@ -2,6 +2,7 @@
 // Font faces must be imported here (not via @import in global.css):
 // @tailwindcss/postcss inlines CSS @imports without rebasing their relative
 // url(./files/*.woff2) refs, so Vite never emits the fonts otherwise.
+import { serializeJsonLd } from "@tracht-digital-solutions/tds-shared/site";
 import "@fontsource/lato/400.css";
 import "@fontsource/lato/700.css";
 import "@fontsource/lato/900.css";
@@ -70,7 +71,7 @@ const adsActive = ads.enabled && !!ads.publisherId;
  * flows into it, and a literal `</script>` would end the element early and run
  * whatever followed as markup.
  */
-const jsonLdText = jsonLd ? JSON.stringify(jsonLd).replace(/</g, "\\u003c") : null;
+const jsonLdText = jsonLd ? serializeJsonLd(jsonLd) : null;
 ---
 
 <!DOCTYPE html>

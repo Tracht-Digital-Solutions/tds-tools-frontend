@@ -26,6 +26,7 @@ import { enabledTools } from "./catalog";
 import { guideUpdatedAt } from "./guides";
 import { EN_ENABLED, localizedPath, type Lang } from "./seo";
 import { site } from "./site";
+import { escapeXml } from "@tracht-digital-solutions/tds-shared/site";
 
 export interface SitemapUrl {
   path: string;
@@ -39,13 +40,6 @@ export interface SitemapUrl {
   lastmod?: string;
 }
 
-function escapeXml(value: string): string {
-  return value
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
-}
 
 /** Absolute URL for a path on this site. */
 export function absolute(path: string): string {

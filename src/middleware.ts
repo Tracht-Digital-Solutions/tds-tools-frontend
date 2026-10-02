@@ -1,7 +1,7 @@
 import { defineMiddleware, sequence } from "astro:middleware";
 
 import { siteCache } from "./lib/pageCache";
-import { siteKeyRejectionCount } from "./lib/siteKey";
+import { guardSiteKey } from "@tracht-digital-solutions/tds-shared/site";
 import { ensureCatalogSynced } from "./lib/connection";
 
 /**
@@ -34,17 +34,7 @@ import { ensureCatalogSynced } from "./lib/connection";
  * racing can only make this refuse to store a page that was fine; it can never
  * make it store one that was not, and a needless miss costs one render.
  */
-const refuseStaleKey = defineMiddleware(async (_context, next) => {
-  const before = siteKeyRejectionCount();
-  const response = await next();
-
-  if (siteKeyRejectionCount() > before) {
-    const guarded = new Response(response.body, response);
-    guarded.headers.set("cache-control", "no-store");
-    return guarded;
-  }
-  return response;
-});
+const refuseStaleKey = defineMiddleware((_context, next) => guardSiteKey(next as () => Promise<Response>));
 
 const retryCatalogSync = defineMiddleware((_context, next) => {
   void ensureCatalogSynced().catch((error) => {
