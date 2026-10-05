@@ -342,10 +342,15 @@
    After the `.tool-card` rules on purpose — `.tool-grid .tool-card:hover`
    has to restate the fill at the same specificity as the transparent rest
    state, so source order decides. */
-:root {
+/* The bare attribute forms are for a themed SUBTREE: the theme toggle's hover
+   preview marks a clone of the page with the other theme, and a value set only
+   on <html> would reach it as the page theme's literal. */
+:root,
+[data-theme="light"] {
   --tool-glare: rgb(255 255 255 / 0.3);
 }
-:root[data-theme="dark"] {
+:root[data-theme="dark"],
+[data-theme="dark"] {
   --tool-glare: rgb(255 255 255 / 0.07);
 }
 .tool-grid {
