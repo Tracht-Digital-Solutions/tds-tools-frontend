@@ -141,7 +141,7 @@ for (const file of files) {
       // the same case: the tab-bar item, the sheet's close button and a
       // segmented option each carry their own geometry, hover and
       // focus-visible treatment — a `.btn` would turn a tab into a pill.
-      if (!/\b(btn|chip|tds-dropdown__(trigger|item)|tds-tabbar__item|tds-sheet__close|tds-segmented__option)\b/.test(cls)) {
+      if (!/\b(btn|chip|tds-dropdown__(trigger|item)|tds-tabbar__item|tds-sheet__close|tds-segmented__option|tds-tile)\b/.test(cls)) {
         findings.push(`${where}  <button> needs "btn btn-*" (or "chip")`);
       }
       // …and the VARIANT has to exist. `btn btn-secondary` passed the check
@@ -158,7 +158,9 @@ for (const file of files) {
     } else {
       const type = (tag.match(/type\s*=\s*"([^"]*)"/) ?? [])[1] ?? "text";
       if (BARE_TYPES.has(type)) continue;
-      if (!/\bfield\b/.test(cls)) findings.push(`${where}  <${name}> needs "field-boxed" (or "field")`);
+      // The app shell's search field (tds-shared app-shell.css) carries its own
+      // geometry and focus ring, like `.field-boxed`.
+      if (!/\bfield\b|\btds-searchfield__input\b/.test(cls)) findings.push(`${where}  <${name}> needs "field-boxed" (or "field")`);
     }
   }
 

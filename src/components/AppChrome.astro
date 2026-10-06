@@ -1,12 +1,13 @@
 ---
 /**
- * The tools site on a phone, as an app: a bottom tab bar (Katalog ·
- * Kategorien · Suche · Mehr) and the sheets it opens. Below `lg` only; it
- * replaces the hamburger sheet. Mechanics and CSS are shared
- * (`tds-shared/app`, `styles/app-shell.css`) with the journal and the shop.
+ * The tools site on a phone, as an app (since 2026-10-06, tds-shared 0.49):
+ * Katalog · Entdecken · Mehr. The non-link tabs open full-screen PAGES
+ * (`mountTabPages`) that slide in from their tab's side, swipe to the
+ * neighbouring tab, and close on Back. Below `lg` only.
  *
- * Search filters the catalog's own tool list in the sheet — the catalog is
- * small and fully known at render time, so there is no request to make.
+ * "Entdecken" is search and presentation in one: empty, it presents every
+ * category with its tools (the category tiles at the top jump to them); as
+ * soon as something is typed it searches every tool in place.
  */
 import { propertyContact, propertyNav } from "@tracht-digital-solutions/tds-shared/nav";
 import { enabledTools } from "~/lib/catalog";
@@ -54,16 +55,20 @@ const contact = propertyContact(lang);
 
 const t = de
   ? {
-      tabs: "App-Navigation", catalog: "Katalog", cats: "Kategorien", search: "Suche", more: "Mehr", close: "Schließen",
-      searchLabel: "Tools durchsuchen", searchPh: "Welches Werkzeug suchst du?", none: "Kein Tool gefunden.",
-      look: "Darstellung", light: "Hell", dark: "Dunkel", system: "Auto", language: "Sprache",
-      saved: "Wird für dich gespeichert – auf allen Tracht-Digital-Seiten.", elsewhere: "Weitere Angebote", cta: "Unverbindlich anfragen",
+      tabs: "App-Navigation", catalog: "Katalog", discover: "Entdecken", more: "Mehr",
+      discoverLead: "Finde das passende Werkzeug – oder stöbere nach Bereich.",
+      searchLabel: "Tools durchsuchen", searchPh: "z. B. QR-Code, PDF, Rechnung", none: "Kein Tool passt dazu.",
+      areas: "Bereiche", look: "Darstellung", light: "Hell", dark: "Dunkel", auto: "Auto", language: "Sprache",
+      elsewhere: "Mehr von Tracht Digital", cta: "Unverbindlich anfragen",
+      count: (n: number) => (n === 1 ? "1 Tool" : `${n} Tools`),
     }
   : {
-      tabs: "App navigation", catalog: "Catalog", cats: "Categories", search: "Search", more: "More", close: "Close",
-      searchLabel: "Search the tools", searchPh: "Which tool are you looking for?", none: "No tool found.",
-      look: "Appearance", light: "Light", dark: "Dark", system: "Auto", language: "Language",
-      saved: "Saved for you — on every Tracht Digital site.", elsewhere: "More from Tracht Digital", cta: "Get in touch",
+      tabs: "App navigation", catalog: "Catalog", discover: "Discover", more: "More",
+      discoverLead: "Find the right tool — or browse by area.",
+      searchLabel: "Search the tools", searchPh: "e.g. QR code, PDF, invoice", none: "No tool matches that.",
+      areas: "Areas", look: "Appearance", light: "Light", dark: "Dark", auto: "Auto", language: "Language",
+      elsewhere: "More from Tracht Digital", cta: "Get in touch",
+      count: (n: number) => (n === 1 ? "1 tool" : `${n} tools`),
     };
 ---
 
@@ -72,147 +77,170 @@ const t = de
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7.5" height="7.5"></rect><rect x="13.5" y="3" width="7.5" height="7.5"></rect><rect x="3" y="13.5" width="7.5" height="7.5"></rect><rect x="13.5" y="13.5" width="7.5" height="7.5"></rect></svg>
     <span>{t.catalog}</span>
   </a>
-  <button type="button" class="tds-tabbar__item" data-sheet-open="sheet-cats">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h12"></path></svg>
-    <span>{t.cats}</span>
-  </button>
-  <button type="button" class="tds-tabbar__item" data-sheet-open="sheet-search">
+  <button type="button" class="tds-tabbar__item" data-tab-page="discover" aria-controls="tabpage-discover" aria-expanded="false">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
-    <span>{t.search}</span>
+    <span>{t.discover}</span>
   </button>
-  <button type="button" class="tds-tabbar__item" data-sheet-open="sheet-more">
+  <button type="button" class="tds-tabbar__item" data-tab-page="more" aria-controls="tabpage-more" aria-expanded="false">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"></path><circle cx="16" cy="7" r="2"></circle><circle cx="10" cy="17" r="2"></circle></svg>
     <span>{t.more}</span>
   </button>
 </nav>
 
-<dialog class="tds-sheet" id="sheet-cats" aria-labelledby="sheet-cats-title">
-  <div class="tds-sheet__grab">
-    <h2 class="tds-sheet__title" id="sheet-cats-title">{t.cats}</h2>
-    <button type="button" class="tds-sheet__close" data-sheet-close aria-label={t.close}>
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg>
-    </button>
-  </div>
-  <div class="tds-sheet__body">
-    {groups.map((g) => (
-      <>
-        <p class="tds-sheet-heading">{g.label}</p>
-        {g.items.map((e) => (
-          <a class="tds-sheet-row" href={e.href} aria-current={path === e.href ? "page" : undefined}>
-            <span>{e.name}</span><span aria-hidden="true">→</span>
-          </a>
-        ))}
-      </>
-    ))}
-  </div>
-</dialog>
+<section class="tds-tabpage" id="tabpage-discover" data-tab-page-id="discover" aria-labelledby="tabpage-discover-title" hidden>
+  <header class="tds-tabpage__head">
+    <h2 id="tabpage-discover-title" tabindex="-1">{t.discover}</h2>
+    <p>{t.discoverLead}</p>
+  </header>
+  <div class="tds-tabpage__body">
+    <form class="tds-searchfield" role="search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+      <label class="sr-only" for="discover-q">{t.searchLabel}</label>
+      <input id="discover-q" class="tds-searchfield__input" type="search" enterkeyhint="search" autocomplete="off" placeholder={t.searchPh} data-autofocus />
+    </form>
+    <p class="sr-only" role="status" aria-live="polite" id="discover-status"></p>
 
-<dialog class="tds-sheet" id="sheet-search" aria-labelledby="sheet-search-title">
-  <div class="tds-sheet__grab">
-    <h2 class="tds-sheet__title" id="sheet-search-title">{t.search}</h2>
-    <button type="button" class="tds-sheet__close" data-sheet-close aria-label={t.close}>
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg>
-    </button>
-  </div>
-  <div class="tds-sheet__body">
-    <label class="sr-only" for="app-tool-q">{t.searchLabel}</label>
-    <input id="app-tool-q" class="field-boxed app-search-input" type="search" enterkeyhint="search" autocomplete="off" placeholder={t.searchPh} />
-    <div id="app-tool-results" role="list">
-      {entries.map((e) => (
-        <a class="tds-sheet-row app-tool-row" role="listitem" href={e.href} data-search={`${e.name} ${e.description}`.toLowerCase()}>
-          <span><strong>{e.name}</strong><small>{e.description}</small></span>
-        </a>
+    <div class="tds-tabpage__section discover-results" id="discover-results" hidden>
+      <ul class="discover-list">
+        {entries.map((e) => (
+          <li data-search={`${e.name} ${e.description} ${categoryLabels[lang][e.category as keyof (typeof categoryLabels)["de"]] ?? ""}`.toLowerCase()}>
+            <a href={e.href} class="discover-hit"><strong>{e.name}</strong><small>{e.description}</small></a>
+          </li>
+        ))}
+      </ul>
+      <p class="discover-empty" id="discover-empty" hidden>{t.none}</p>
+    </div>
+
+    <div id="discover-idle">
+      <div class="tds-tabpage__section">
+        <p class="tds-sheet-heading">{t.areas}</p>
+        <div class="tds-tilegrid">
+          {groups.map((g) => (
+            <button type="button" class="tds-tile tds-tile--button" data-jump={`area-${g.cat}`}>
+              <strong>{g.label}</strong>
+              <small>{t.count(g.items.length)}</small>
+            </button>
+          ))}
+        </div>
+      </div>
+      {groups.map((g) => (
+        <div class="tds-tabpage__section" id={`area-${g.cat}`}>
+          <p class="tds-sheet-heading">{g.label}</p>
+          <ul class="discover-list">
+            {g.items.map((e) => (
+              <li>
+                <a href={e.href} class="discover-hit" aria-current={path === e.href ? "page" : undefined}><strong>{e.name}</strong><small>{e.description}</small></a>
+              </li>
+            ))}
+          </ul>
+        </div>
       ))}
     </div>
-    <p id="app-tool-none" class="app-sheet-note" hidden>{t.none}</p>
   </div>
-</dialog>
+</section>
 
-<dialog class="tds-sheet" id="sheet-more" aria-labelledby="sheet-more-title">
-  <div class="tds-sheet__grab">
-    <h2 class="tds-sheet__title" id="sheet-more-title">{t.more}</h2>
-    <button type="button" class="tds-sheet__close" data-sheet-close aria-label={t.close}>
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg>
-    </button>
-  </div>
-  <div class="tds-sheet__body" id="sheet-more-body">
-    <p class="tds-sheet-heading">{t.look}</p>
-    <div class="tds-segmented" role="group" aria-label={t.look}>
-      <button type="button" class="tds-segmented__option" data-theme-choice="light" aria-pressed="false">{t.light}</button>
-      <button type="button" class="tds-segmented__option" data-theme-choice="dark" aria-pressed="false">{t.dark}</button>
-      <button type="button" class="tds-segmented__option" data-theme-choice="system" aria-pressed="false">{t.system}</button>
+<section class="tds-tabpage" id="tabpage-more" data-tab-page-id="more" aria-labelledby="tabpage-more-title" hidden>
+  <header class="tds-tabpage__head">
+    <h2 id="tabpage-more-title" tabindex="-1">{t.more}</h2>
+  </header>
+  <div class="tds-tabpage__body" id="tabpage-more-body">
+    <div class="tds-tabpage__section">
+      <p class="tds-sheet-heading">{t.look}</p>
+      <div class="tds-segmented tds-segmented--icons" role="group" aria-label={t.look}>
+        <button type="button" class="tds-segmented__option" data-theme-choice="light" aria-pressed="false" aria-label={t.light} title={t.light}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
+        </button>
+        <button type="button" class="tds-segmented__option" data-theme-choice="dark" aria-pressed="false" aria-label={t.dark} title={t.dark}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11Z"></path></svg>
+        </button>
+        <button type="button" class="tds-segmented__option" data-theme-choice="system" aria-pressed="false" aria-label={t.auto} title={t.auto}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><circle cx="12" cy="12" r="8.5"></circle><path d="M12 3.5a8.5 8.5 0 0 1 0 17Z" fill="currentColor" stroke="none"></path></svg>
+        </button>
+      </div>
     </div>
     {EN_ENABLED && (
-      <>
+      <div class="tds-tabpage__section">
         <p class="tds-sheet-heading">{t.language}</p>
         <div class="tds-segmented" role="group" aria-label={t.language}>
-          <a href={localizedPath(path, "de")} hreflang="de" data-locale-link="de" aria-current={de ? "true" : undefined}>Deutsch</a>
-          <a href={localizedPath(path, "en")} hreflang="en" data-locale-link="en" aria-current={!de ? "true" : undefined}>English</a>
+          <a class="tds-segmented__option" href={localizedPath(path, "de")} hreflang="de" data-locale-link="de" aria-current={de ? "true" : undefined}>Deutsch</a>
+          <a class="tds-segmented__option" href={localizedPath(path, "en")} hreflang="en" data-locale-link="en" aria-current={!de ? "true" : undefined}>English</a>
         </div>
-      </>
+      </div>
     )}
-    <p class="app-sheet-note">{t.saved}</p>
-    <p class="tds-sheet-heading">{t.elsewhere}</p>
-    {others.map((p) => (
-      <a class="tds-sheet-row" href={p.href}><span>{p.label}</span><span aria-hidden="true">↗</span></a>
-    ))}
-    <a href={contact} class="btn btn-primary no-underline app-sheet-cta">{t.cta}</a>
+    <div class="tds-tabpage__section">
+      <p class="tds-sheet-heading">{t.elsewhere}</p>
+      <div class="tds-linkgroup">
+        {others.map((p) => <a href={p.href}>{p.label}</a>)}
+      </div>
+      <a href={contact} class="btn btn-primary no-underline more-cta">{t.cta}</a>
+    </div>
   </div>
-</dialog>
+</section>
 
 <style>
-  /* Geometry and focus come from the shared `.field-boxed`; only the width,
-     the gap and the 16px size (iOS does not zoom the page on focus) here. */
-  .app-search-input {
-    width: 100%;
-    margin: 0.25rem 0 0.5rem;
-    font-size: 1rem;
+  .discover-results { margin-top: 1.25rem; }
+  .discover-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.625rem; }
+  .discover-hit {
+    display: grid;
+    gap: 0.25rem;
+    padding: 0.875rem 1rem 0.875rem 1.125rem;
+    background: var(--color-soft);
+    color: var(--color-ink);
+    text-decoration: none;
+    box-shadow: inset 4px 0 0 var(--color-accent);
   }
-  .app-tool-row strong { display: block; font-weight: 600; }
-  .app-tool-row small {
+  .discover-hit[aria-current="page"] { box-shadow: inset 4px 0 0 var(--color-primary); }
+  .discover-hit strong { font-weight: 700; line-height: 1.25; }
+  .discover-hit small {
     display: -webkit-box;
     -webkit-line-clamp: 2;
     line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    margin-top: 0.125rem;
-    font-size: 0.8125rem;
-    font-weight: 400;
     color: var(--color-muted);
+    font-size: 0.8125rem;
+    line-height: 1.45;
   }
-  .app-sheet-note { margin: 0.625rem 0 0; font-size: 0.8125rem; color: var(--color-muted); }
-  .app-sheet-cta { width: 100%; justify-content: center; margin-top: 1rem; }
+  .discover-empty { margin: 0.75rem 0 0; color: var(--color-muted); }
+  .tds-tile--button { border: 0; font: inherit; text-align: left; cursor: pointer; }
+  .more-cta { width: 100%; justify-content: center; margin-top: 1rem; }
 </style>
 
 <script>
-  import { mountAppTabBar, mountSheet, mountPreferenceControls } from "@tracht-digital-solutions/tds-shared/app";
+  import { mountAppTabBar, mountLiveFilter, mountPreferenceControls, mountTabPages } from "@tracht-digital-solutions/tds-shared/app";
 
   const bar = document.getElementById("app-tabbar");
-  if (bar) mountAppTabBar(bar);
-  for (const dialog of Array.from(document.querySelectorAll<HTMLDialogElement>("dialog.tds-sheet"))) {
-    mountSheet({
-      dialog,
-      triggers: Array.from(document.querySelectorAll<HTMLElement>(`[data-sheet-open="${dialog.id}"]`)),
-      onOpen: () => {
-        if (dialog.id === "sheet-search") document.getElementById("app-tool-q")?.focus();
-      },
-    });
+  if (bar) {
+    mountAppTabBar(bar);
+    mountTabPages(bar);
   }
-  const more = document.getElementById("sheet-more-body");
+  const more = document.getElementById("tabpage-more-body");
   if (more) mountPreferenceControls(more);
 
-  // Instant filter over the rendered list: every word must match.
-  const q = document.getElementById("app-tool-q") as HTMLInputElement | null;
-  const rows = Array.from(document.querySelectorAll<HTMLElement>(".app-tool-row"));
-  const none = document.getElementById("app-tool-none");
-  q?.addEventListener("input", () => {
-    const words = q.value.toLowerCase().split(/\s+/).filter(Boolean);
-    let shown = 0;
-    for (const row of rows) {
-      const hit = words.every((w) => (row.dataset.search ?? "").includes(w));
-      row.style.display = hit ? "" : "none";
-      if (hit) shown++;
-    }
-    if (none) none.hidden = shown > 0;
-  });
+  const q = document.getElementById("discover-q") as HTMLInputElement | null;
+  if (q) {
+    const isDe = document.documentElement.lang !== "en";
+    mountLiveFilter({
+      input: q,
+      items: Array.from(document.querySelectorAll<HTMLElement>("#discover-results li[data-search]")),
+      idle: document.getElementById("discover-idle"),
+      results: document.getElementById("discover-results"),
+      empty: document.getElementById("discover-empty"),
+      status: document.getElementById("discover-status"),
+      countLabel: (n) => (isDe ? `${n} ${n === 1 ? "Tool" : "Tools"}` : `${n} ${n === 1 ? "tool" : "tools"}`),
+    });
+    q.form?.addEventListener("submit", (e) => {
+      e.preventDefault();
+      q.blur();
+    });
+  }
+
+  // Area tiles jump to their section INSIDE the page (a hash link would close
+  // the page, which is right for an article chapter and wrong here).
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  for (const tile of Array.from(document.querySelectorAll<HTMLElement>("[data-jump]"))) {
+    tile.addEventListener("click", () => {
+      document.getElementById(tile.dataset.jump ?? "")?.scrollIntoView({ block: "start", behavior: reduce ? "auto" : "smooth" });
+    });
+  }
 </script>

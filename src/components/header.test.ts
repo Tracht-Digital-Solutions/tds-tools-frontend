@@ -61,7 +61,7 @@ describe("mobile navigation", () => {
 
   it("takes its mechanics from tds-shared", () => {
     expect(chrome).toMatch(/mountAppTabBar\(/);
-    expect(chrome).toMatch(/mountSheet\(/);
+    expect(chrome).toMatch(/mountTabPages\(/);
     expect(source).toContain("mountAppHeader(header)");
   });
 
