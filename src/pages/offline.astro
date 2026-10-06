@@ -1,0 +1,40 @@
+---
+import Layout from "~/layouts/Layout.astro";
+import { SW_PAGE_CACHE } from "@tracht-digital-solutions/tds-shared/pwa";
+// The service worker's fallback page (src/pages/sw.js.ts). Lists the tool
+// pages this device kept — they run in the browser, so they work offline.
+export const prerender = true;
+---
+
+<Layout title="Offline — TD Tools" lang="de" noindex>
+  <div class="mx-auto max-w-2xl px-4 py-20 sm:px-6">
+    <h1 class="tds-page__title tool-title">Du bist gerade offline.</h1>
+    <p class="tds-page__lede mt-3">Diese Seite ist noch nicht auf deinem Gerät. Diese Werkzeuge funktionieren ohne Verbindung:</p>
+    <ul id="offline-list" class="mt-6" data-cache={SW_PAGE_CACHE} data-prefix=""></ul>
+    <p id="offline-none" class="tds-page__lede mt-3" hidden>Noch nichts gespeichert. Jedes Tool, das du online öffnest, läuft danach auch offline.</p>
+    <button type="button" class="btn btn-primary mt-6" id="offline-retry">Erneut versuchen</button>
+  </div>
+</Layout>
+
+<script>
+  const list = document.getElementById("offline-list");
+  const none = document.getElementById("offline-none");
+  document.getElementById("offline-retry")?.addEventListener("click", () => location.reload());
+  (async () => {
+    if (!list || !("caches" in window)) { if (none) none.hidden = false; return; }
+    const cache = await caches.open(list.dataset.cache ?? "tds-pages");
+    const en = list.dataset.prefix === "en";
+    let n = 0;
+    for (const req of [...(await cache.keys())].reverse()) {
+      const path = new URL(req.url).pathname;
+      if (!path.includes("/tools/") || en !== path.startsWith("/en/")) continue;
+      const html = await (await cache.match(req))?.text();
+      const title = (html?.match(/<title>([^<]*)<\/title>/)?.[1] ?? path).split(" — ")[0]!.trim();
+      const li = document.createElement("li");
+      const a = document.createElement("a");
+      a.href = path; a.textContent = title; a.className = "link-underline";
+      li.className = "py-2"; li.append(a); list.append(li); n++;
+    }
+    if (none) none.hidden = n > 0;
+  })();
+</script>

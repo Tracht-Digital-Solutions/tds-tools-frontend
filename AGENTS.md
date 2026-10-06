@@ -85,26 +85,23 @@ is describing the shape, not the runtime.
   the same user that owns its target, which satisfies SymLinksIfOwnerMatch. If a
   cache hit ever answers 403, grant it at the **vhost** level in Plesk's
   *Additional Apache directives*, which `AllowOverride` does not restrict.
-- **The mobile navigation is shared, and it did not exist here at all until
-  2026-08-18 (tds-shared 0.25.0).** The nav used to reflow onto a second
-  full-width row below `sm`; there was no hamburger, no panel, nothing to open.
-  That is worth remembering as a *class* of defect: it was not a bug anyone
-  could see in a diff, and this is a public, indexable property. `Header.astro`
-  now hides its desktop cluster at `lg` and opens the shared `.tds-mobile-menu`
-  sheet via `mountMobileNav` (`@tracht-digital-solutions/tds-shared/nav`);
-  `src/components/header.test.ts` fails if the menu disappears again or if any
-  mechanic gets hand-rolled back into this repo.
-  - **Hide the desktop cluster on a WRAPPER, never on the `.btn` itself.** This
-    file already documented the reason for the CTA: tds-shared is unlayered and
-    `.btn`'s own `display` beats a layered `hidden` utility, so
-    `hidden lg:inline-flex` on a button does nothing whatsoever. Same for the
-    hamburger — its breakpoint belongs to `.tds-menu-toggle`.
-  - **The toggle carries `btn btn-ghost tds-menu-toggle`, all three.**
-    `lint:primitives` accepts only `btn` / `chip` / `tds-dropdown__*`, so the
-    shared geometry class alone would be reported as a bare control.
-  - **The panel's labels are bilingual.** `navMenu` exists in both copy tables;
-    an `aria-label` is exactly the sort of string that gets left in German, and
-    a half-translated surface is the documented failure mode for this site.
+- **On a phone the site is an app (2026-10-06, tds-shared 0.47).** There was
+  no mobile navigation at all until 2026-08-18 — a defect class worth
+  remembering on a public, indexable property. Now `AppChrome.astro` (mounted
+  in `Layout.astro` on every page) renders the shared bottom tab bar —
+  Katalog · Kategorien · Suche (instant filter over the tool list) · Mehr
+  (theme, language, sibling properties, CTA) — with `tds-shared/app` sheets;
+  the header keeps wordmark + account and tucks away while scrolling.
+  `header.test.ts` pins it.
+  - **Hide the desktop cluster on a WRAPPER, never on the `.btn` itself.**
+    tds-shared is unlayered, so `hidden lg:inline-flex` on a button does nothing.
+  - Theme and language are saved through `tds-shared/prefs` (cookie on
+    `.tracht-digital.de` + account sync), so a choice made on the journal
+    already applies here on the first frame.
+  - **PWA:** `src/pages/manifest.webmanifest.ts` + `src/pages/sw.js.ts`
+    (prerendered; worker version = build time), fallback `/offline` +
+    `/en/offline` listing the tool pages this device kept. Tool pages opened
+    once work offline because they compute in the browser.
 - **`postcss.config.mjs` is REQUIRED.** Tailwind v4 runs through
   `@tailwindcss/postcss` (never `@tailwindcss/vite` — Astro 6/rolldown breaks it).
   Without the postcss config Tailwind never runs — no utilities are generated at
@@ -598,10 +595,9 @@ the catalog page saw nothing at all.
   in the bar. The link **paints immediately** rather than after the `/me` probe —
   anonymous is the common case on a public site, and making nearly every
   visitor watch the header reflow would be a poor trade for one round trip.
-- **It is mounted OUTSIDE the `hidden … lg:flex` cluster**, before
-  `#menu-toggle`. Below `lg` that cluster is gone and this is the only control
-  beside the hamburger, so inside it the menu would be absent rather than
-  smaller. Pinned by `header.test.ts`.
+- **It is mounted OUTSIDE the `hidden … lg:flex` cluster.** Below `lg` that
+  cluster is gone and this is the only control in the bar, so inside it the
+  menu would be absent rather than smaller. Pinned by `header.test.ts`.
 - **Utilities go on the wrapper `<div>`, never on `<AccountMenu>`** — the same
   unlayered-vs-`@layer utilities` trap the CTA above it already documents.
 - **Signing out reloads the page.** Not cosmetic: `ToolGate` may already have

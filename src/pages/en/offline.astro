@@ -1,0 +1,40 @@
+---
+import Layout from "~/layouts/Layout.astro";
+import { SW_PAGE_CACHE } from "@tracht-digital-solutions/tds-shared/pwa";
+// The service worker's fallback page (src/pages/sw.js.ts). Lists the tool
+// pages this device kept — they run in the browser, so they work offline.
+export const prerender = true;
+---
+
+<Layout title="Offline — TD Tools" lang="en" noindex>
+  <div class="mx-auto max-w-2xl px-4 py-20 sm:px-6">
+    <h1 class="tds-page__title tool-title">You are offline.</h1>
+    <p class="tds-page__lede mt-3">This page is not on your device yet. These tools work without a connection:</p>
+    <ul id="offline-list" class="mt-6" data-cache={SW_PAGE_CACHE} data-prefix="en"></ul>
+    <p id="offline-none" class="tds-page__lede mt-3" hidden>Nothing saved yet. Every tool you open online works offline afterwards.</p>
+    <button type="button" class="btn btn-primary mt-6" id="offline-retry">Try again</button>
+  </div>
+</Layout>
+
+<script>
+  const list = document.getElementById("offline-list");
+  const none = document.getElementById("offline-none");
+  document.getElementById("offline-retry")?.addEventListener("click", () => location.reload());
+  (async () => {
+    if (!list || !("caches" in window)) { if (none) none.hidden = false; return; }
+    const cache = await caches.open(list.dataset.cache ?? "tds-pages");
+    const en = list.dataset.prefix === "en";
+    let n = 0;
+    for (const req of [...(await cache.keys())].reverse()) {
+      const path = new URL(req.url).pathname;
+      if (!path.includes("/tools/") || en !== path.startsWith("/en/")) continue;
+      const html = await (await cache.match(req))?.text();
+      const title = (html?.match(/<title>([^<]*)<\/title>/)?.[1] ?? path).split(" — ")[0]!.trim();
+      const li = document.createElement("li");
+      const a = document.createElement("a");
+      a.href = path; a.textContent = title; a.className = "link-underline";
+      li.className = "py-2"; li.append(a); list.append(li); n++;
+    }
+    if (none) none.hidden = n > 0;
+  })();
+</script>

@@ -10,9 +10,10 @@
  * is only what is this site's own: the wordmark, the page-equivalent language
  * switch and the sign-in link.
  *
- * Below `lg` the nav and the desktop cluster give way to a hamburger opening
- * the shared `.tds-mobile-menu` sheet — the same panel and the same mechanics
- * as the landingpage, the journal and the shop.
+ * Below `lg` the bar keeps only the wordmark and the account menu; navigation,
+ * search and settings live in the app tab bar at the bottom (`AppChrome.astro`,
+ * tds-shared/app) — the same shell as the journal and the shop. The bar tucks
+ * away while scrolling down.
  */
 import { AccountMenu, ThemeToggle } from "@tracht-digital-solutions/tds-shared/components";
 import { propertyContact, propertyNav } from "@tracht-digital-solutions/tds-shared/nav";
@@ -54,7 +55,7 @@ const langHrefs: { code: Lang; href: string; label: string }[] = [
 {/* Fill, blur and the warm bottom hairline all come from `.brand-header`
     (tds-shared). Never re-declare them here: the class draws its border with a
     literal 1px that no local rule can reach. */}
-<header class="brand-header">
+<header class="brand-header tds-app-header" id="site-header">
   {/* `.tds-shell` gives the bar the page's own edges — the blog surface's
       120rem, the same on all three properties. */}
   <div class="tds-shell tds-sitebar">
@@ -101,6 +102,7 @@ const langHrefs: { code: Lang; href: string; label: string }[] = [
               href={l.href}
               hreflang={l.code}
               lang={l.code}
+              data-locale-link={l.code}
               class={l.code === lang ? "on" : ""}
               aria-current={l.code === lang ? "true" : undefined}
             >
@@ -117,89 +119,26 @@ const langHrefs: { code: Lang; href: string; label: string }[] = [
       </div>
     </div>
 
-    {/* Identity at EVERY width, then the hamburger. Unlike the journal, a
-        signed-out visitor gets a sign-in link: on this site a session unlocks
-        the premium tools, so the way in is worth a slot. The breakpoint of the
-        toggle comes from `.tds-menu-toggle` itself, not from `lg:hidden`. */}
+    {/* Identity at EVERY width. Unlike the journal, a signed-out visitor gets a
+        sign-in link: on this site a session unlocks the premium tools, so the
+        way in is worth a slot. */}
     <div class="tds-sitebar__actions">
       <AccountMenu client:idle lang={lang} loggedOut="login" />
-      <button
-        id="menu-toggle"
-        type="button"
-        class="btn btn-ghost tds-menu-toggle"
-        aria-controls="mobile-menu"
-        aria-expanded="false"
-        aria-label={s.navMenu}
-      >
-        <span class="tds-menu-bar tds-menu-bar-top" aria-hidden="true"></span>
-        <span class="tds-menu-bar tds-menu-bar-mid" aria-hidden="true"></span>
-        <span class="tds-menu-bar tds-menu-bar-bot" aria-hidden="true"></span>
-      </button>
     </div>
   </div>
 
-  {/* The docked sheet, its motion and its scroll containment are all
-      `.tds-mobile-menu` (tds-shared). Only the offset is local, matched to the
-      bar's 3.75rem and published as `--tds-mobile-menu-inset` so the panel's
-      max-height stops at the viewport edge instead of running past it. */}
-  <div
-    id="mobile-menu"
-    class="tds-mobile-menu inset-x-0 top-[3.75rem]"
-    style="--tds-mobile-menu-inset: 3.75rem"
-    aria-hidden="true"
-    aria-label={s.navMenu}
-  >
-    <nav aria-label="Navigation">
-      {nav.map((item) => (
-        <a
-          href={item.href}
-          data-menu-link
-          class="tds-mobile-menu__link"
-          aria-current={item.current ? (onCatalog ? "page" : "true") : undefined}
-        >
-          {item.label}
-        </a>
-      ))}
-    </nav>
-
-    <div class="mt-3 flex flex-wrap items-center justify-between gap-2 border-t border-[color:var(--color-line)] pt-3">
-      <div class="flex items-center gap-2">
-        <ThemeToggle client:idle />
-        {/* The switch rides the drawer's control row rather than the link list:
-            it is a setting, not a destination. */}
-        {EN_ENABLED && (
-          <div class="tds-lang-toggle" role="group" aria-label="Sprache / Language">
-            {langHrefs.map((l) => (
-              <a
-                href={l.href}
-                hreflang={l.code}
-                lang={l.code}
-                data-menu-link
-                class={l.code === lang ? "on" : ""}
-                aria-current={l.code === lang ? "true" : undefined}
-              >
-                {l.label}
-              </a>
-            ))}
-          </div>
-        )}
-      </div>
-      <a href={contact} data-menu-link class="btn btn-primary no-underline">
-        {s.cta}
-      </a>
-    </div>
-  </div>
 </header>
 <span class="sr-only" data-site-tagline>{s.tagline}</span>
 
 <script>
   // NOT `is:inline` — an inline script is not bundled, so this import would
   // reach the browser as a bare specifier.
-  import { mountMobileNav } from "@tracht-digital-solutions/tds-shared/nav";
+  import { mountAppHeader, mountPreferenceControls } from "@tracht-digital-solutions/tds-shared/app";
 
-  const toggle = document.getElementById("menu-toggle");
-  const panel = document.getElementById("mobile-menu");
-  if (toggle && panel) {
-    mountMobileNav({ toggle, panel });
+  const header = document.getElementById("site-header");
+  if (header) {
+    mountAppHeader(header);
+    // The DE/EN switch remembers the choice for every Tracht Digital site.
+    mountPreferenceControls(header);
   }
 </script>

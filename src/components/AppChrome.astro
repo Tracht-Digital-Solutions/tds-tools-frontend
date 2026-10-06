@@ -1,0 +1,223 @@
+---
+/**
+ * The tools site on a phone, as an app: a bottom tab bar (Katalog ·
+ * Kategorien · Suche · Mehr) and the sheets it opens. Below `lg` only; it
+ * replaces the hamburger sheet. Mechanics and CSS are shared
+ * (`tds-shared/app`, `styles/app-shell.css`) with the journal and the shop.
+ *
+ * Search filters the catalog's own tool list in the sheet — the catalog is
+ * small and fully known at render time, so there is no request to make.
+ */
+import { propertyContact, propertyNav } from "@tracht-digital-solutions/tds-shared/nav";
+import { enabledTools } from "~/lib/catalog";
+import { categoryLabels, toolCopyFor } from "~/lib/i18n";
+import { categoryOrder, site } from "~/lib/site";
+import { EN_ENABLED, localizedPath, type Lang } from "~/lib/seo";
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const de = lang === "de";
+const base = de ? "" : "/en";
+const path = Astro.url.pathname;
+
+let tools: Awaited<ReturnType<typeof enabledTools>> = [];
+try {
+  tools = await enabledTools();
+} catch {
+  tools = [];
+}
+const entries = tools.map((tool) => {
+  const copy = toolCopyFor(lang, tool, site.name);
+  return {
+    slug: tool.slug,
+    category: tool.category,
+    name: copy.name,
+    description: copy.description,
+    href: `${base}/tools/${tool.slug}`,
+  };
+});
+const rank = (c: string) => {
+  const i = categoryOrder.indexOf(c as never);
+  return i === -1 ? categoryOrder.length : i;
+};
+const groups = [...new Set(entries.map((e) => e.category))]
+  .sort((a, b) => rank(a) - rank(b))
+  .map((cat) => ({
+    cat,
+    label: categoryLabels[lang][cat as keyof (typeof categoryLabels)["de"]] ?? cat,
+    items: entries.filter((e) => e.category === cat),
+  }));
+const others = propertyNav("tools", lang, `${base}/`).filter((p) => !p.current);
+const contact = propertyContact(lang);
+
+const t = de
+  ? {
+      tabs: "App-Navigation", catalog: "Katalog", cats: "Kategorien", search: "Suche", more: "Mehr", close: "Schließen",
+      searchLabel: "Tools durchsuchen", searchPh: "Welches Werkzeug suchst du?", none: "Kein Tool gefunden.",
+      look: "Darstellung", light: "Hell", dark: "Dunkel", system: "System", language: "Sprache",
+      saved: "Wird für dich gespeichert – auf allen Tracht-Digital-Seiten.", elsewhere: "Weitere Angebote", cta: "Unverbindlich anfragen",
+    }
+  : {
+      tabs: "App navigation", catalog: "Catalog", cats: "Categories", search: "Search", more: "More", close: "Close",
+      searchLabel: "Search the tools", searchPh: "Which tool are you looking for?", none: "No tool found.",
+      look: "Appearance", light: "Light", dark: "Dark", system: "System", language: "Language",
+      saved: "Saved for you — on every Tracht Digital site.", elsewhere: "More from Tracht Digital", cta: "Get in touch",
+    };
+---
+
+<nav class="tds-tabbar" id="app-tabbar" aria-label={t.tabs}>
+  <a class="tds-tabbar__item" href={`${base}/`} data-tab-match={`${base}/ ${base}/tools`}>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7.5" height="7.5"></rect><rect x="13.5" y="3" width="7.5" height="7.5"></rect><rect x="3" y="13.5" width="7.5" height="7.5"></rect><rect x="13.5" y="13.5" width="7.5" height="7.5"></rect></svg>
+    <span>{t.catalog}</span>
+  </a>
+  <button type="button" class="tds-tabbar__item" data-sheet-open="sheet-cats">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h12"></path></svg>
+    <span>{t.cats}</span>
+  </button>
+  <button type="button" class="tds-tabbar__item" data-sheet-open="sheet-search">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+    <span>{t.search}</span>
+  </button>
+  <button type="button" class="tds-tabbar__item" data-sheet-open="sheet-more">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"></path><circle cx="16" cy="7" r="2"></circle><circle cx="10" cy="17" r="2"></circle></svg>
+    <span>{t.more}</span>
+  </button>
+</nav>
+
+<dialog class="tds-sheet" id="sheet-cats" aria-labelledby="sheet-cats-title">
+  <div class="tds-sheet__grab">
+    <h2 class="tds-sheet__title" id="sheet-cats-title">{t.cats}</h2>
+    <button type="button" class="tds-sheet__close" data-sheet-close aria-label={t.close}>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg>
+    </button>
+  </div>
+  <div class="tds-sheet__body">
+    {groups.map((g) => (
+      <>
+        <p class="tds-sheet-heading">{g.label}</p>
+        {g.items.map((e) => (
+          <a class="tds-sheet-row" href={e.href} aria-current={path === e.href ? "page" : undefined}>
+            <span>{e.name}</span><span aria-hidden="true">→</span>
+          </a>
+        ))}
+      </>
+    ))}
+  </div>
+</dialog>
+
+<dialog class="tds-sheet" id="sheet-search" aria-labelledby="sheet-search-title">
+  <div class="tds-sheet__grab">
+    <h2 class="tds-sheet__title" id="sheet-search-title">{t.search}</h2>
+    <button type="button" class="tds-sheet__close" data-sheet-close aria-label={t.close}>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg>
+    </button>
+  </div>
+  <div class="tds-sheet__body">
+    <label class="sr-only" for="app-tool-q">{t.searchLabel}</label>
+    <input id="app-tool-q" class="app-search-input" type="search" enterkeyhint="search" autocomplete="off" placeholder={t.searchPh} />
+    <div id="app-tool-results" role="list">
+      {entries.map((e) => (
+        <a class="tds-sheet-row app-tool-row" role="listitem" href={e.href} data-search={`${e.name} ${e.description}`.toLowerCase()}>
+          <span><strong>{e.name}</strong><small>{e.description}</small></span>
+        </a>
+      ))}
+    </div>
+    <p id="app-tool-none" class="app-sheet-note" hidden>{t.none}</p>
+  </div>
+</dialog>
+
+<dialog class="tds-sheet" id="sheet-more" aria-labelledby="sheet-more-title">
+  <div class="tds-sheet__grab">
+    <h2 class="tds-sheet__title" id="sheet-more-title">{t.more}</h2>
+    <button type="button" class="tds-sheet__close" data-sheet-close aria-label={t.close}>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg>
+    </button>
+  </div>
+  <div class="tds-sheet__body" id="sheet-more-body">
+    <p class="tds-sheet-heading">{t.look}</p>
+    <div class="tds-segmented" role="group" aria-label={t.look}>
+      <button type="button" data-theme-choice="light" aria-pressed="false">{t.light}</button>
+      <button type="button" data-theme-choice="dark" aria-pressed="false">{t.dark}</button>
+      <button type="button" data-theme-choice="system" aria-pressed="false">{t.system}</button>
+    </div>
+    {EN_ENABLED && (
+      <>
+        <p class="tds-sheet-heading">{t.language}</p>
+        <div class="tds-segmented" role="group" aria-label={t.language}>
+          <a href={localizedPath(path, "de")} hreflang="de" data-locale-link="de" aria-current={de ? "true" : undefined}>Deutsch</a>
+          <a href={localizedPath(path, "en")} hreflang="en" data-locale-link="en" aria-current={!de ? "true" : undefined}>English</a>
+        </div>
+      </>
+    )}
+    <p class="app-sheet-note">{t.saved}</p>
+    <p class="tds-sheet-heading">{t.elsewhere}</p>
+    {others.map((p) => (
+      <a class="tds-sheet-row" href={p.href}><span>{p.label}</span><span aria-hidden="true">↗</span></a>
+    ))}
+    <a href={contact} class="btn btn-primary no-underline app-sheet-cta">{t.cta}</a>
+  </div>
+</dialog>
+
+<style>
+  .app-search-input {
+    width: 100%;
+    min-height: 2.875rem;
+    margin: 0.25rem 0 0.5rem;
+    padding: 0 0.875rem;
+    border: 1px solid var(--color-line);
+    background: var(--color-card, var(--color-paper));
+    color: var(--color-ink);
+    font: inherit;
+    font-size: 1rem; /* ≥16px: iOS does not zoom on focus */
+  }
+  .app-search-input:focus-visible { outline: 2px solid var(--color-accent); outline-offset: -1px; }
+  .app-tool-row strong { display: block; font-weight: 600; }
+  .app-tool-row small {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-top: 0.125rem;
+    font-size: 0.8125rem;
+    font-weight: 400;
+    color: var(--color-muted);
+  }
+  .app-sheet-note { margin: 0.625rem 0 0; font-size: 0.8125rem; color: var(--color-muted); }
+  .app-sheet-cta { width: 100%; justify-content: center; margin-top: 1rem; }
+</style>
+
+<script>
+  import { mountAppTabBar, mountSheet, mountPreferenceControls } from "@tracht-digital-solutions/tds-shared/app";
+
+  const bar = document.getElementById("app-tabbar");
+  if (bar) mountAppTabBar(bar);
+  for (const dialog of Array.from(document.querySelectorAll<HTMLDialogElement>("dialog.tds-sheet"))) {
+    mountSheet({
+      dialog,
+      triggers: Array.from(document.querySelectorAll<HTMLElement>(`[data-sheet-open="${dialog.id}"]`)),
+      onOpen: () => {
+        if (dialog.id === "sheet-search") document.getElementById("app-tool-q")?.focus();
+      },
+    });
+  }
+  const more = document.getElementById("sheet-more-body");
+  if (more) mountPreferenceControls(more);
+
+  // Instant filter over the rendered list: every word must match.
+  const q = document.getElementById("app-tool-q") as HTMLInputElement | null;
+  const rows = Array.from(document.querySelectorAll<HTMLElement>(".app-tool-row"));
+  const none = document.getElementById("app-tool-none");
+  q?.addEventListener("input", () => {
+    const words = q.value.toLowerCase().split(/\s+/).filter(Boolean);
+    let shown = 0;
+    for (const row of rows) {
+      const hit = words.every((w) => (row.dataset.search ?? "").includes(w));
+      row.style.display = hit ? "" : "none";
+      if (hit) shown++;
+    }
+    if (none) none.hidden = shown > 0;
+  });
+</script>
