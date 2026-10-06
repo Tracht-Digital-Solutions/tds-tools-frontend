@@ -15,9 +15,14 @@ describe("cacheEvents", () => {
     (await resolveEvents(cacheEvents, events)).paths;
 
   it("rebuilds a tool's page and the pages that list it", async () => {
+    // Every sitemap document since the sectioned index (2026-10-06): the
+    // index carries each section's newest date, so it moves with them.
     expect(await paths([{ type: "tool", id: "qr-code-generator", lang: "de" }])).toEqual([
       "/",
       "/sitemap-0.xml",
+      "/sitemap-index.xml",
+      "/sitemap-pages.xml",
+      "/sitemap-tools.xml",
       "/tools/qr-code-generator",
     ]);
   });
@@ -35,6 +40,9 @@ describe("cacheEvents", () => {
       "/",
       "/en/",
       "/sitemap-0.xml",
+      "/sitemap-index.xml",
+      "/sitemap-pages.xml",
+      "/sitemap-tools.xml",
     ]);
   });
 

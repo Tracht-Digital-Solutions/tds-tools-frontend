@@ -153,7 +153,7 @@ export const copy = {
     navHome: "Main site",
     navMenu: "Menu",
     toBlog: "To the blog",
-    toHome: "To the main site",
+    toHome: "To the home page",
     cta: "Get in touch",
     skipToContent: "Skip to content",
     emptyCatalog: "No tools are available at the moment.",

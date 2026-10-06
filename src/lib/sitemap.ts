@@ -26,10 +26,15 @@ import { enabledTools } from "./catalog";
 import { guideUpdatedAt } from "./guides";
 import { EN_ENABLED, localizedPath, type Lang } from "./seo";
 import { site } from "./site";
-import { escapeXml } from "@tracht-digital-solutions/tds-shared/site";
+import { escapeXml, newestDay, renderSectionedSitemapIndex } from "@tracht-digital-solutions/tds-shared/site";
+import { SITEMAP_SECTIONS, sectionPath, type SitemapSection } from "./sitemapSections";
 
 export interface SitemapUrl {
   path: string;
+  /** Which child sitemap lists it. */
+  section: SitemapSection;
+  /** The page's share image, per language (the tool's generated OG card). */
+  image?: { de: string; en: string; title: string };
   changefreq: "weekly" | "monthly";
   priority: number;
   /**
@@ -56,6 +61,8 @@ export function absolute(path: string): string {
 export async function sitemapPaths(): Promise<SitemapUrl[]> {
   const tools = (await enabledTools()).map((tool) => ({
     path: `/tools/${tool.slug}`,
+    section: "tools" as const,
+    image: { de: `/og/tools/${tool.slug}.png`, en: `/og/en/tools/${tool.slug}.png`, title: tool.name },
     changefreq: "monthly" as const,
     priority: 0.8,
     lastmod: guideUpdatedAt(tool.slug),
@@ -66,7 +73,7 @@ export async function sitemapPaths(): Promise<SitemapUrl[]> {
     .filter((d): d is string => Boolean(d))
     .sort()
     .at(-1);
-  return [{ path: "/", changefreq: "weekly", priority: 1.0, lastmod: newest }, ...tools];
+  return [{ path: "/", section: "pages", changefreq: "weekly", priority: 1.0, lastmod: newest }, ...tools];
 }
 
 export function renderUrlset(paths: SitemapUrl[], fallbackLastmod?: string): string {
@@ -83,10 +90,15 @@ export function renderUrlset(paths: SitemapUrl[], fallbackLastmod?: string): str
               `<xhtml:link rel="alternate" hreflang="x-default" href="${escapeXml(absolute(localizedPath(entry.path, "de")))}"/>`,
             ].join("")
           : "";
+        const image = entry.image
+          ? `<image:image><image:loc>${escapeXml(absolute(entry.image[lang]))}</image:loc>` +
+            `<image:title>${escapeXml(entry.image.title)}</image:title></image:image>`
+          : "";
         return [
           "<url>",
           `<loc>${escapeXml(absolute(localizedPath(entry.path, lang)))}</loc>`,
           alternates,
+          image,
           lastmod ? `<lastmod>${escapeXml(lastmod)}</lastmod>` : "",
           `<changefreq>${entry.changefreq}</changefreq>`,
           `<priority>${entry.priority.toFixed(1)}</priority>`,
@@ -99,7 +111,8 @@ export function renderUrlset(paths: SitemapUrl[], fallbackLastmod?: string): str
   return (
     '<?xml version="1.0" encoding="UTF-8"?>' +
     '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" ' +
-    'xmlns:xhtml="http://www.w3.org/1999/xhtml">' +
+    'xmlns:xhtml="http://www.w3.org/1999/xhtml" ' +
+    'xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">' +
     body +
     "</urlset>"
   );
@@ -118,5 +131,19 @@ export function renderSitemapIndex(lastmod?: string): string {
     (lastmod ? `<lastmod>${escapeXml(lastmod)}</lastmod>` : "") +
     "</sitemap>" +
     "</sitemapindex>"
+  );
+}
+
+/**
+ * The sectioned index (2026-10-06): one child per non-empty section, each with
+ * the newest real date inside it — or none, never the render date.
+ */
+export function renderSectionIndex(paths: readonly SitemapUrl[]): string {
+  return renderSectionedSitemapIndex(
+    SITEMAP_SECTIONS.flatMap((section) => {
+      const inSection = paths.filter((p) => p.section === section);
+      if (inSection.length === 0) return [];
+      return [{ loc: absolute(sectionPath(section)), lastmod: newestDay(inSection.map((p) => p.lastmod)) }];
+    }),
   );
 }

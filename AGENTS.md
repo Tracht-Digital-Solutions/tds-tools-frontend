@@ -798,3 +798,11 @@ account dropdown and the cookie notice take it in tds-shared). Here:
 - **Hover lifts a card** 2px up-left while its offset grows by 2px
   (`--tds-shadow-hard-hover`, 2026-09-26). The tilt keeps `transform`, the
   lift uses `translate`, so neither overwrites the other.
+
+- **2026-10-06:** no top bar on the phone — the header is the page's first
+  line, navy with a light logo where the catalogue opens on `.tools-hero`.
+  Sectioned sitemap: `sitemap-{pages,tools}.xml` (src/lib/sitemapSections.ts),
+  tool pages with their OG card as `image:image`; `/sitemap-0.xml` still lists
+  everything. `.htaccess` compresses; fonts preloaded; `<meta charset>` must
+  stay inside the first 1024 bytes — the long comment above `<html>` is an
+  Astro comment now, not an HTML one.

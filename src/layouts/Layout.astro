@@ -3,6 +3,12 @@
 // @tailwindcss/postcss inlines CSS @imports without rebasing their relative
 // url(./files/*.woff2) refs, so Vite never emits the fonts otherwise.
 import { serializeJsonLd } from "@tracht-digital-solutions/tds-shared/site";
+// The two font files the first paint needs, imported for their hashed URLs so
+// they can be preloaded (same pattern as the landingpage). Without it the body
+// face and the 800-weight display face arrived after first paint and swapped
+// in — Lighthouse measured that as the page's whole layout shift (CLS 0.2).
+import bodyFont from "@fontsource-variable/plus-jakarta-sans/files/plus-jakarta-sans-latin-wght-normal.woff2?url";
+import displayFont from "@fontsource/lato/files/lato-latin-900-normal.woff2?url";
 import "@fontsource/lato/400.css";
 import "@fontsource/lato/700.css";
 import "@fontsource/lato/900.css";
@@ -81,7 +87,7 @@ const jsonLdText = jsonLd ? serializeJsonLd(jsonLd) : null;
 ---
 
 <!DOCTYPE html>
-<!-- data-surface selects the geometry layer from tds-shared's design library.
+{/* data-surface selects the geometry layer from tds-shared's design library.
      Since 0.9.0 this site renders the **blog** surface (surfaces/blog.css) —
      the same layer `blog.tracht-digital.de` renders: the flat "kantig" kit,
      every radius 0, no elevation anywhere, the 800 display voice and the
@@ -126,11 +132,15 @@ const jsonLdText = jsonLd ? serializeJsonLd(jsonLd) : null;
 
      Do NOT author radii or shadows locally — that is exactly what made the
      blog repo fork `.chip`, `.display` and `.eyebrow` before the surface
-     split. Set a token in the surface layer or use a shared class. -->
+     split. Set a token in the surface layer or use a shared class. */}
 <html lang={lang} data-surface="blog" data-flat class="tds-app">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {/* `crossorigin` is required: fonts load in CORS mode, and a preload
+        without it warms a second request that nothing uses. */}
+    <link rel="preload" href={bodyFont} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={displayFont} as="font" type="font/woff2" crossorigin />
     <!-- The cross-page transition switch, as early as it can be: Chrome decides the
          incoming page's opt-in at its first render, and the stylesheet linked at the
          end of this head often arrives later (tds-shared pageTransitionOptIn). -->

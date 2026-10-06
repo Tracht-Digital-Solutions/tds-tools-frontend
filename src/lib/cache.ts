@@ -15,6 +15,7 @@ import {
   type CacheEvent,
   type EventMap,
 } from "@tracht-digital-solutions/tds-shared/cache";
+import { SITEMAP_PATHS } from "./sitemapSections";
 
 /**
  * The one memo every content fetch on this site shares.
@@ -38,7 +39,7 @@ const prefix = (lang: "de" | "en") => (lang === "de" ? "" : "/en");
  * it only produced a failed entry on every tool event.
  */
 function catalogPages(lang: "de" | "en"): string[] {
-  return [`${prefix(lang)}/`, "/sitemap-0.xml"];
+  return [`${prefix(lang)}/`, ...SITEMAP_PATHS];
 }
 
 /**
@@ -78,6 +79,5 @@ export const cacheEvents: EventMap = {
 export const alwaysPaths = [
   "/",
   "/en/",
-  "/sitemap-0.xml",
-  "/sitemap-index.xml",
+  ...SITEMAP_PATHS,
 ];
