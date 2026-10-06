@@ -116,7 +116,7 @@ const t = de
   </div>
   <div class="tds-sheet__body">
     <label class="sr-only" for="app-tool-q">{t.searchLabel}</label>
-    <input id="app-tool-q" class="app-search-input" type="search" enterkeyhint="search" autocomplete="off" placeholder={t.searchPh} />
+    <input id="app-tool-q" class="field-boxed app-search-input" type="search" enterkeyhint="search" autocomplete="off" placeholder={t.searchPh} />
     <div id="app-tool-results" role="list">
       {entries.map((e) => (
         <a class="tds-sheet-row app-tool-row" role="listitem" href={e.href} data-search={`${e.name} ${e.description}`.toLowerCase()}>
@@ -138,9 +138,9 @@ const t = de
   <div class="tds-sheet__body" id="sheet-more-body">
     <p class="tds-sheet-heading">{t.look}</p>
     <div class="tds-segmented" role="group" aria-label={t.look}>
-      <button type="button" data-theme-choice="light" aria-pressed="false">{t.light}</button>
-      <button type="button" data-theme-choice="dark" aria-pressed="false">{t.dark}</button>
-      <button type="button" data-theme-choice="system" aria-pressed="false">{t.system}</button>
+      <button type="button" class="tds-segmented__option" data-theme-choice="light" aria-pressed="false">{t.light}</button>
+      <button type="button" class="tds-segmented__option" data-theme-choice="dark" aria-pressed="false">{t.dark}</button>
+      <button type="button" class="tds-segmented__option" data-theme-choice="system" aria-pressed="false">{t.system}</button>
     </div>
     {EN_ENABLED && (
       <>
@@ -161,18 +161,13 @@ const t = de
 </dialog>
 
 <style>
+  /* Geometry and focus come from the shared `.field-boxed`; only the width,
+     the gap and the 16px size (iOS does not zoom the page on focus) here. */
   .app-search-input {
     width: 100%;
-    min-height: 2.875rem;
     margin: 0.25rem 0 0.5rem;
-    padding: 0 0.875rem;
-    border: 1px solid var(--color-line);
-    background: var(--color-card, var(--color-paper));
-    color: var(--color-ink);
-    font: inherit;
-    font-size: 1rem; /* ≥16px: iOS does not zoom on focus */
+    font-size: 1rem;
   }
-  .app-search-input:focus-visible { outline: 2px solid var(--color-accent); outline-offset: -1px; }
   .app-tool-row strong { display: block; font-weight: 600; }
   .app-tool-row small {
     display: -webkit-box;

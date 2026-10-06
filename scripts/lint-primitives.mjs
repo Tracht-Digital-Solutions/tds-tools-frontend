@@ -136,7 +136,12 @@ for (const file of files) {
       // shared class that provides geometry", not "must literally say btn" —
       // forcing `.btn` onto a menu row would give it the pill radius and
       // button padding and make the menu look like a stack of buttons.
-      if (!/\b(btn|chip|tds-dropdown__(trigger|item))\b/.test(cls)) {
+      //
+      // The app shell's controls (tds-shared styles/app-shell.css, 0.47) are
+      // the same case: the tab-bar item, the sheet's close button and a
+      // segmented option each carry their own geometry, hover and
+      // focus-visible treatment — a `.btn` would turn a tab into a pill.
+      if (!/\b(btn|chip|tds-dropdown__(trigger|item)|tds-tabbar__item|tds-sheet__close|tds-segmented__option)\b/.test(cls)) {
         findings.push(`${where}  <button> needs "btn btn-*" (or "chip")`);
       }
       // …and the VARIANT has to exist. `btn btn-secondary` passed the check

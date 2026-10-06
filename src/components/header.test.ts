@@ -16,7 +16,6 @@ import { join } from "node:path";
 
 const SRC = join(process.cwd(), "src");
 const raw = readFileSync(join(SRC, "components", "Header.astro"), "utf8");
-const i18n = readFileSync(join(SRC, "lib", "i18n.ts"), "utf8");
 const site = readFileSync(join(SRC, "lib", "site.ts"), "utf8");
 
 /** This file documents the traps being pinned, so assert against code only. */
