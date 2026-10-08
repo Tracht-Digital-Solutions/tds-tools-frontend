@@ -22,6 +22,7 @@ import {
   pageDirectionScript,
   pageTransitionOptIn,
   speculationRules,
+  errorBounceScript,
   themeBootstrapScript,
 } from "@tracht-digital-solutions/tds-shared/astro";
 import AppChrome from "~/components/AppChrome.astro";
@@ -179,6 +180,8 @@ const jsonLdText = jsonLd ? serializeJsonLd(jsonLd) : null;
         expression, written out unescaped — a raw body would need the script
         source inline). */}
     <script is:inline set:html={themeBootstrapScript} />
+    {/* Errors shake: a refused field, an alert appearing, the button that sent it (tds-shared). */}
+    <script is:inline set:html={errorBounceScript} />
 
     <link rel="canonical" href={url} />
 
