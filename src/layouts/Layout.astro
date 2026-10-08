@@ -29,6 +29,7 @@ import Header from "~/components/Header.astro";
 import Footer from "~/components/Footer.astro";
 import { links, site } from "~/lib/site";
 import { t } from "~/lib/i18n";
+import { isExcluded } from "~/lib/sitemapExclusions";
 import { seoConfig, ogLocale, localizedPath, EN_ENABLED, type Lang } from "~/lib/seo";
 import { adsConfig } from "~/lib/catalog";
 
@@ -59,6 +60,12 @@ const {
 
 const origin = Astro.site?.origin ?? site.origin;
 const url = canonical ?? new URL(Astro.url.pathname, origin).toString();
+// A page the panel excluded from the sitemap is also served `noindex`. Both
+// halves are required and neither is sufficient: a sitemap omission is a hint a
+// crawler may ignore, while `noindex` on a URL still advertised in the sitemap
+// tells it two different things. `noindex` (the prop) stays the local override
+// for pages that are never public — `/install`, `/404`.
+const hidden = noindex || (await isExcluded(Astro.url.pathname));
 const ogImageAbs = ogImage.startsWith("http") ? ogImage : new URL(ogImage, origin).toString();
 
 // hreflang alternates. English is mounted under `/en/…` with the SAME slugs,
@@ -155,7 +162,7 @@ const jsonLdText = jsonLd ? serializeJsonLd(jsonLd) : null;
     <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="TD Tools" />
-    {noindex && <meta name="robots" content="noindex,nofollow" />}
+    {hidden && <meta name="robots" content="noindex,nofollow" />}
     {/* The brand mark shared by every TDS property — byte-identical to the
         landingpage's and the blog's. It used to be a hand-drawn SVG unique to
         this site; the tools site is indexable and links back to the main
@@ -178,7 +185,7 @@ const jsonLdText = jsonLd ? serializeJsonLd(jsonLd) : null;
     {/* i18n alternates — only on indexable pages. `x-default` is the German
         page: the audience is local businesses in Northern Germany, so German
         is the right guess for a visitor whose language we do not know. */}
-    {EN_ENABLED && !noindex && (
+    {EN_ENABLED && !hidden && (
       <>
         <link rel="alternate" hreflang="de" href={deAltUrl} />
         <link rel="alternate" hreflang="en" href={enAltUrl} />
@@ -216,7 +223,7 @@ const jsonLdText = jsonLd ? serializeJsonLd(jsonLd) : null;
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content={title} />
     <meta property="og:locale" content={ogLocale[lang]} />
-    {EN_ENABLED && !noindex && (
+    {EN_ENABLED && !hidden && (
       <meta property="og:locale:alternate" content={altOgLocale} />
     )}
     <meta property="og:site_name" content={site.name} />

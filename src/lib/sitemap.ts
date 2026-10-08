@@ -27,6 +27,7 @@ import { guideUpdatedAt } from "./guides";
 import { EN_ENABLED, localizedPath, type Lang } from "./seo";
 import { site } from "./site";
 import { escapeXml, newestDay, renderSectionedSitemapIndex } from "@tracht-digital-solutions/tds-shared/site";
+import { exclusionPatterns, groupExcluded, hreflangGroup } from "./sitemapExclusions";
 import { SITEMAP_SECTIONS, sectionPath, type SitemapSection } from "./sitemapSections";
 
 export interface SitemapUrl {
@@ -59,7 +60,8 @@ export function absolute(path: string): string {
  * alternates depend on.
  */
 export async function sitemapPaths(): Promise<SitemapUrl[]> {
-  const tools = (await enabledTools()).map((tool) => ({
+  const [enabled, patterns] = await Promise.all([enabledTools(), exclusionPatterns()]);
+  const tools = enabled.map((tool) => ({
     path: `/tools/${tool.slug}`,
     section: "tools" as const,
     image: { de: `/og/tools/${tool.slug}.png`, en: `/og/en/tools/${tool.slug}.png`, title: tool.name },
@@ -73,7 +75,16 @@ export async function sitemapPaths(): Promise<SitemapUrl[]> {
     .filter((d): d is string => Boolean(d))
     .sort()
     .at(-1);
-  return [{ path: "/", section: "pages", changefreq: "weekly", priority: 1.0, lastmod: newest }, ...tools];
+  const all: SitemapUrl[] = [
+    { path: "/", section: "pages", changefreq: "weekly", priority: 1.0, lastmod: newest },
+    ...tools,
+  ];
+  if (patterns.length === 0) return all;
+
+  // Filtered on the whole hreflang group, never on one URL: `renderUrlset`
+  // emits both trees from ONE entry, and a surviving side would point an
+  // alternate at a URL no longer offered, which invalidates the set on both.
+  return all.filter((entry) => !groupExcluded(hreflangGroup(entry.path), patterns));
 }
 
 export function renderUrlset(paths: SitemapUrl[], fallbackLastmod?: string): string {

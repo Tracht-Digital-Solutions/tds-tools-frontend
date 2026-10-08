@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { resolveEvents } from "@tracht-digital-solutions/tds-shared/cache";
 
 import { alwaysPaths, cacheEvents } from "./cache";
@@ -60,6 +60,21 @@ describe("cacheEvents", () => {
 
   it("reports an event type it does not know", async () => {
     expect((await resolveEvents(cacheEvents, [{ type: "widget" }])).unknown).toEqual(["widget"]);
+  });
+
+  it("rebuilds the tool pages too when the exclusion list changes", async () => {
+    // The list moves the `robots` meta of the excluded page, not just the
+    // sitemap. Rebuilding only the sitemap would leave that page serving its
+    // old indexable head from cache — the omission visible in the XML, the
+    // `noindex` nowhere.
+    vi.stubGlobal("fetch", vi.fn(async () => new Response("no", { status: 500 })));
+    vi.spyOn(console, "warn").mockImplementation(() => {});
+    const result = await paths([{ type: "sitemap" }]);
+    expect(result).toContain("/sitemap-index.xml");
+    expect(result).toContain("/sitemap-tools.xml");
+    expect(result).toContain("/tools/kostenloses-tool");
+    expect(result).toContain("/en/tools/kostenloses-tool");
+    vi.unstubAllGlobals();
   });
 
   it("keeps individual tool pages out of alwaysPaths", async () => {

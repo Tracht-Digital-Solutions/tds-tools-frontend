@@ -74,6 +74,9 @@ Rendered at build time: `/og/default.png` and `/og/tools/<slug>.png` (one per en
 
 - Sectioned sitemaps: `sitemap-{pages,tools}.xml` (`src/lib/sitemapSections.ts`), tool pages with their OG card as
   `image:image`; `/sitemap-0.xml` still lists everything; `sitemap-index.xml` ties them together.
+- The panel's exclusion list (`/content/sitemap-exclusions?site=tools`, `src/lib/sitemapExclusions.ts`) drops a
+  page from every sitemap AND serves it `noindex`. A pattern always takes the whole hreflang pair; an unreachable
+  API means nothing excluded. The `sitemap` cache event rebuilds the sitemaps, the catalog and every tool page.
 - `/llms.txt` is a generated route (`src/lib/llmsTxt.ts`, `src/pages/llms.txt.ts`). Don't add a static
   `public/llms.txt`; it would shadow the route.
 - `npm run audit:geo -- <url>` runs the shared geo audit (`scripts/geo-audit.mjs`, `src/lib/geoAudit.test.ts`).
