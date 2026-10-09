@@ -55,7 +55,7 @@ const premium = tools.filter((tool) => tool.isPremium);
     <ul class="premium-note__list">
       {premium.map((tool) => (
         <li>
-          <a href={`${base}/tools/${tool.slug}`} class="link-underline premium-note__link">
+          <a href={`${base}/tools/${tool.slug}`} class="link-underline premium-note__link" data-track={`premium-${tool.slug}`}>
             {toolCopyFor(lang, tool, site.name).name}
           </a>
         </li>

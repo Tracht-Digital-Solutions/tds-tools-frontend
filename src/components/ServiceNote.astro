@@ -36,5 +36,5 @@ const s = t(lang);
   {/* `.link-underline` (tds-shared) inherits its colour, so the accent is set
       by the class in global.css rather than by a utility here: tds-shared is
       unlayered CSS and beats anything in `@layer utilities`. */}
-  <a href={links.contact} class="service-note__cta link-underline">{s.serviceNoteCta}</a>
+  <a href={links.contact} class="service-note__cta link-underline" data-track="service-note">{s.serviceNoteCta}</a>
 </aside>

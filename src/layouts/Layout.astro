@@ -259,6 +259,18 @@ const jsonLdText = jsonLd ? serializeJsonLd(jsonLd) : null;
       registerServiceWorker();
     </script>
 
+    {/* Besucher-Statistik: nothing until the visitor agrees to "Statistik" in
+        the banner below; withdrawing deletes the ids. Tool inputs are never
+        read — only `data-track` clicks, sections and page views. */}
+    <script>
+      import { startAnalytics } from "@tracht-digital-solutions/tds-shared/analytics";
+
+      startAnalytics({
+        site: "tools",
+        lang: document.documentElement.lang.startsWith("en") ? "en" : "de",
+      });
+    </script>
+
     {/*
       The consent manager, mounted ALWAYS — not only when advertising is on.
 
@@ -279,7 +291,7 @@ const jsonLdText = jsonLd ? serializeJsonLd(jsonLd) : null;
     <ConsentBanner
       client:idle
       lang={lang}
-      categories={adsActive ? ["marketing"] : []}
+      categories={adsActive ? ["analytics", "marketing"] : ["analytics"]}
       privacyUrl={links.datenschutz}
       imprintUrl={links.impressum}
     />

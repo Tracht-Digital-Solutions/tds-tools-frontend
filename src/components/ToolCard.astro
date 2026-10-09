@@ -39,7 +39,7 @@ const badges = lang === "de"
     pair re-implemented `chip--warning` / `chip--info` with hand-authored
     geometry, which then kept the marketing pill shape on a surface that rounds
     nothing. */}
-<a href={`${base}/tools/${tool.slug}`} class="tool-card">
+<a href={`${base}/tools/${tool.slug}`} class="tool-card" data-track={`tool-${tool.slug}`}>
   <span class="tool-card__eyebrow">{category}</span>
   <span class="tool-card__title">
     <span class="tool-card__icon">
