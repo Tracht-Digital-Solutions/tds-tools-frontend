@@ -19,6 +19,7 @@ import datenschutzerklaerungGenerator from "~/content/guides/datenschutzerklaeru
 import barrierefreiheitserklaerungGenerator from "~/content/guides/barrierefreiheitserklaerung-generator";
 import kiKennzeichnungBilder from "~/content/guides/ki-kennzeichnung-bilder";
 import visitenkartenDesigner from "~/content/guides/visitenkarten-designer";
+import designsystemStudio from "~/content/guides/designsystem-studio";
 
 /**
  * The long-form guide rendered under each tool.
@@ -97,6 +98,7 @@ export const guides: Record<string, ToolGuideSet> = {
   "barrierefreiheitserklaerung-generator": barrierefreiheitserklaerungGenerator,
   "ki-kennzeichnung-bilder": kiKennzeichnungBilder,
   "visitenkarten-designer": visitenkartenDesigner,
+  "designsystem-studio": designsystemStudio,
 };
 
 /**

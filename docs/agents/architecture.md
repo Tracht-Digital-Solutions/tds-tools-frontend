@@ -15,6 +15,14 @@
   locally: `npm install --install-links ../tds-tool-*-pkg`, build, grep the EN page for an English label, then
   `git checkout -- package.json` (it rewrites ranges to `file:`).
 
+## Designsystem-Studio export (`POST /tds/studio/export`)
+
+`src/pages/tds/studio/export.ts` mounts `handleExport` from
+`@tracht-digital-solutions/tds-tool-devkit/studio/exportRoute` (pack ≥ 0.2.3). It builds the
+download on this server after asking `GET /tools/studio/access` with the visitor's cookie, so
+premium formats are refused server-side; an unreachable API means the default policy and no
+premium (fail closed). POST only, never page-cached. `studioExport.test.ts` pins the mounting.
+
 ## Catalog = manifest defaults + admin overrides
 
 `src/lib/catalog.ts` fetches `GET /tools/catalog` (served by `tds-ext-tools-pkg`) and merges enabled,

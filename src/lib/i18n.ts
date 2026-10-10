@@ -370,6 +370,12 @@ export const toolCopyEn: Record<string, ToolCopy> = {
       "Design a business card in the browser: accent colour, surface, corners, shadow and layout, with a live preview. PNG download at 85 × 55 mm, 300 dpi.",
     seoTitle: "Business Card Designer — design and download as PNG",
   },
+  "designsystem-studio": {
+    name: "Design System Studio",
+    description:
+      "Design a button or card visually, derive a design system with light and dark mode, check contrast and export it as CSS, SCSS or Tailwind.",
+    seoTitle: "CSS design system generator — style components visually",
+  },
 };
 
 /**

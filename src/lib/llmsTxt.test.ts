@@ -71,7 +71,10 @@ describe("llms.txt", () => {
   });
 
   it("stays one small file", () => {
-    expect(Buffer.byteLength(llms, "utf8")).toBeLessThanOrEqual(8 * 1024);
+    // ~350 bytes per tool; 8 KiB held 19 tools. The point is ONE index file,
+    // not a second corpus — the cap guards against prose creeping in, so it
+    // grows with the catalogue, not with the text per tool.
+    expect(Buffer.byteLength(llms, "utf8")).toBeLessThanOrEqual(12 * 1024);
     expect(llms).not.toMatch(/llms-full/);
   });
 
