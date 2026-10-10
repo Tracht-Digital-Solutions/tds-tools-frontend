@@ -1,0 +1,44 @@
+---
+/**
+ * The tool itself: the access gate (login / premium) and the card the pack's
+ * component renders into. One component so `ToolPage` can place it either in
+ * the main column or, for a `layout: "wide"` tool, above the two columns —
+ * without the gate markup existing twice.
+ */
+import ToolGate from "~/components/ToolGate.tsx";
+import type { ResolvedTool } from "~/lib/catalog";
+import type { Lang } from "~/lib/seo";
+
+interface Props {
+  tool: ResolvedTool;
+  Tool: ((props: Record<string, unknown>) => unknown) | undefined;
+  gated: boolean;
+  lang: Lang;
+}
+
+const { tool, Tool, gated, lang } = Astro.props;
+---
+
+{gated && (
+  <ToolGate
+    client:load
+    toolId={tool.id}
+    isPremium={tool.isPremium}
+    lang={lang}
+    priceCents={tool.priceCents}
+    bodySelector="#tool-body"
+  />
+)}
+
+{/* `lang` reaches the island through the pack's shell, so an English page
+    renders an English tool rather than a half-translated one. Packs default
+    the prop to German, so an older pinned pack still works. */}
+<section id="tool-body" hidden={gated} class="tds-card p-5 sm:p-7">
+  {Tool ? (
+    <Tool lang={lang} />
+  ) : (
+    <p class="text-[color:var(--color-danger)]">
+      {lang === "de" ? "Dieses Tool konnte nicht geladen werden." : "This tool could not be loaded."}
+    </p>
+  )}
+</section>

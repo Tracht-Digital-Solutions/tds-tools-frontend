@@ -11,7 +11,7 @@
 import Layout from "~/layouts/Layout.astro";
 import AdSlot from "~/components/AdSlot.astro";
 import Icon from "~/components/Icon.astro";
-import ToolGate from "~/components/ToolGate.tsx";
+import ToolBody from "~/components/ToolBody.astro";
 import ToolGuide from "~/components/ToolGuide.astro";
 import RelatedTools from "~/components/RelatedTools.astro";
 import ServiceNote from "~/components/ServiceNote.astro";
@@ -67,6 +67,7 @@ const showAds = ads.enabled && !!ads.slotTool && !tool.isPremium;
 // body is hidden until the gate confirms the shared session (and, for premium,
 // the entitlement). Free tools render directly.
 const gated = tool.requiresLogin || tool.isPremium;
+const wide = tool.layout === "wide";
 
 // German copy comes from the pack manifest, English from `lib/i18n`, and a
 // panel edit outranks both — field by field, so an editor who rewrote the
@@ -197,34 +198,17 @@ const jsonLd = asGraph(
     {/* Two columns from 80rem (global.css, "Tool page columns"): the tool and
         its guide in the main one, the related tools and the service note
         beside them. One column below that, in this same source order. */}
+    {/* A workspace tool (`layout: "wide"`) gets the full content width; the
+        guide and the related tools follow in the usual two columns. */}
+    {wide && (
+      <div class="tool-wide">
+        <ToolBody tool={tool} Tool={Tool} gated={gated} lang={lang} />
+      </div>
+    )}
+
     <div class="tool-layout">
       <div class="tool-main">
-        {gated && (
-          <ToolGate
-            client:load
-            toolId={tool.id}
-            isPremium={tool.isPremium}
-            lang={lang}
-            priceCents={tool.priceCents}
-            bodySelector="#tool-body"
-          />
-        )}
-
-        {/* `lang` reaches the island through the pack's shell, so an English
-            page renders an English tool rather than a half-translated one.
-            Packs default the prop to German, so an older pinned pack still
-            works. */}
-        <section id="tool-body" hidden={gated} class="tds-card p-5 sm:p-7">
-          {Tool ? (
-            <Tool lang={lang} />
-          ) : (
-            <p class="text-[color:var(--color-danger)]">
-              {lang === "de"
-                ? "Dieses Tool konnte nicht geladen werden."
-                : "This tool could not be loaded."}
-            </p>
-          )}
-        </section>
+        {!wide && <ToolBody tool={tool} Tool={Tool} gated={gated} lang={lang} />}
 
         {showAds && <AdSlot client={ads.publisherId} slot={ads.slotTool} lang={lang} />}
 

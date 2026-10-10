@@ -8,6 +8,8 @@
   gate). **No `getStaticPaths()`** (illegal on an on-demand route): both language routes resolve the tool
   through `~/lib/toolRoute` and answer 404 themselves, so a tool switched off by the admin stops existing
   instead of rendering an indexable empty page.
+- **`layout: "wide"`** (contract ≥ 1.2.0): `ToolPage` renders `ToolBody` (gate + tool card)
+  above the two columns instead of inside the main one; guide and related tools follow below.
 - **A page template exists once:** `components/CatalogPage.astro` and `components/ToolPage.astro`; the route
   files under `pages/` are a few lines each.
 - `lang` reaches tool islands through the pack shells (`<Tool lang={lang} />` → `tools/*.astro` → island).

@@ -522,6 +522,17 @@
   }
 }
 
+/* A `layout: "wide"` tool (a workspace with editor + preview) spans the
+   content width above the two columns instead of sharing a row with the
+   related tools. Same vertical rhythm as the column gaps. */
+.tool-wide {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  min-width: 0;
+  margin-bottom: 1.5rem;
+}
+
 .tool-guide__h2 {
   margin: 0;
   font-family: var(--font-display);

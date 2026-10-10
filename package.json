@@ -35,7 +35,7 @@
     "@tracht-digital-solutions/tds-tool-pdf": "^0.2.0",
     "@tracht-digital-solutions/tds-tool-qr": "^0.2.0",
     "@tracht-digital-solutions/tds-tool-textkit": "^0.2.0",
-    "@tracht-digital-solutions/tds-tools-contract": "^1.1.1",
+    "@tracht-digital-solutions/tds-tools-contract": "^1.2.0",
     "astro": "^7.2.5",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
