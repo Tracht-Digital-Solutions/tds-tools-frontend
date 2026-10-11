@@ -167,6 +167,17 @@ describe("the property bar", () => {
     expect(source).toContain('<span class="tds-sitebar__divider" aria-hidden="true">');
   });
 
+  it("splits the bar into two corner islands: brand and nav, then the actions", () => {
+    const islands = source.split('<div class="tds-sitebar__island">');
+    expect(islands, "exactly two islands").toHaveLength(3);
+    const [, first, second] = islands as [string, string, string];
+    expect(first).toContain('class="tds-sitebar__brand brand-wordmark"');
+    expect(first).toContain('<nav class="tds-sitebar__nav"');
+    expect(first).not.toContain("tds-sitebar__actions");
+    expect(second).toContain('<div class="tds-sitebar__desktop">');
+    expect(second).toContain('<div class="tds-sitebar__actions">');
+  });
+
   it("takes its links from propertyNav, never from a local list", () => {
     expect(source).toMatch(
       /import \{[^}]*\bpropertyNav\b[^}]*\} from "@tracht-digital-solutions\/tds-shared\/nav"/,
@@ -191,6 +202,7 @@ describe("the property bar", () => {
     const shared = join(process.cwd(), "node_modules", "@tracht-digital-solutions", "tds-shared");
     const primitives = readFileSync(join(shared, "styles", "primitives.css"), "utf8");
     expect(primitives).toContain(".tds-sitebar__wide");
+    expect(primitives).toContain(".tds-sitebar__island");
     const nav = readFileSync(join(shared, "dist", "nav", "index.d.ts"), "utf8");
     expect(nav).toMatch(/\bpropertyNav\b/);
     expect(nav).toMatch(/\bpropertyContact\b/);

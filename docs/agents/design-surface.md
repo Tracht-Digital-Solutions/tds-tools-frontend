@@ -44,8 +44,8 @@ layer as `blog.tracht-digital.de`: no radii, nothing elevated, display voice at 
 
 ## Header, hero and brand
 
-- **The header owns none of its chrome**: fill, blur and the bottom hairline come from `.brand-header`, and
-  `[data-flat] .brand-header` makes it opaque without blur.
+- **The header owns none of its chrome**: from 64rem it is two corner islands (`.tds-sitebar__island`, two
+  wrappers in `Header.astro`) on a transparent `.brand-header`; fill, border and shadow come from tds-shared.
 - **The hero is a flat navy band** (`.tools-hero` = `--color-surface-navy`) with a coral `.eyebrow`, a `.display`
   headline with one `.accent-italic` word and `.tds-brandbar--on-dark` (required on the dark band). Eyebrow and
   accent use `--color-accent-pink` (the bordeaux is ~2:1 on navy). On the phone the header is the first line,

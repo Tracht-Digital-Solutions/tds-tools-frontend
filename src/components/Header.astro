@@ -59,71 +59,79 @@ const langHrefs: { code: Lang; href: string; label: string }[] = [
   {/* `.tds-shell` gives the bar the page's own edges — the blog surface's
       120rem, the same on all three properties. */}
   <div class="tds-shell tds-sitebar">
-    {/* The mark IS the "TD" of the name — the wordmark reads TD Tools and the
-        mark carries the first half, so only "Tools" is set in type, as the
-        journal's and the shop's do. Because the mark replaces text, the
-        `aria-label` restates the full name and the mark is `aria-hidden`;
-        drop that and the link announces as "Tools". */}
-    <a
-      href={`${base}/`}
-      class="tds-sitebar__brand brand-wordmark"
-      aria-label={`${site.name} — ${s.navAllTools}`}
-    >
-      <span class="brand-logo" aria-hidden="true"></span>
-      <span class="accent-italic">Tools</span>
-    </a>
-    <span class="tds-sitebar__divider" aria-hidden="true"></span>
+    {/* Two corner islands from 64rem (`.tds-sitebar__island`, tds-shared):
+        the wordmark and the property list in the first, everything the
+        reader acts with in the second. Below 64rem the wrappers vanish
+        from layout. */}
+    <div class="tds-sitebar__island">
+      {/* The mark IS the "TD" of the name — the wordmark reads TD Tools and the
+          mark carries the first half, so only "Tools" is set in type, as the
+          journal's and the shop's do. Because the mark replaces text, the
+          `aria-label` restates the full name and the mark is `aria-hidden`;
+          drop that and the link announces as "Tools". */}
+      <a
+        href={`${base}/`}
+        class="tds-sitebar__brand brand-wordmark"
+        aria-label={`${site.name} — ${s.navAllTools}`}
+      >
+        <span class="brand-logo" aria-hidden="true"></span>
+        <span class="accent-italic">Tools</span>
+      </a>
+      <span class="tds-sitebar__divider" aria-hidden="true"></span>
 
-    {/* `page` on the catalog, `true` on a tool page: the reader is inside this
-        property there, just not on its home. */}
-    <nav class="tds-sitebar__nav" aria-label="Navigation">
-      {nav.map((item) => (
-        <a
-          href={item.href}
-          class="tds-sitebar__link"
-          aria-current={item.current ? (onCatalog ? "page" : "true") : undefined}
-        >
-          {item.label}
-        </a>
-      ))}
-    </nav>
-
-    {/* Hidden below `lg` by the shared class on the WRAPPER: tds-shared is
-        unlayered, so a `hidden` utility on the `.btn` itself does nothing.
-        The CTA sits one wrapper deeper and yields below 80rem, where the
-        journal's row runs out of room — the same on all three bars. `hreflang`
-        tells crawlers what is on the other end of the language switch;
-        `aria-current` states the active language, `.on` only paints it. */}
-    <div class="tds-sitebar__desktop">
-      {EN_ENABLED && (
-        <div class="tds-lang-toggle" role="group" aria-label="Sprache / Language">
-          {langHrefs.map((l) => (
-            <a
-              href={l.href}
-              hreflang={l.code}
-              lang={l.code}
-              data-locale-link={l.code}
-              class={l.code === lang ? "on" : ""}
-              aria-current={l.code === lang ? "true" : undefined}
-            >
-              {l.label}
-            </a>
-          ))}
-        </div>
-      )}
-      <ThemeToggle client:idle />
-      <div class="tds-sitebar__wide">
-        <a href={contact} class="btn btn-primary no-underline" data-track="header-contact">
-          {s.cta}
-        </a>
-      </div>
+      {/* `page` on the catalog, `true` on a tool page: the reader is inside this
+          property there, just not on its home. */}
+      <nav class="tds-sitebar__nav" aria-label="Navigation">
+        {nav.map((item) => (
+          <a
+            href={item.href}
+            class="tds-sitebar__link"
+            aria-current={item.current ? (onCatalog ? "page" : "true") : undefined}
+          >
+            {item.label}
+          </a>
+        ))}
+      </nav>
     </div>
 
-    {/* Identity at EVERY width. Unlike the journal, a signed-out visitor gets a
-        sign-in link: on this site a session unlocks the premium tools, so the
-        way in is worth a slot. */}
-    <div class="tds-sitebar__actions">
-      <AccountMenu client:idle lang={lang} loggedOut="login" />
+    <div class="tds-sitebar__island">
+      {/* Hidden below `lg` by the shared class on the WRAPPER: tds-shared is
+          unlayered, so a `hidden` utility on the `.btn` itself does nothing.
+          The CTA sits one wrapper deeper and yields below 80rem, where the
+          journal's row runs out of room — the same on all three bars. `hreflang`
+          tells crawlers what is on the other end of the language switch;
+          `aria-current` states the active language, `.on` only paints it. */}
+      <div class="tds-sitebar__desktop">
+        {EN_ENABLED && (
+          <div class="tds-lang-toggle" role="group" aria-label="Sprache / Language">
+            {langHrefs.map((l) => (
+              <a
+                href={l.href}
+                hreflang={l.code}
+                lang={l.code}
+                data-locale-link={l.code}
+                class={l.code === lang ? "on" : ""}
+                aria-current={l.code === lang ? "true" : undefined}
+              >
+                {l.label}
+              </a>
+            ))}
+          </div>
+        )}
+        <ThemeToggle client:idle />
+        <div class="tds-sitebar__wide">
+          <a href={contact} class="btn btn-primary no-underline" data-track="header-contact">
+            {s.cta}
+          </a>
+        </div>
+      </div>
+
+      {/* Identity at EVERY width. Unlike the journal, a signed-out visitor gets a
+          sign-in link: on this site a session unlocks the premium tools, so the
+          way in is worth a slot. */}
+      <div class="tds-sitebar__actions">
+        <AccountMenu client:idle lang={lang} loggedOut="login" />
+      </div>
     </div>
   </div>
 
