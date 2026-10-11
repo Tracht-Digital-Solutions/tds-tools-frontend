@@ -127,6 +127,21 @@
   background: var(--color-surface-navy);
   color: #fff;
 }
+/* Desktop: the header is a transparent strip with two islands, in flow above
+   the hero, so its 84px showed the light page ground as a bar above the navy
+   band. The band starts under the header (pulled up by more than the header is
+   tall; nothing above the page top is painted) and pads its content back down.
+   The islands take black ink over the navy, as the journal's do. */
+@media (min-width: 64rem) {
+  .tools-hero {
+    margin-top: -7rem;
+    padding-top: 7rem;
+  }
+  body:has(.tools-hero) .brand-header {
+    --tds-shadow-ink: rgb(0 0 0 / 0.5);
+    --tds-shadow-hard-sm: 3px 3px 0 0 var(--tds-shadow-ink);
+  }
+}
 
 /* ---- Catalog heading ---- */
 /* One display heading + a mono tool counter over a 2px accent bar — the flat
