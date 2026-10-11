@@ -11,7 +11,7 @@ import AdSlot from "~/components/AdSlot.astro";
 import ServiceNote from "~/components/ServiceNote.astro";
 import { enabledTools, adsConfig } from "~/lib/catalog";
 import { site, links, categoryOrder } from "~/lib/site";
-import { t, toolCopyFor } from "~/lib/i18n";
+import { t, toolCopyFor, categoryLabels } from "~/lib/i18n";
 import { localizedPath, type Lang } from "~/lib/seo";
 import {
   asGraph,
@@ -43,6 +43,18 @@ const rank = (cat: ToolCategory): number => {
   return index === -1 ? categoryOrder.length : index;
 };
 const orderedTools = [...tools].sort((a, b) => rank(a.category) - rank(b.category));
+
+// The filter bar's category chips: only categories that hold a tool, in the
+// grid's order.
+const presentCategories = categoryOrder.filter((cat) => orderedTools.some((tool) => tool.category === cat));
+const accessOf = (tool: (typeof tools)[number]): string =>
+  [tool.isPremium ? "premium" : "free", tool.requiresLogin ? "login" : ""].filter(Boolean).join(" ");
+const searchOf = (tool: (typeof tools)[number]): string => {
+  const copy = toolCopyFor(lang, tool, site.name);
+  return [copy.name, copy.description, categoryLabels[lang][tool.category], ...(tool.keywords ?? [])]
+    .join(" ")
+    .toLowerCase();
+};
 
 /* One `@graph`, not four sibling script blocks: inside a graph the nodes
    reference each other by `@id`, so the organization is DESCRIBED once here
@@ -127,9 +139,52 @@ const jsonLd = asGraph(
       <section aria-labelledby="catalog-heading">
         <div class="cat-head">
           <h2 id="catalog-heading" class="cat-head__label">{s.catalogHeading}</h2>
-          <span class="cat-head__count">{s.toolCount(orderedTools.length)}</span>
+          <span class="cat-head__count" data-tool-count aria-live="polite">{s.toolCount(orderedTools.length)}</span>
         </div>
         <span aria-hidden="true" class="cat-head__mark"></span>
+        {/* The shared collapsible filter bar (tds-shared .tds-filterbar),
+            closed by default. Client-side over the cards below: the page
+            cache keys on the path, so a query string never reaches the
+            server's answer. */}
+        <details class="tds-disclosure tds-filterbar tool-filterbar" data-tool-filter
+          data-unit-one={s.toolCount(1).replace(/^1\s*/, "")}
+          data-unit-many={s.toolCount(2).replace(/^2\s*/, "")}
+          data-none={s.filter.none}>
+          <summary class="tds-filterbar__toggle">{s.filter.toggle} <span class="tds-filterbar__count"></span></summary>
+          <div class="tds-filterbar__panel">
+            <input
+              type="search"
+              class="field-boxed tds-filterbar__search"
+              data-filter-search
+              placeholder={s.filter.search}
+              aria-label={s.filter.search}
+              autocomplete="off"
+            />
+            <fieldset class="tds-filterbar__group">
+              <legend class="tds-filterbar__legend">{s.filter.category}</legend>
+              <div class="tds-toolbar">
+                <button type="button" class="chip" data-filter-group="category" data-value="all" aria-pressed="true">{s.filter.all}</button>
+                {presentCategories.map((cat) => (
+                  <button type="button" class="chip" data-filter-group="category" data-value={cat} aria-pressed="false">
+                    {categoryLabels[lang][cat]}
+                  </button>
+                ))}
+              </div>
+            </fieldset>
+            <fieldset class="tds-filterbar__group">
+              <legend class="tds-filterbar__legend">{s.filter.access}</legend>
+              <div class="tds-toolbar">
+                {(["all", "free", "premium", "login"] as const).map((key) => (
+                  <button type="button" class="chip" data-filter-group="access" data-value={key} aria-pressed={key === "all" ? "true" : "false"}>
+                    {s.filter.accesses[key]}
+                  </button>
+                ))}
+              </div>
+            </fieldset>
+            <button type="button" class="tds-filterbar__reset" data-filter-reset>{s.filter.reset}</button>
+          </div>
+        </details>
+        <p class="tool-filter-empty" data-tool-filter-empty></p>
         {/* ONE intrinsic grid for every tool, laid out as a closed surface:
             `auto-fill` derives the column count from the width, the grid
             itself carries the card colour, and each card draws a 1px seam —
@@ -139,7 +194,12 @@ const jsonLd = asGraph(
             they are: the `.tool-grid` block in global.css. */}
         <ul class="tds-grid-auto tool-grid" style="--tds-grid-min: 17rem;" data-tool-grid>
           {orderedTools.map((tool) => (
-            <li class="tool-grid__cell">
+            <li
+              class="tool-grid__cell"
+              data-category={tool.category}
+              data-access={accessOf(tool)}
+              data-search={searchOf(tool)}
+            >
               <ToolCard tool={tool} lang={lang} base={base} />
             </li>
           ))}
@@ -160,5 +220,27 @@ const jsonLd = asGraph(
 
   for (const grid of document.querySelectorAll<HTMLElement>("[data-tool-grid]")) {
     mountCardTilt(grid);
+  }
+
+  import { matchesAllWords, mountFilterBar } from "@tracht-digital-solutions/tds-shared/filter";
+
+  const filter = document.querySelector<HTMLElement>("[data-tool-filter]");
+  if (filter) {
+    // The copy rides on the element: importing the i18n module here would ship
+    // every tool's translated copy to the browser for three short strings.
+    const { unitOne = "", unitMany = "", none = "" } = filter.dataset;
+    const counter = document.querySelector<HTMLElement>("[data-tool-count]");
+    const empty = document.querySelector<HTMLElement>("[data-tool-filter-empty]");
+    mountFilterBar(filter, {
+      items: Array.from(document.querySelectorAll<HTMLElement>("[data-tool-grid] > .tool-grid__cell")),
+      match: (cell, state) =>
+        (state.groups.category === "all" || cell.dataset.category === state.groups.category) &&
+        (state.groups.access === "all" || (cell.dataset.access ?? "").split(" ").includes(state.groups.access)) &&
+        matchesAllWords(cell.dataset.search ?? "", state.query),
+      onChange: (visible) => {
+        if (counter) counter.textContent = `${visible} ${visible === 1 ? unitOne : unitMany}`;
+        if (empty) empty.textContent = visible === 0 ? none : "";
+      },
+    });
   }
 </script>

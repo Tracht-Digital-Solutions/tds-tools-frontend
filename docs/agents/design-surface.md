@@ -67,6 +67,12 @@ in stable `categoryOrder`; the category rides on each card as a mono eyebrow. On
 (`toolCount`) and an accent bar sit above it. The body lifts the shell ceiling (`--tds-shell-max: none`); header
 and hero keep 120rem.
 
+**Filter bar** (tds-shared ≥ 0.52.2 `.tds-filterbar` + `mountFilterBar()` from `./filter`), closed by default, under
+the accent bar: search (name, description, category label, `keywords`), category (only categories with a tool),
+access (Kostenlos / Premium / Mit Anmeldung, from `isPremium` / `requiresLogin`). Each cell carries `data-category`,
+`data-access`, `data-search`; the counter shows the visible count. Client-side only (the page cache keys on the
+path). Copy reaches the script as data attributes, never by importing `~/lib/i18n` into the bundle.
+
 - **Seams are not a `gap: 1px` over a line-coloured grid** (`auto-fill` keeps empty tracks that would show as grey
   blocks). Cards draw inset 1 px seams on their right and bottom edges.
 - `.tool-card` is the journal's flat card: `--color-soft` block, no border or radius; hover deepens to

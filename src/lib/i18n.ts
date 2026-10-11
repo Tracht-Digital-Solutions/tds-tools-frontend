@@ -45,6 +45,17 @@ export interface SiteCopy {
   /** Heading above the catalog grid; the tool count sits beside it. */
   catalogHeading: string;
   toolCount: (n: number) => string;
+  /** The collapsible filter bar above the grid (tds-shared .tds-filterbar). */
+  filter: {
+    toggle: string;
+    search: string;
+    category: string;
+    all: string;
+    access: string;
+    accesses: { all: string; free: string; premium: string; login: string };
+    reset: string;
+    none: string;
+  };
   guideHeading: string;
   guideUseCases: string;
   guideSteps: string;
@@ -102,6 +113,16 @@ export const copy = {
     emptyCatalog: "Zurzeit sind keine Tools verfügbar.",
     catalogHeading: "Alle Werkzeuge",
     toolCount: (n: number) => `${n} ${n === 1 ? "Werkzeug" : "Werkzeuge"}`,
+    filter: {
+      toggle: "Filter",
+      search: "Werkzeug suchen",
+      category: "Kategorie",
+      all: "Alle",
+      access: "Zugang",
+      accesses: { all: "Alle", free: "Kostenlos", premium: "Premium", login: "Mit Anmeldung" },
+      reset: "Filter zurücksetzen",
+      none: "Kein Werkzeug passt zu diesen Filtern.",
+    },
     guideHeading: "Ratgeber",
     guideUseCases: "Typische Anwendungsfälle",
     guideSteps: "So gehen Sie vor",
@@ -159,6 +180,16 @@ export const copy = {
     emptyCatalog: "No tools are available at the moment.",
     catalogHeading: "All tools",
     toolCount: (n: number) => `${n} ${n === 1 ? "tool" : "tools"}`,
+    filter: {
+      toggle: "Filter",
+      search: "Search tools",
+      category: "Category",
+      all: "All",
+      access: "Access",
+      accesses: { all: "All", free: "Free", premium: "Premium", login: "Sign-in required" },
+      reset: "Reset filters",
+      none: "No tool matches these filters.",
+    },
     guideHeading: "Guide",
     guideUseCases: "Typical use cases",
     guideSteps: "How to use it",

@@ -791,3 +791,15 @@
   .tds-app body:has(.tools-hero) .tds-app-header .brand-wordmark .accent-italic { color: #fff; }
   .tds-app body:has(.tools-hero) .tds-app-header .brand-wordmark .accent-italic { color: var(--color-accent-pink, #ff8fab); }
 }
+
+/* The catalog's filter bar (tds-shared .tds-filterbar): spacing only. */
+.tool-filterbar {
+  margin-bottom: 1.25rem;
+}
+.tool-filter-empty {
+  margin: 0 0 1.5rem;
+  color: var(--color-muted);
+}
+.tool-filter-empty:empty {
+  display: none;
+}
