@@ -67,8 +67,9 @@ in stable `categoryOrder`; the category rides on each card as a mono eyebrow. On
 (`toolCount`) and an accent bar sit above it. The body lifts the shell ceiling (`--tds-shell-max: none`); header
 and hero keep 120rem.
 
-**Filter bar** (tds-shared ≥ 0.52.2 `.tds-filterbar` + `mountFilterBar()` from `./filter`), closed by default, under
-the accent bar: search (name, description, category label, `keywords`), category (only categories with a tool),
+**Filter bar** (tds-shared ≥ 0.53.1 `.tds-filterbar__*` + `mountFilterBar()` from `./filter`): the toggle (a brand
+button) closes the `.cat-head` row on the right (heading + counter wrap as `.cat-head__title`), the panel opens under
+the accent bar, closed by default: search (name, description, category label, `keywords`), category (only categories with a tool),
 access (Kostenlos / Premium / Mit Anmeldung, from `isPremium` / `requiresLogin`). Each cell carries `data-category`,
 `data-access`, `data-search`; the counter shows the visible count. Client-side only (the page cache keys on the
 path). Copy reaches the script as data attributes, never by importing `~/lib/i18n` into the bundle.

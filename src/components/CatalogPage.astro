@@ -138,20 +138,43 @@ const jsonLd = asGraph(
     ) : (
       <section aria-labelledby="catalog-heading">
         <div class="cat-head">
-          <h2 id="catalog-heading" class="cat-head__label">{s.catalogHeading}</h2>
-          <span class="cat-head__count" data-tool-count aria-live="polite">{s.toolCount(orderedTools.length)}</span>
+          {/* Heading and counter wrap as one group, so on a phone the counter
+              drops under the heading while the filter toggle keeps its line. */}
+          <div class="cat-head__title">
+            <h2 id="catalog-heading" class="cat-head__label">{s.catalogHeading}</h2>
+            <span class="cat-head__count" data-tool-count aria-live="polite">{s.toolCount(orderedTools.length)}</span>
+          </div>
+          {/* The filter toggle (tds-shared .tds-filterbar__toggle, a brand
+              button) at the right end of the heading row; its panel opens
+              under the accent bar. */}
+          <button
+            type="button"
+            class="btn btn-primary tds-filterbar__toggle cat-head__filter"
+            data-filter-toggle
+            aria-expanded="false"
+            aria-controls="catalog-filter"
+          >
+            <svg class="tds-filterbar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true">
+              <path d="M21 4h-7M10 4H3M21 12h-9M8 12H3M21 20h-5M12 20H3M14 2v4M8 10v4M16 18v4" />
+            </svg>
+            <span class="tds-filterbar__label">{s.filter.toggle}</span>
+            <span class="tds-filterbar__count"></span>
+          </button>
         </div>
         <span aria-hidden="true" class="cat-head__mark"></span>
-        {/* The shared collapsible filter bar (tds-shared .tds-filterbar),
+        {/* The filter panel (tds-shared .tds-filterbar__panel),
             closed by default. Client-side over the cards below: the page
             cache keys on the path, so a query string never reaches the
             server's answer. */}
-        <details class="tds-disclosure tds-filterbar tool-filterbar" data-tool-filter
+        <div
+          class="tds-filterbar__panel"
+          id="catalog-filter"
+          data-tool-filter
           data-unit-one={s.toolCount(1).replace(/^1\s*/, "")}
           data-unit-many={s.toolCount(2).replace(/^2\s*/, "")}
-          data-none={s.filter.none}>
-          <summary class="tds-filterbar__toggle">{s.filter.toggle} <span class="tds-filterbar__count"></span></summary>
-          <div class="tds-filterbar__panel">
+          data-none={s.filter.none}
+          hidden
+        >
             <input
               type="search"
               class="field-boxed tds-filterbar__search"
@@ -182,8 +205,7 @@ const jsonLd = asGraph(
               </div>
             </fieldset>
             <button type="button" class="tds-filterbar__reset" data-filter-reset>{s.filter.reset}</button>
-          </div>
-        </details>
+        </div>
         <p class="tool-filter-empty" data-tool-filter-empty></p>
         {/* ONE intrinsic grid for every tool, laid out as a closed surface:
             `auto-fill` derives the column count from the width, the grid

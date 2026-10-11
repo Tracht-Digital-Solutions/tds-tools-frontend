@@ -807,9 +807,22 @@
   .tds-app body:has(.tools-hero) .tds-app-header .brand-wordmark .accent-italic { color: var(--color-accent-pink, #ff8fab); }
 }
 
-/* The catalog's filter bar (tds-shared .tds-filterbar): spacing only. */
-.tool-filterbar {
-  margin-bottom: 1.25rem;
+/* The catalog's filter toggle (tds-shared .tds-filterbar__toggle) closes the
+   heading row on the right; position only. */
+.cat-head__filter {
+  margin-inline-start: auto;
+  align-self: center;
+}
+.cat-head:has(.cat-head__title) {
+  flex-wrap: nowrap;
+  align-items: center;
+}
+.cat-head__title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 0.75rem;
+  min-width: 0;
 }
 .tool-filter-empty {
   margin: 0 0 1.5rem;
