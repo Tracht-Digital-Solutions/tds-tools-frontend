@@ -61,13 +61,16 @@ const {
 } = Astro.props;
 
 const origin = Astro.site?.origin ?? site.origin;
-const url = canonical ?? new URL(Astro.url.pathname, origin).toString();
+// One spelling per page (public/.htaccess rule 0a): no trailing slash except
+// on the two roots, so the canonical and hreflang URLs match the sitemap.
+const pathname = Astro.url.pathname.replace(/(.)\/+$/, "$1").replace(/^\/en$/, "/en/");
+const url = canonical ?? new URL(pathname, origin).toString();
 // A page the panel excluded from the sitemap is also served `noindex`. Both
 // halves are required and neither is sufficient: a sitemap omission is a hint a
 // crawler may ignore, while `noindex` on a URL still advertised in the sitemap
 // tells it two different things. `noindex` (the prop) stays the local override
 // for pages that are never public — `/install`, `/404`.
-const hidden = noindex || (await isExcluded(Astro.url.pathname));
+const hidden = noindex || (await isExcluded(pathname));
 const ogImageAbs = ogImage.startsWith("http") ? ogImage : new URL(ogImage, origin).toString();
 
 // hreflang alternates. English is mounted under `/en/…` with the SAME slugs,
@@ -77,8 +80,8 @@ const ogImageAbs = ogImage.startsWith("http") ? ogImage : new URL(ogImage, origi
 //
 // Skipped entirely when the page opts out of search: a noindex page with
 // alternates tells a crawler to follow a link it is also told to ignore.
-const deAltUrl = new URL(localizedPath(Astro.url.pathname, "de"), origin).toString();
-const enAltUrl = new URL(localizedPath(Astro.url.pathname, "en"), origin).toString();
+const deAltUrl = new URL(localizedPath(pathname, "de"), origin).toString();
+const enAltUrl = new URL(localizedPath(pathname, "en"), origin).toString();
 const altOgLocale = lang === "de" ? ogLocale.en : ogLocale.de;
 
 // AdSense config (build-time, admin-toggleable). When enabled we show the
