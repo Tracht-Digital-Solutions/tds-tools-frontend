@@ -1,11 +1,11 @@
 import type { ToolGuideSet } from "~/lib/guides";
 
 const guide: ToolGuideSet = {
-  updatedAt: "2026-08-18",
+  updatedAt: "2026-10-12",
   de: {
     intro: [
       "Ein abfotografierter Beleg ist für einen Computer ein Bild und sonst nichts. Der Betrag darauf ist nicht suchbar, die Adresse nicht kopierbar, die Rechnungsnummer nicht in ein Formular zu übernehmen — obwohl alles davon gut lesbar vor einem liegt. Texterkennung schließt diese Lücke: Sie liest die Buchstaben aus dem Bild heraus und gibt sie als Text zurück.",
-      "Dieses Werkzeug erkennt deutschen und englischen Text und arbeitet dabei vollständig auf Ihrem Gerät. Auch die Spracherkennungsdaten kommen von dieser Website und nicht von einem fremden Anbieter — beim Öffnen des Werkzeugs entsteht also keine Verbindung nach außen, und das Bild selbst wird ohnehin nicht übertragen.",
+      "Die Texterkennung (OCR) auf dieser Seite liest Text aus Bildern, Fotos und Scans, erkennt deutsche und englische Sprache und arbeitet dabei vollständig auf Ihrem Gerät. Auch die Spracherkennungsdaten kommen von dieser Website und nicht von einem fremden Anbieter — beim Öffnen des Werkzeugs entsteht also keine Verbindung nach außen, und das Bild selbst wird ohnehin nicht übertragen.",
       "Wie gut das Ergebnis wird, entscheidet fast ausschließlich die Vorlage. Ein gerade aufgenommener, scharfer Ausschnitt mit gutem Kontrast liefert Text, den man nur noch überfliegen muss. Ein schräges Foto bei Kunstlicht liefert Bruchstücke. Es lohnt sich deshalb mehr, die Aufnahme zu wiederholen, als am Ergebnis herumzubessern.",
     ],
     useCases: [
@@ -73,7 +73,7 @@ const guide: ToolGuideSet = {
   en: {
     intro: [
       "A photographed receipt is an image to a computer and nothing else. The amount on it cannot be searched, the address cannot be copied, the invoice number cannot be carried into a form — even though all of it is sitting there perfectly legible. Text recognition closes that gap: it reads the letters out of the picture and hands them back as text.",
-      "This tool recognises German and English text and does the whole job on your device. Even the recognition data is served by this website rather than by a third party — so opening the tool opens no outbound connection, and the picture itself is not transmitted in any case.",
+      "The text recognition (OCR) on this page reads text out of images, photos and scans, recognises German and English and does the whole job on your device. Even the recognition data is served by this website rather than by a third party — so opening the tool opens no outbound connection, and the picture itself is not transmitted in any case.",
       "How good the result is depends almost entirely on the input. A straight, sharp, well-contrasted shot yields text you only have to skim. A tilted photo under artificial light yields fragments. It is therefore worth more to retake the picture than to patch up the output.",
     ],
     useCases: [

@@ -1,29 +1,33 @@
 import type { ToolGuideSet } from "~/lib/guides";
 
 const guide: ToolGuideSet = {
-  updatedAt: "2026-09-02",
+  updatedAt: "2026-10-12",
   de: {
     intro: [
       "Bilder aus einer Handy- oder Systemkamera sind für das Web unnötig groß: vier bis zwölf Megabyte, mehrere tausend Pixel breit. Auf einer Website wird davon meist ein Ausschnitt von tausend Pixeln angezeigt — der Rest wird übertragen, bezahlt und dann verworfen. Auf dem Telefon im Mobilfunknetz entscheidet das darüber, ob eine Seite in einer oder in acht Sekunden steht.",
-      "Dieses Werkzeug verkleinert Bilder auf eine Zielbreite und komprimiert sie mit einstellbarer Qualität. Es zeigt die neue Dateigröße im Vergleich zur alten und gibt das Ergebnis als JPEG oder WebP aus. WebP ist dabei in aller Regel die bessere Wahl: gleiche sichtbare Qualität bei spürbar kleinerer Datei, und alle aktuellen Browser verstehen es.",
-      "Eine sinnvolle Faustregel für den Alltag: Zielbreite 1600 Pixel für großflächige Bilder, 800 für Bilder in Textbreite, Qualität um 80 Prozent. Damit landen die meisten Fotos zwischen 60 und 200 Kilobyte — statt bei acht Megabyte — ohne dass ein Unterschied auffällt.",
+      "Mit diesem Werkzeug komprimieren Sie Bilder und verkleinern die Größe von JPG-Dateien, ohne sie irgendwo hochzuladen. Sie wählen mehrere Fotos auf einmal aus oder ziehen sie in das Feld, legen eine maximale Breite und Höhe in Pixeln fest und speichern das Ergebnis als JPG, WebP, PNG oder — in aktuellen Browsern — als AVIF. Muss eine feste Grenze eingehalten werden, etwa höchstens 500 KB für ein Bewerbungsportal, tragen Sie eine Zielgröße ein: Die Qualität wird dann automatisch gerade so weit gesenkt, bis die Datei passt.",
+      "Für die Bildkomprimierung im Alltag gilt eine einfache Faustregel: Zielbreite 1600 Pixel für großflächige Bilder, 800 für Bilder in Textbreite, Qualität um 80 Prozent. Damit landen die meisten Fotos zwischen 60 und 300 Kilobyte — statt bei acht Megabyte — ohne dass ein Unterschied auffällt. Den größten Anteil daran hat übrigens das Verkleinern der Pixelmaße, nicht die Qualitätsstufe.",
     ],
     useCases: [
       {
         title: "Bilder für die eigene Website",
-        text: "Produktfotos, Referenzbilder und Teamfotos vor dem Hochladen verkleinern. Der schnellste Hebel für eine schnellere Seite.",
+        text: "Produktfotos, Referenzbilder und Teamfotos vor dem Hochladen verkleinern. Der schnellste Hebel für eine schnellere Seite und bessere Werte bei den Core Web Vitals.",
+      },
+      {
+        title: "Uploads mit Größenlimit",
+        text: "Bewerbungsportale, Behördenformulare und Ticketsysteme nehmen oft nur Dateien bis 500 KB oder 1 MB an. Mit einer Zielgröße passt das Foto beim ersten Versuch.",
       },
       {
         title: "Anhänge, die durch das Postfach passen",
-        text: "Viele Postfächer nehmen Anhänge nur bis zu einer bestimmten Größe an. Fünf komprimierte Fotos passen, wo zwei Originale scheitern.",
+        text: "Viele Postfächer nehmen Anhänge nur bis zu einer bestimmten Größe an. Zehn komprimierte Fotos passen, wo zwei Originale scheitern — gesammelt als eine ZIP-Datei.",
       },
       {
         title: "Fotos für Kleinanzeigen und Portale",
-        text: "Verkaufsportale rechnen Bilder ohnehin herunter — oft schlechter als nötig. Wer selbst verkleinert, behält die Kontrolle über das Ergebnis.",
+        text: "Verkaufsportale rechnen Bilder ohnehin herunter — oft schlechter als nötig. Wer selbst verkleinert, behält die Kontrolle über Ausschnitt und Schärfe.",
       },
       {
         title: "Dokumentation aus dem Betrieb",
-        text: "Aufmaß-, Schadens- und Baufortschrittsfotos summieren sich schnell auf Gigabyte. Komprimiert bleiben sie lesbar und das Archiv handhabbar.",
+        text: "Aufmaß-, Schadens- und Baufortschrittsfotos summieren sich schnell auf Gigabyte. Stapelweise komprimiert bleiben sie lesbar und das Archiv handhabbar.",
       },
       {
         title: "Bilder für Newsletter",
@@ -32,74 +36,95 @@ const guide: ToolGuideSet = {
     ],
     steps: [
       {
-        title: "Bild auswählen",
+        title: "Bilder auswählen",
         description:
-          "Wählen Sie eine Datei im Format JPG, PNG oder WebP. Die Vorschau und die ursprüngliche Dateigröße erscheinen sofort.",
+          "Wählen Sie eine oder mehrere Dateien im Format JPG, PNG, WebP, AVIF oder GIF, ziehen Sie sie in das Feld oder fügen Sie einen Screenshot mit Strg+V ein. Jede Datei erscheint mit ihrer Größe und ihren Pixelmaßen.",
       },
       {
-        title: "Zielbreite festlegen",
+        title: "Voreinstellung wählen oder Maße festlegen",
         description:
-          "Geben Sie an, wie breit das Bild höchstens werden soll. Die Höhe wird im Seitenverhältnis mitgerechnet. Für die Anzeige im Web sind 1600 Pixel bei großen Bildern und 800 Pixel innerhalb von Text gute Werte.",
+          "Die Voreinstellungen Website, E-Mail, Social Media und Vorschaubild füllen Format, Qualität und Maße passend aus. Alternativ legen Sie selbst eine maximale Breite und Höhe in Pixeln fest; das Seitenverhältnis bleibt erhalten, kleinere Bilder werden nie vergrößert.",
       },
       {
-        title: "Qualität einstellen",
+        title: "Qualität oder Zielgröße einstellen",
         description:
-          "Zwischen 70 und 85 Prozent liegt der brauchbare Bereich; darunter werden Kanten und Flächen sichtbar unruhig. Die Wirkung sehen Sie unmittelbar an der neuen Dateigröße.",
+          "Zwischen 70 und 85 Prozent Qualität liegt der brauchbare Bereich; darunter werden Kanten und Flächen sichtbar unruhig. Muss die Datei unter eine feste Grenze, tragen Sie die Zielgröße in KB ein — das Werkzeug senkt die Qualität und notfalls die Pixelmaße, bis sie passt.",
+      },
+      {
+        title: "Komprimieren und vergleichen",
+        description:
+          "Ein Klick auf „Komprimieren“ verarbeitet alle Bilder nacheinander. Neben jeder Datei stehen alte und neue Größe samt Ersparnis; unter „Vorher und nachher vergleichen“ sehen Sie beide Fassungen nebeneinander.",
       },
       {
         title: "Herunterladen",
         description:
-          "Speichern Sie das Ergebnis als JPEG oder WebP. Bei Fotos ist WebP fast immer kleiner; für Grafiken mit harten Kanten oder Transparenz ist es ebenfalls die bessere Wahl.",
+          "Speichern Sie jedes Bild einzeln oder alle zusammen als ZIP-Datei. Der ursprüngliche Dateiname bleibt erhalten und bekommt den Zusatz „-komprimiert“, damit nichts versehentlich überschrieben wird.",
       },
     ],
     privacy:
-      "Das Bild wird nicht hochgeladen. Es wird im Browser über ein Canvas-Element neu gezeichnet und dort komprimiert — die Datei verlässt Ihr Gerät zu keinem Zeitpunkt. Das ist der eigentliche Unterschied zu den verbreiteten Kompressionsdiensten: Dort landen Ihre Fotos auf einem fremden Server, was bei Baustellen-, Schadens- oder Personenaufnahmen nicht nur eine Geschmacksfrage ist, sondern eine datenschutzrechtliche.",
+      "Die Bilder werden nicht hochgeladen. Sie werden im Browser über ein Canvas-Element neu gezeichnet und dort komprimiert, und auch die ZIP-Datei entsteht auf Ihrem Gerät — die Fotos verlassen es zu keinem Zeitpunkt. Das ist der eigentliche Unterschied zu den verbreiteten Kompressionsdiensten: Dort landen Ihre Aufnahmen auf einem fremden Server, was bei Baustellen-, Schadens- oder Personenaufnahmen nicht nur eine Geschmacksfrage ist, sondern eine datenschutzrechtliche.",
     faq: [
       {
-        q: "Verliert das Bild sichtbar an Qualität?",
-        a: "Bei 80 Prozent Qualität sehen die wenigsten Betrachter einen Unterschied zum Original, während die Datei um ein Vielfaches kleiner wird. Deutlich sichtbar wird die Kompression meist erst unterhalb von 60 Prozent, zuerst an weichen Farbverläufen wie einem Himmel.",
+        q: "Wie verkleinere ich die Größe einer JPG-Datei?",
+        a: "Bild auswählen, Format JPEG lassen, eine maximale Breite von etwa 1600 Pixeln und eine Qualität um 80 Prozent einstellen, dann auf „Komprimieren“ klicken. Ein typisches Handyfoto schrumpft so von vier bis acht Megabyte auf 200 bis 400 Kilobyte. Den größten Effekt hat das Verkleinern der Pixelmaße.",
       },
       {
-        q: "JPEG oder WebP?",
-        a: "WebP, sofern das Zielsystem es annimmt: gleiche wahrgenommene Qualität bei etwa 25 bis 35 Prozent weniger Daten, dazu Transparenz. JPEG bleibt die sichere Wahl für ältere Programme und für Portale, die nur dieses Format akzeptieren.",
+        q: "Kann ich ein Bild auf eine bestimmte Größe in KB komprimieren?",
+        a: "Ja. Tragen Sie unter „Zielgröße (KB)“ die Grenze ein, zum Beispiel 200 oder 500. Das Werkzeug sucht die höchste Qualität, mit der die Datei darunter bleibt, und verkleinert erst danach die Pixelmaße. Ist die Grenze selbst so nicht erreichbar, erhalten Sie die kleinstmögliche Datei und einen Hinweis.",
+      },
+      {
+        q: "Kann ich mehrere Bilder gleichzeitig komprimieren?",
+        a: "Ja. Wählen Sie beliebig viele Dateien aus oder ziehen Sie einen ganzen Stapel hinein; alle werden mit denselben Einstellungen verarbeitet und lassen sich gesammelt als ZIP herunterladen. Fallen bei Ihnen regelmäßig ganze Ordner an, lässt sich das auch dauerhaft automatisieren.",
+      },
+      {
+        q: "Was ist der Unterschied zwischen Bild komprimieren und Bildgröße ändern?",
+        a: "Die Bildgröße in Pixeln bestimmt, wie viele Bildpunkte gespeichert werden; die Komprimierung bestimmt, wie sparsam jeder davon gespeichert wird. Ein Foto von 4000 auf 1600 Pixel Breite zu verkleinern, spart schon rund vier Fünftel der Daten. Die Qualitätsstufe holt danach den Rest heraus.",
+      },
+      {
+        q: "Verliert das Bild sichtbar an Qualität?",
+        a: "Bei 80 Prozent Qualität sehen die wenigsten Betrachter einen Unterschied zum Original, während die Datei um ein Vielfaches kleiner wird. Deutlich sichtbar wird die Kompression meist erst unterhalb von 60 Prozent, zuerst an weichen Farbverläufen wie einem Himmel. Der Vorher-nachher-Vergleich zeigt es Ihnen direkt.",
+      },
+      {
+        q: "JPEG, WebP, PNG oder AVIF?",
+        a: "Für Websites WebP oder AVIF: gleiche wahrgenommene Qualität bei deutlich weniger Daten, dazu Transparenz. JPEG bleibt die sichere Wahl für E-Mail, ältere Programme und Portale, die nur JPG annehmen. PNG ist verlustfrei und eignet sich für Grafiken, Logos und Screenshots — kleiner wird es nur über die Pixelmaße.",
       },
       {
         q: "Werden meine Bilder auf einen Server geladen?",
-        a: "Nein. Die gesamte Verarbeitung findet in Ihrem Browser statt; es gibt keine Gegenstelle, die die Datei entgegennehmen könnte. Sie können die Seite nach dem Laden vom Netz trennen und weiterarbeiten.",
+        a: "Nein. Die gesamte Verarbeitung findet in Ihrem Browser statt; es gibt keine Gegenstelle, die die Dateien entgegennehmen könnte. Sie können die Seite nach dem Laden vom Netz trennen und weiterarbeiten.",
       },
       {
         q: "Bleiben Aufnahmedatum und Ort erhalten?",
         a: "Nein. Beim Neuzeichnen im Browser gehen die EXIF-Daten verloren, also auch GPS-Koordinaten und Kameramodell. Für Bilder im Internet ist das ein Vorteil — wenn Sie die Angaben brauchen, bewahren Sie das Original auf.",
       },
-      {
-        q: "Kann ich mehrere Bilder auf einmal verarbeiten?",
-        a: "Das Werkzeug arbeitet Bild für Bild. Wenn bei Ihnen regelmäßig ganze Ordner anfallen — etwa aus der Baustellendokumentation —, lässt sich das automatisieren, statt es von Hand zu wiederholen.",
-      },
     ],
-    related: ["pdf-werkzeuge", "qr-code-generator", "ki-kennzeichnung-bilder"],
+    related: ["pdf-komprimieren", "bilder-zu-pdf", "pdf-werkzeuge", "ki-kennzeichnung-bilder"],
   },
   en: {
     intro: [
       "Photos out of a phone or system camera are needlessly large for the web: four to twelve megabytes, several thousand pixels wide. A website usually displays a thousand-pixel crop of that — the rest is transferred, paid for and then discarded. On a phone over mobile data, that is the difference between a page appearing in one second and in eight.",
-      "This tool scales images down to a target width and compresses them at an adjustable quality. It shows the new file size next to the old one and outputs the result as JPEG or WebP. WebP is usually the better choice: the same apparent quality at a noticeably smaller file, and every current browser understands it.",
-      "A workable rule of thumb: a target width of 1600 pixels for full-width images, 800 for images inside text, and quality around 80 per cent. That puts most photos between 60 and 200 kilobytes — instead of eight megabytes — without any visible difference.",
+      "This tool compresses images and reduces the file size of JPGs without uploading them anywhere. Pick several photos at once or drag them in, set a maximum width and height in pixels, and save the result as JPG, WebP, PNG or — in current browsers — AVIF. If you have to stay under a fixed limit, say 500 KB for an application portal, enter a target size: quality is then lowered automatically just far enough for the file to fit.",
+      "A workable rule of thumb for everyday image compression: a target width of 1600 pixels for full-width images, 800 for images inside text, and quality around 80 per cent. That puts most photos between 60 and 300 kilobytes — instead of eight megabytes — without any visible difference. Most of that saving, incidentally, comes from reducing the pixel dimensions, not from the quality setting.",
     ],
     useCases: [
       {
         title: "Images for your own website",
-        text: "Shrink product, reference and team photos before uploading. The single fastest lever for a faster site.",
+        text: "Shrink product, reference and team photos before uploading. The single fastest lever for a faster site and better Core Web Vitals.",
+      },
+      {
+        title: "Uploads with a size limit",
+        text: "Application portals, government forms and ticket systems often accept files only up to 500 KB or 1 MB. With a target size the photo fits on the first try.",
       },
       {
         title: "Attachments that fit through a mailbox",
-        text: "Many mailboxes only accept attachments up to a certain size. Five compressed photos fit where two originals fail.",
+        text: "Many mailboxes only accept attachments up to a certain size. Ten compressed photos fit where two originals fail — bundled as one ZIP file.",
       },
       {
         title: "Photos for classifieds and portals",
-        text: "Selling portals downscale images anyway — often worse than necessary. Doing it yourself keeps control of the result.",
+        text: "Selling portals downscale images anyway — often worse than necessary. Doing it yourself keeps control of crop and sharpness.",
       },
       {
         title: "Documentation from the field",
-        text: "Measurement, damage and progress photos add up to gigabytes quickly. Compressed they stay legible and the archive stays manageable.",
+        text: "Measurement, damage and progress photos add up to gigabytes quickly. Compressed in batches they stay legible and the archive stays manageable.",
       },
       {
         title: "Images for a newsletter",
@@ -108,51 +133,68 @@ const guide: ToolGuideSet = {
     ],
     steps: [
       {
-        title: "Choose an image",
+        title: "Choose images",
         description:
-          "Pick a file in JPG, PNG or WebP format. The preview and the original file size appear immediately.",
+          "Pick one or more files in JPG, PNG, WebP, AVIF or GIF format, drag them into the box, or paste a screenshot with Ctrl+V. Each file appears with its size and pixel dimensions.",
       },
       {
-        title: "Set the target width",
+        title: "Pick a preset or set the dimensions",
         description:
-          "State how wide the image should be at most. The height follows the aspect ratio. For display on the web, 1600 pixels for large images and 800 pixels within text are good values.",
+          "The Website, Email, Social media and Thumbnail presets fill in format, quality and dimensions. Or set a maximum width and height in pixels yourself; the aspect ratio is kept and smaller images are never enlarged.",
       },
       {
-        title: "Set the quality",
+        title: "Set the quality or a target size",
         description:
-          "Between 70 and 85 per cent is the usable range; below that edges and flat areas become visibly restless. You can see the effect immediately in the new file size.",
+          "Between 70 and 85 per cent quality is the usable range; below that edges and flat areas become visibly restless. If the file must stay under a fixed limit, enter the target size in KB — the tool lowers quality and, if needed, the pixel dimensions until it fits.",
+      },
+      {
+        title: "Compress and compare",
+        description:
+          "One click on “Compress” processes every image in turn. Each file shows its old and new size with the saving; “Compare before and after” puts both versions side by side.",
       },
       {
         title: "Download",
         description:
-          "Save the result as JPEG or WebP. For photographs WebP is almost always smaller; for graphics with hard edges or transparency it is the better choice too.",
+          "Save each image on its own or all of them together as a ZIP file. The original file name is kept and gets the suffix “-compressed”, so nothing is overwritten by accident.",
       },
     ],
     privacy:
-      "The image is not uploaded. It is redrawn and compressed in your browser through a canvas element — the file never leaves your device at any point. That is the real difference from the widespread compression services: there your photos land on somebody else's server, which for site, damage or personal photographs is not a matter of taste but of data protection law.",
+      "The images are not uploaded. They are redrawn and compressed in your browser through a canvas element, and the ZIP file is assembled on your device too — the photos never leave it at any point. That is the real difference from the widespread compression services: there your pictures land on somebody else's server, which for site, damage or personal photographs is not a matter of taste but of data protection law.",
     faq: [
       {
-        q: "Does the image visibly lose quality?",
-        a: "At 80 per cent quality very few viewers see any difference from the original, while the file becomes several times smaller. Compression usually only becomes clearly visible below 60 per cent, first in soft gradients such as a sky.",
+        q: "How do I reduce the file size of a JPG?",
+        a: "Choose the image, leave the format on JPEG, set a maximum width of about 1600 pixels and quality around 80 per cent, then click “Compress”. A typical phone photo shrinks from four to eight megabytes to 200 to 400 kilobytes. Reducing the pixel dimensions has the largest effect.",
       },
       {
-        q: "JPEG or WebP?",
-        a: "WebP, provided the target system accepts it: the same perceived quality at roughly 25 to 35 per cent fewer bytes, plus transparency. JPEG remains the safe choice for older software and for portals that only accept that format.",
+        q: "Can I compress an image to a specific size in KB?",
+        a: "Yes. Enter the limit under “Target size (KB)”, for example 200 or 500. The tool searches for the highest quality that keeps the file below it and only then reduces the pixel dimensions. If even that cannot reach the limit, you get the smallest possible file and a notice.",
+      },
+      {
+        q: "Can I compress several images at once?",
+        a: "Yes. Select as many files as you like or drag in a whole batch; all of them are processed with the same settings and can be downloaded together as a ZIP. If whole folders come up regularly for you, that can also be automated for good.",
+      },
+      {
+        q: "What is the difference between compressing an image and resizing it?",
+        a: "The pixel size decides how many dots are stored; compression decides how economically each of them is stored. Reducing a photo from 4000 to 1600 pixels wide already saves about four fifths of the data. The quality setting then takes care of the rest.",
+      },
+      {
+        q: "Does the image visibly lose quality?",
+        a: "At 80 per cent quality very few viewers see any difference from the original, while the file becomes several times smaller. Compression usually only becomes clearly visible below 60 per cent, first in soft gradients such as a sky. The before-and-after view shows you directly.",
+      },
+      {
+        q: "JPEG, WebP, PNG or AVIF?",
+        a: "For websites WebP or AVIF: the same perceived quality at noticeably fewer bytes, plus transparency. JPEG remains the safe choice for email, older software and portals that only accept JPG. PNG is lossless and suits graphics, logos and screenshots — it only gets smaller through its pixel dimensions.",
       },
       {
         q: "Are my images uploaded to a server?",
-        a: "No. All processing happens in your browser; there is no counterpart that could receive the file. You can disconnect from the network after the page loads and keep working.",
+        a: "No. All processing happens in your browser; there is no counterpart that could receive the files. You can disconnect from the network after the page loads and keep working.",
       },
       {
         q: "Are the capture date and location preserved?",
         a: "No. Redrawing in the browser discards the EXIF data, including GPS coordinates and camera model. For images destined for the internet that is an advantage — if you need the values, keep the original.",
       },
-      {
-        q: "Can I process several images at once?",
-        a: "The tool works one image at a time. If whole folders regularly come up for you — from site documentation, say — that can be automated rather than repeated by hand.",
-      },
     ],
-    related: ["pdf-werkzeuge", "qr-code-generator", "ki-kennzeichnung-bilder"],
+    related: ["pdf-komprimieren", "bilder-zu-pdf", "pdf-werkzeuge", "ki-kennzeichnung-bilder"],
   },
 };
 

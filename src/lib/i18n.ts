@@ -95,13 +95,13 @@ export const copy = {
      * still fit inside the ~160 characters a SERP renders.
      */
     description:
-      "Werkzeuge direkt im Browser: QR-Codes, Passwörter, JSON, PDF und Texterkennung — vieles kostenlos und ohne Anmeldung. Von TDS aus Schwarzenbek bei Hamburg.",
+      "Bilder komprimieren, QR-Codes erstellen, UTM-Links, PDF und Texterkennung im Browser — vieles kostenlos, ohne Anmeldung. Von TDS aus Schwarzenbek bei Hamburg.",
     heroEyebrow: "Digitalisierung für Unternehmen",
     heroHeadlineLead: "Digitale",
     heroHeadlineAccent: "Werkzeuge",
     heroHeadlineTail: "— direkt im Browser.",
     heroBody:
-      "QR-Codes, Passwörter, JSON, PDF-Werkzeuge und Texterkennung. Vieles kostenlos und ohne Anmeldung, alles ohne Installation. Von Tracht Digital Solutions aus Schwarzenbek bei Hamburg.",
+      "Bilder komprimieren, QR-Codes erstellen, UTM-Links bauen, PDF-Werkzeuge, Texterkennung und mehr. Vieles kostenlos und ohne Anmeldung, alles ohne Installation. Von Tracht Digital Solutions aus Schwarzenbek bei Hamburg.",
     navAllTools: "Alle Tools",
     navBlog: "Blog",
     navHome: "Startseite",
@@ -162,13 +162,13 @@ export const copy = {
   en: {
     tagline: "Digital tools for business, much of it free",
     description:
-      "Tools straight in your browser: QR codes, passwords, JSON, PDF and text recognition — much of it free, no sign-up. By TDS in Schwarzenbek near Hamburg.",
+      "Compress images, create QR codes, UTM links, PDF tools and OCR in your browser — much of it free, no sign-up. By TDS in Schwarzenbek near Hamburg.",
     heroEyebrow: "Digitalisation for businesses",
     heroHeadlineLead: "Digital",
     heroHeadlineAccent: "tools",
     heroHeadlineTail: "— right in your browser.",
     heroBody:
-      "QR codes, passwords, JSON, PDF tools and text recognition. Much of it free and without sign-up, all of it without installing anything. By Tracht Digital Solutions in Schwarzenbek near Hamburg.",
+      "Compress images, create QR codes, build UTM links, PDF tools, text recognition and more. Much of it free and without sign-up, all of it without installing anything. By Tracht Digital Solutions in Schwarzenbek near Hamburg.",
     navAllTools: "All tools",
     navBlog: "Blog",
     navHome: "Main site",
@@ -276,8 +276,8 @@ export const toolCopyEn: Record<string, ToolCopy> = {
   "qr-code-generator": {
     name: "QR Code Generator",
     description:
-      "Free QR code generator for URLs, text, Wi-Fi access and vCards. PNG and SVG download, everything local in your browser — no sign-up needed.",
-    seoTitle: "QR Code Generator — free, no sign-up",
+      "Create QR codes for free, no sign-up: for URLs, text, Wi-Fi access and vCards. PNG and SVG download, codes never expire, all local in your browser.",
+    seoTitle: "Create a QR Code — free, no sign-up",
   },
   "passwort-generator": {
     name: "Password Generator",
@@ -286,10 +286,10 @@ export const toolCopyEn: Record<string, ToolCopy> = {
     seoTitle: "Password Generator — create secure passwords",
   },
   "utm-link-generator": {
-    name: "UTM Link Builder",
+    name: "UTM Generator",
     description:
-      "Free UTM builder: create trackable marketing links with utm_source, utm_medium and utm_campaign. Built right in your browser, no sign-up.",
-    seoTitle: "UTM Link Builder — campaign links with tracking",
+      "Free UTM generator and builder: create trackable campaign links with utm_source, utm_medium and utm_campaign for Google Analytics. In your browser.",
+    seoTitle: "UTM Generator — build UTM links for free",
   },
   "json-formatter": {
     name: "JSON Formatter & Validator",
@@ -306,8 +306,8 @@ export const toolCopyEn: Record<string, ToolCopy> = {
   "bild-komprimieren": {
     name: "Compress Image",
     description:
-      "Free image compressor: shrink and compress JPG, PNG and WebP files with adjustable quality. Runs in your browser, nothing is uploaded.",
-    seoTitle: "Compress Image — online and free",
+      "Compress images and reduce JPG file size: several photos at once, target size in KB, JPG, WebP, PNG and AVIF. Free, in your browser, nothing uploaded.",
+    seoTitle: "Compress Images & Reduce JPG Size — free",
   },
   "pdf-werkzeuge": {
     name: "PDF Tools",
@@ -359,7 +359,7 @@ export const toolCopyEn: Record<string, ToolCopy> = {
     name: "Text Recognition (OCR)",
     description:
       "No more retyping: text recognition for photos and scanned images, German and English. It runs on your device and the picture stays there.",
-    seoTitle: "Text recognition (OCR) — read text from an image",
+    seoTitle: "Text recognition (OCR) online — text from an image",
   },
 
   // tds-tool-legal

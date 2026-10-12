@@ -1,11 +1,11 @@
 import type { ToolGuideSet } from "~/lib/guides";
 
 const guide: ToolGuideSet = {
-  updatedAt: "2026-08-18",
+  updatedAt: "2026-10-12",
   de: {
     intro: [
       "Ein QR-Code ist nichts weiter als eine Adresse in Bildform. Wer ihn mit der Handykamera erfasst, landet direkt auf Ihrer Website, im WLAN Ihres Betriebs oder mit Ihren Kontaktdaten im Adressbuch — ohne dass jemand etwas abtippen muss. Genau da liegt der praktische Nutzen: Jede Ziffer, die ein Kunde selbst eingeben soll, ist eine Gelegenheit, sich zu vertippen und aufzugeben.",
-      "Dieser Generator erzeugt vier Arten von Codes: freie URLs und Texte, WLAN-Zugänge und Kontaktdaten als vCard. Sie können Vorder- und Hintergrundfarbe an Ihr Erscheinungsbild anpassen und das Ergebnis als PNG für den Druck oder als SVG für die skalierbare Weiterverarbeitung herunterladen.",
+      "Mit diesem Generator erstellen Sie QR-Codes kostenlos und ohne Anmeldung, ohne Konto und ohne Ablaufdatum. Er erzeugt vier Arten von Codes: freie URLs und Texte, WLAN-Zugänge und Kontaktdaten als vCard. Sie können Vorder- und Hintergrundfarbe an Ihr Erscheinungsbild anpassen und das Ergebnis als PNG für den Druck oder als SVG für die skalierbare Weiterverarbeitung herunterladen.",
       "Wichtig zu wissen: Der Code enthält das Ziel unmittelbar — er ist keine Weiterleitung über einen fremden Dienst. Das bedeutet, dass er dauerhaft funktioniert, aber auch, dass sich das Ziel nachträglich nicht ändern lässt. Wenn Sie damit rechnen, die Adresse später zu wechseln, verweisen Sie besser auf eine eigene Seite, deren Inhalt Sie selbst anpassen können.",
     ],
     useCases: [
@@ -81,7 +81,7 @@ const guide: ToolGuideSet = {
   en: {
     intro: [
       "A QR code is nothing more than an address in the shape of a picture. Point a phone camera at it and the person lands directly on your website, on your business Wi-Fi, or with your contact details in their address book — without anyone having to type. That is where the practical value sits: every character a customer is asked to enter themselves is an opportunity to mistype it and give up.",
-      "This generator produces four kinds of code: plain URLs and text, Wi-Fi credentials, and contact details as a vCard. You can match the foreground and background colours to your own look, and download the result as a PNG for print or an SVG for scalable use.",
+      "With this generator you create QR codes for free and without signing up — no account, no expiry date. It produces four kinds of code: plain URLs and text, Wi-Fi credentials, and contact details as a vCard. You can match the foreground and background colours to your own look, and download the result as a PNG for print or an SVG for scalable use.",
       "One thing worth knowing: the code contains its destination directly — it is not a redirect through someone else's service. That means it keeps working indefinitely, but it also means the destination cannot be changed afterwards. If you expect the address to move, point the code at a page of your own whose content you can edit instead.",
     ],
     useCases: [
