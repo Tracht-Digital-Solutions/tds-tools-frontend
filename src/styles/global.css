@@ -831,3 +831,17 @@
 .tool-filter-empty:empty {
   display: none;
 }
+
+/* === Tap targets on touch (2026-10-12) ==================================
+   Measured at 360/390px: footer links 18px high, the premium list and the
+   "Alle Tools" link 18–21px — under WCAG 2.2's 24px. Lifted on coarse
+   pointers only, so the desktop density stays (the shop does the same). */
+@media (pointer: coarse) {
+  .tools-footer a,
+  .premium-note__link,
+  .tnav-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+}
