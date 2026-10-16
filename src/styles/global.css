@@ -144,6 +144,12 @@
 }
 
 /* ---- Catalog heading ---- */
+.tools-hero__layout { display: grid; gap: 2rem; align-items: center; }
+.tools-hero__photo { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; }
+@media (min-width: 64rem) { .tools-hero__layout { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: clamp(2rem, 5vw, 5rem); } }
+.tool-card__photo { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; margin-bottom: .75rem; }
+.tool-guide__photo { display: block; width: 100%; height: auto; max-height: 20rem; aspect-ratio: 2 / 1; object-fit: cover; margin-block: 2rem; }
+
 /* One display heading + a mono tool counter over a 2px accent bar — the flat
    kit's own device — above the single catalog grid. The same mark also opens
    the premium block. Never a hairline: this surface draws almost no borders.

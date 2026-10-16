@@ -21,6 +21,7 @@ import {
   websiteSchema,
 } from "~/lib/jsonld";
 import type { ToolCategory } from "@tracht-digital-solutions/tds-tools-contract";
+import { editorialSrc, editorialSrcset } from '~/lib/editorialImages';
 
 interface Props {
   lang: Lang;
@@ -95,7 +96,8 @@ const jsonLd = asGraph(
     {/* `.tds-shell`, not `max-w-6xl`: the blog surface's 120rem is the width
         the journal and the shop use too, so the edges line up with the header
         on every property. The headline and body keep their own measure. */}
-    <div class="tds-shell py-16 sm:py-20">
+    <div class="tds-shell py-16 sm:py-20 tools-hero__layout">
+      <div>
       <p class="eyebrow" style="color: var(--color-accent-pink);">{s.heroEyebrow}</p>
       <h1 class="display mt-3 max-w-3xl text-4xl leading-tight sm:text-5xl">
         {s.heroHeadlineLead}{" "}
@@ -121,6 +123,8 @@ const jsonLd = asGraph(
         <a href={links.blog} class="link-underline">{s.toBlog}</a>
         <a href={links.main} class="link-underline">{s.toHome}</a>
       </p>
+      </div>
+      <img class="tools-hero__photo" src={editorialSrc('hero')} srcset={editorialSrcset('hero')} sizes="(min-width: 64rem) 40vw, 100vw" width="960" height="540" alt="" decoding="async" />
     </div>
   </section>
 

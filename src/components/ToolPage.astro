@@ -32,6 +32,7 @@ import {
 import { guideUpdatedAt } from "~/lib/guides";
 import { mergeCopy, mergeGuide, type GuideOverrides } from "~/lib/guideOverrides";
 import type { ResolvedTool } from "~/lib/catalog";
+import { categoryArtwork, editorialSrc, editorialSrcset } from '~/lib/editorialImages';
 
 interface Props {
   tool: ResolvedTool;
@@ -217,7 +218,12 @@ const jsonLd = asGraph(
             the heading and the input is the pattern that made recipe sites a
             punchline. It is still on the page, in the DOM, ahead of the footer —
             which is all the crawler needs. */}
-        {guide && <ToolGuide guide={guide} toolName={copy.name} lang={lang} updatedAt={guideUpdatedAt(tool.slug)} />}
+        {guide && (
+          <>
+            <img class="tool-guide__photo" src={editorialSrc(categoryArtwork[tool.category])} srcset={editorialSrcset(categoryArtwork[tool.category])} sizes="(min-width: 80rem) 65vw, 100vw" width="960" height="640" alt="" loading="lazy" decoding="async" />
+            <ToolGuide guide={guide} toolName={copy.name} lang={lang} updatedAt={guideUpdatedAt(tool.slug)} />
+          </>
+        )}
       </div>
 
       <div class="tool-aside">
