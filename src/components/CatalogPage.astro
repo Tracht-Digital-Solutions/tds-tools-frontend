@@ -21,6 +21,7 @@ import {
   websiteSchema,
 } from "~/lib/jsonld";
 import type { ToolCategory } from "@tracht-digital-solutions/tds-tools-contract";
+import { imageHints, imageObject } from '~/lib/imageCatalog';
 import { editorialSrc, editorialSrcset } from '~/lib/editorialImages';
 
 interface Props {
@@ -68,6 +69,7 @@ const jsonLd = asGraph(
   organizationSchema(),
   personSchema(),
   websiteSchema(s.description),
+  imageObject(editorialSrc('hero'), lang, `${site.origin}${base}/`),
   itemListSchema(
     // The listed NAMES follow the page language too. They used to come
     // straight off the manifest, so the English catalog advertised
@@ -124,7 +126,7 @@ const jsonLd = asGraph(
         <a href={links.main} class="link-underline">{s.toHome}</a>
       </p>
       </div>
-      <img class="tools-hero__photo" src={editorialSrc('hero')} srcset={editorialSrcset('hero')} sizes="(min-width: 64rem) 40vw, 100vw" width="960" height="540" alt="" decoding="async" />
+      <img class="tools-hero__photo" src={editorialSrc('hero')} srcset={imageHints(editorialSrc('hero'), lang)?.srcSet ?? editorialSrcset('hero')} sizes="(min-width: 64rem) 40vw, 100vw" width="960" height="540" alt="" decoding="async" />
     </div>
   </section>
 

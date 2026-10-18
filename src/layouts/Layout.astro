@@ -171,7 +171,7 @@ const jsonLdText = jsonLd ? serializeJsonLd(jsonLd) : null;
     <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="TD Tools" />
-    {hidden && <meta name="robots" content="noindex,nofollow" />}
+    <meta name="robots" content={hidden ? "noindex,nofollow,max-image-preview:large" : "index,follow,max-image-preview:large"} />
     {/* The brand mark shared by every TDS property — byte-identical to the
         landingpage's and the blog's. It used to be a hand-drawn SVG unique to
         this site; the tools site is indexable and links back to the main
@@ -244,6 +244,7 @@ const jsonLdText = jsonLd ? serializeJsonLd(jsonLd) : null;
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImageAbs} />
+    <meta name="twitter:image:alt" content={title} />
 
     {jsonLdText && <script type="application/ld+json" is:inline set:html={jsonLdText} />}
     {/* Near-instant navigation: prerender a link once the visitor shows intent. */}

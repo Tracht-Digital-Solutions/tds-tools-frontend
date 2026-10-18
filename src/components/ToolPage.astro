@@ -32,6 +32,7 @@ import {
 import { guideUpdatedAt } from "~/lib/guides";
 import { mergeCopy, mergeGuide, type GuideOverrides } from "~/lib/guideOverrides";
 import type { ResolvedTool } from "~/lib/catalog";
+import { imageHints, imageObject } from '~/lib/imageCatalog';
 import { categoryArtwork, editorialSrc, editorialSrcset } from '~/lib/editorialImages';
 
 interface Props {
@@ -94,6 +95,7 @@ const jsonLd = asGraph(
      pages did not, so a tool page fetched on its own — which is how an answer
      engine reaches it — named no site it belonged to. */
   websiteSchema(site.description),
+  imageObject(editorialSrc(categoryArtwork[tool.category]), lang, toolUrl),
   /* The PAGE, beside the tool. `WebApplication` describes the thing on the
      page; this describes the page: who wrote it, who published it, and when
      its text was last true. `dateModified` is the guide's "Stand" line, and
@@ -220,7 +222,7 @@ const jsonLd = asGraph(
             which is all the crawler needs. */}
         {guide && (
           <>
-            <img class="tool-guide__photo" src={editorialSrc(categoryArtwork[tool.category])} srcset={editorialSrcset(categoryArtwork[tool.category])} sizes="(min-width: 80rem) 65vw, 100vw" width="960" height="640" alt="" loading="lazy" decoding="async" />
+            <img class="tool-guide__photo" src={editorialSrc(categoryArtwork[tool.category])} srcset={imageHints(editorialSrc(categoryArtwork[tool.category]), lang)?.srcSet ?? editorialSrcset(categoryArtwork[tool.category])} sizes="(min-width: 80rem) 65vw, 100vw" width="960" height="640" alt={imageHints(editorialSrc(categoryArtwork[tool.category]), lang)?.alt ?? ""} loading="lazy" decoding="async" />
             <ToolGuide guide={guide} toolName={copy.name} lang={lang} updatedAt={guideUpdatedAt(tool.slug)} />
           </>
         )}

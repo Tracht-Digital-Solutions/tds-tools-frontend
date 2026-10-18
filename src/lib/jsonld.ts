@@ -265,9 +265,9 @@ export function howToSchema(name: string, steps: readonly HowToStepInput[]) {
  * Combine nodes into a single `@graph` — the canonical way to emit several
  * typed entities in one script block without repeating `@context`.
  */
-export function asGraph(...nodes: object[]): WithContext {
+export function asGraph(...nodes: (object | null | undefined)[]): WithContext {
   return {
     "@context": "https://schema.org",
-    "@graph": nodes,
+    "@graph": nodes.filter(Boolean),
   };
 }

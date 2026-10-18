@@ -4,6 +4,7 @@ import { categoryLabels, toolCopyFor } from "~/lib/i18n";
 import { site } from "~/lib/site";
 import type { Lang } from "~/lib/seo";
 import type { ResolvedTool } from "~/lib/catalog";
+import { imageHints } from '~/lib/imageCatalog';
 import { categoryArtwork, editorialSrc, editorialSrcset } from '~/lib/editorialImages';
 
 interface Props {
@@ -41,7 +42,7 @@ const badges = lang === "de"
     geometry, which then kept the marketing pill shape on a surface that rounds
     nothing. */}
 <a href={`${base}/tools/${tool.slug}`} class="tool-card" data-track={`tool-${tool.slug}`}>
-  <img class="tool-card__photo" src={editorialSrc(categoryArtwork[tool.category],480)} srcset={editorialSrcset(categoryArtwork[tool.category])} sizes="(min-width: 64rem) 320px, (min-width: 40rem) 50vw, 100vw" width="480" height="320" alt="" loading="lazy" decoding="async" />
+  <img class="tool-card__photo" src={editorialSrc(categoryArtwork[tool.category],480)} srcset={imageHints(editorialSrc(categoryArtwork[tool.category]), lang)?.srcSet ?? editorialSrcset(categoryArtwork[tool.category])} sizes="(min-width: 64rem) 320px, (min-width: 40rem) 50vw, 100vw" width="480" height="320" alt="" loading="lazy" decoding="async" />
   <span class="tool-card__eyebrow">{category}</span>
   <span class="tool-card__title">
     <span class="tool-card__icon">

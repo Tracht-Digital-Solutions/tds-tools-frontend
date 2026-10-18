@@ -1,0 +1,362 @@
+{
+  "/images/editorial/hero-2026-1440.webp": {
+    "src": "/images/editorial/hero-2026-1440.webp",
+    "width": 1440,
+    "height": 810,
+    "alt": {
+      "de": "Digitaler Arbeitsplatz als Symbol für Browser-Werkzeuge.",
+      "en": "Digital workspace illustrating browser tools."
+    },
+    "variants": [
+      {
+        "src": "/images/editorial/hero-2026-480.webp",
+        "width": 480,
+        "height": 270,
+        "hash": "5d8b62cfab4d",
+        "bytes": 12396
+      },
+      {
+        "src": "/images/editorial/hero-2026-800.webp",
+        "width": 800,
+        "height": 450,
+        "hash": "2874e038da03",
+        "bytes": 25888
+      },
+      {
+        "src": "/images/editorial/hero-2026-960.webp",
+        "width": 960,
+        "height": 540,
+        "hash": "e7f087900a91",
+        "bytes": 33396
+      },
+      {
+        "src": "/images/editorial/hero-2026-1440.webp",
+        "width": 1440,
+        "height": 810,
+        "hash": "c63af4a5c606",
+        "bytes": 59164
+      }
+    ],
+    "digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+  },
+  "/images/editorial/content-2026-1440.webp": {
+    "src": "/images/editorial/content-2026-1440.webp",
+    "width": 1440,
+    "height": 960,
+    "alt": {
+      "de": "Papier und Stift als Symbol für Text- und Dokumentwerkzeuge.",
+      "en": "Paper and pen illustrating text and document tools."
+    },
+    "variants": [
+      {
+        "src": "/images/editorial/content-2026-480.webp",
+        "width": 480,
+        "height": 320,
+        "hash": "469fa0ffb84d",
+        "bytes": 21926
+      },
+      {
+        "src": "/images/editorial/content-2026-800.webp",
+        "width": 800,
+        "height": 533,
+        "hash": "e3063e5f1c27",
+        "bytes": 53388
+      },
+      {
+        "src": "/images/editorial/content-2026-960.webp",
+        "width": 960,
+        "height": 640,
+        "hash": "5d754d1153c2",
+        "bytes": 76312
+      },
+      {
+        "src": "/images/editorial/content-2026-1440.webp",
+        "width": 1440,
+        "height": 960,
+        "hash": "e9c26633ff23",
+        "bytes": 162854
+      }
+    ],
+    "digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+  },
+  "/images/editorial/developer-2026-1440.webp": {
+    "src": "/images/editorial/developer-2026-1440.webp",
+    "width": 1440,
+    "height": 960,
+    "alt": {
+      "de": "Tastatur und Präzisionswerkzeug als Symbol für Entwicklerwerkzeuge.",
+      "en": "Keyboard and precision tool illustrating developer utilities."
+    },
+    "variants": [
+      {
+        "src": "/images/editorial/developer-2026-480.webp",
+        "width": 480,
+        "height": 320,
+        "hash": "a2085e641bba",
+        "bytes": 26294
+      },
+      {
+        "src": "/images/editorial/developer-2026-800.webp",
+        "width": 800,
+        "height": 533,
+        "hash": "a2ed8316cb03",
+        "bytes": 57288
+      },
+      {
+        "src": "/images/editorial/developer-2026-960.webp",
+        "width": 960,
+        "height": 640,
+        "hash": "ce9f777aea66",
+        "bytes": 75980
+      },
+      {
+        "src": "/images/editorial/developer-2026-1440.webp",
+        "width": 1440,
+        "height": 960,
+        "hash": "78077d1bf7a9",
+        "bytes": 135006
+      }
+    ],
+    "digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+  },
+  "/images/editorial/design-2026-1440.webp": {
+    "src": "/images/editorial/design-2026-1440.webp",
+    "width": 1440,
+    "height": 960,
+    "alt": {
+      "de": "Farbmuster als Symbol für Design und Kontrastprüfung.",
+      "en": "Colour swatches illustrating design and contrast checking."
+    },
+    "variants": [
+      {
+        "src": "/images/editorial/design-2026-480.webp",
+        "width": 480,
+        "height": 320,
+        "hash": "b6c572d2da24",
+        "bytes": 20618
+      },
+      {
+        "src": "/images/editorial/design-2026-800.webp",
+        "width": 800,
+        "height": 533,
+        "hash": "5e5811c3bfa2",
+        "bytes": 54982
+      },
+      {
+        "src": "/images/editorial/design-2026-960.webp",
+        "width": 960,
+        "height": 640,
+        "hash": "1362845bba5c",
+        "bytes": 80684
+      },
+      {
+        "src": "/images/editorial/design-2026-1440.webp",
+        "width": 1440,
+        "height": 960,
+        "hash": "71244f871ca7",
+        "bytes": 181078
+      }
+    ],
+    "digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+  },
+  "/images/editorial/marketing-2026-1440.webp": {
+    "src": "/images/editorial/marketing-2026-1440.webp",
+    "width": 1440,
+    "height": 960,
+    "alt": {
+      "de": "Korrespondenzkarten und Telefon als Symbol für Marketingwerkzeuge.",
+      "en": "Correspondence cards and phone illustrating marketing tools."
+    },
+    "variants": [
+      {
+        "src": "/images/editorial/marketing-2026-480.webp",
+        "width": 480,
+        "height": 320,
+        "hash": "fbe6fcb3fca7",
+        "bytes": 22300
+      },
+      {
+        "src": "/images/editorial/marketing-2026-800.webp",
+        "width": 800,
+        "height": 533,
+        "hash": "cc1bdb4d031e",
+        "bytes": 46532
+      },
+      {
+        "src": "/images/editorial/marketing-2026-960.webp",
+        "width": 960,
+        "height": 640,
+        "hash": "3c2cec909a22",
+        "bytes": 62436
+      },
+      {
+        "src": "/images/editorial/marketing-2026-1440.webp",
+        "width": 1440,
+        "height": 960,
+        "hash": "89c610af2a32",
+        "bytes": 112310
+      }
+    ],
+    "digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+  },
+  "/images/editorial/media-2026-1440.webp": {
+    "src": "/images/editorial/media-2026-1440.webp",
+    "width": 1440,
+    "height": 960,
+    "alt": {
+      "de": "Kamera und Grafiktablett als Symbol für Medienbearbeitung.",
+      "en": "Camera and graphics tablet illustrating media editing."
+    },
+    "variants": [
+      {
+        "src": "/images/editorial/media-2026-480.webp",
+        "width": 480,
+        "height": 320,
+        "hash": "2193ca462a5f",
+        "bytes": 22826
+      },
+      {
+        "src": "/images/editorial/media-2026-800.webp",
+        "width": 800,
+        "height": 533,
+        "hash": "8fa3116b1bde",
+        "bytes": 44536
+      },
+      {
+        "src": "/images/editorial/media-2026-960.webp",
+        "width": 960,
+        "height": 640,
+        "hash": "3abc806f3a73",
+        "bytes": 58150
+      },
+      {
+        "src": "/images/editorial/media-2026-1440.webp",
+        "width": 1440,
+        "height": 960,
+        "hash": "062efda05866",
+        "bytes": 103148
+      }
+    ],
+    "digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+  },
+  "/images/editorial/business-2026-1440.webp": {
+    "src": "/images/editorial/business-2026-1440.webp",
+    "width": 1440,
+    "height": 960,
+    "alt": {
+      "de": "Rechner und geordnete Karten als Symbol für Büro-Werkzeuge.",
+      "en": "Calculator and organised cards illustrating business tools."
+    },
+    "variants": [
+      {
+        "src": "/images/editorial/business-2026-480.webp",
+        "width": 480,
+        "height": 320,
+        "hash": "ad5d8f5a6fc1",
+        "bytes": 19442
+      },
+      {
+        "src": "/images/editorial/business-2026-800.webp",
+        "width": 800,
+        "height": 533,
+        "hash": "b696c38b9b6c",
+        "bytes": 42346
+      },
+      {
+        "src": "/images/editorial/business-2026-960.webp",
+        "width": 960,
+        "height": 640,
+        "hash": "25f9d7bda6bf",
+        "bytes": 55550
+      },
+      {
+        "src": "/images/editorial/business-2026-1440.webp",
+        "width": 1440,
+        "height": 960,
+        "hash": "41ff5b5c14a5",
+        "bytes": 100546
+      }
+    ],
+    "digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+  },
+  "/images/editorial/compliance-2026-1440.webp": {
+    "src": "/images/editorial/compliance-2026-1440.webp",
+    "width": 1440,
+    "height": 960,
+    "alt": {
+      "de": "Dokumentmappen als Symbol für Website-Pflichtangaben.",
+      "en": "Document folders illustrating website compliance information."
+    },
+    "variants": [
+      {
+        "src": "/images/editorial/compliance-2026-480.webp",
+        "width": 480,
+        "height": 320,
+        "hash": "01bb349e6e27",
+        "bytes": 20590
+      },
+      {
+        "src": "/images/editorial/compliance-2026-800.webp",
+        "width": 800,
+        "height": 533,
+        "hash": "e93832123ec0",
+        "bytes": 41884
+      },
+      {
+        "src": "/images/editorial/compliance-2026-960.webp",
+        "width": 960,
+        "height": 640,
+        "hash": "2a766d73d178",
+        "bytes": 52682
+      },
+      {
+        "src": "/images/editorial/compliance-2026-1440.webp",
+        "width": 1440,
+        "height": 960,
+        "hash": "5d4c31dd6b2c",
+        "bytes": 91472
+      }
+    ],
+    "digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+  },
+  "/images/editorial/security-2026-1440.webp": {
+    "src": "/images/editorial/security-2026-1440.webp",
+    "width": 1440,
+    "height": 960,
+    "alt": {
+      "de": "USB-Sicherheitsschlüssel als Symbol für Passkeys und sichere Anmeldung.",
+      "en": "USB security keys illustrating passkeys and secure sign-in."
+    },
+    "variants": [
+      {
+        "src": "/images/editorial/security-2026-480.webp",
+        "width": 480,
+        "height": 320,
+        "hash": "20834be31ba0",
+        "bytes": 21128
+      },
+      {
+        "src": "/images/editorial/security-2026-800.webp",
+        "width": 800,
+        "height": 533,
+        "hash": "ab2100c24f76",
+        "bytes": 51312
+      },
+      {
+        "src": "/images/editorial/security-2026-960.webp",
+        "width": 960,
+        "height": 640,
+        "hash": "222a82cb2467",
+        "bytes": 69380
+      },
+      {
+        "src": "/images/editorial/security-2026-1440.webp",
+        "width": 1440,
+        "height": 960,
+        "hash": "873c586892da",
+        "bytes": 128932
+      }
+    ],
+    "digitalSourceType": "http://cv.iptc.org/newscodes/digitalsourcetype/trainedAlgorithmicMedia"
+  }
+}
