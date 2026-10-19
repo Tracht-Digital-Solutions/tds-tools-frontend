@@ -33,7 +33,7 @@ const base = lang === "de" ? "" : "/en";
 const path = Astro.url.pathname;
 const onCatalog = neutralPath(path) === "/";
 
-/** Ratgeber · Online-Tools · Digitalmarkt · Startseite, with this site marked current. */
+/** Startseite · Ratgeber · Online-Tools · Digitalmarkt, with this site marked current. */
 const nav = propertyNav("tools", lang, `${base}/`);
 const contact = propertyContact(lang);
 
