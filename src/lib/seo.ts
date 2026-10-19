@@ -102,23 +102,9 @@ export type Lang = "de" | "en";
 export const EN_ENABLED = true;
 
 /**
- * hreflang/OG locale pairs. `x-default` points at the German page: the
- * audience is local businesses in Northern Germany, so German is the
- * best guess for a visitor whose language we do not know.
- */
-export const ogLocale: Record<Lang, string> = { de: "de_DE", en: "en_GB" };
-
-/**
- * The EN counterpart of a German path (and back). The site mounts English
+ * hreflang/OG locale pairs and the DE/EN path pair. The site mounts English
  * under `/en/…` with the SAME slugs, so an hreflang pair is a pure prefix
- * operation and the two URLs always point at each other.
+ * operation; the helpers live in tds-shared since 0.59 (the landing page and
+ * the shop use them too). `x-default` points at the German page.
  */
-export function neutralPath(pathname: string): string {
-  return pathname.replace(/^\/en(?=\/|$)/, "") || "/";
-}
-
-export function localizedPath(pathname: string, lang: Lang): string {
-  const neutral = neutralPath(pathname);
-  if (lang === "de") return neutral;
-  return neutral === "/" ? "/en/" : `/en${neutral}`;
-}
+export { localizedPath, neutralPath, OG_LOCALE as ogLocale } from "@tracht-digital-solutions/tds-shared/i18n";

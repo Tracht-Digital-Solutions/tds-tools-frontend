@@ -26,7 +26,7 @@ import { enabledTools } from "./catalog";
 import { guideUpdatedAt } from "./guides";
 import { EN_ENABLED, localizedPath, type Lang } from "./seo";
 import { site } from "./site";
-import { escapeXml, newestDay, renderSectionedSitemapIndex } from "@tracht-digital-solutions/tds-shared/site";
+import { newestDay, renderSectionedSitemapIndex, renderUrlset as renderUrlsetXml } from "@tracht-digital-solutions/tds-shared/site";
 import { exclusionPatterns, groupExcluded, hreflangGroup } from "./sitemapExclusions";
 import { SITEMAP_SECTIONS, sectionPath, type SitemapSection } from "./sitemapSections";
 
@@ -89,59 +89,19 @@ export async function sitemapPaths(): Promise<SitemapUrl[]> {
 
 export function renderUrlset(paths: SitemapUrl[], fallbackLastmod?: string): string {
   const langs: Lang[] = EN_ENABLED ? ["de", "en"] : ["de"];
-
-  const body = paths
-    .flatMap((entry) =>
-      langs.map((lang) => {
-        const lastmod = entry.lastmod ?? fallbackLastmod;
-        const alternates = EN_ENABLED
-          ? [
-              `<xhtml:link rel="alternate" hreflang="de-DE" href="${escapeXml(absolute(localizedPath(entry.path, "de")))}"/>`,
-              `<xhtml:link rel="alternate" hreflang="en-GB" href="${escapeXml(absolute(localizedPath(entry.path, "en")))}"/>`,
-              `<xhtml:link rel="alternate" hreflang="x-default" href="${escapeXml(absolute(localizedPath(entry.path, "de")))}"/>`,
-            ].join("")
-          : "";
-        const image = entry.image
-          ? `<image:image><image:loc>${escapeXml(absolute(entry.image[lang]))}</image:loc>` +
-            `<image:title>${escapeXml(entry.image.title)}</image:title></image:image>`
-          : "";
-        return [
-          "<url>",
-          `<loc>${escapeXml(absolute(localizedPath(entry.path, lang)))}</loc>`,
-          alternates,
-          image,
-          lastmod ? `<lastmod>${escapeXml(lastmod)}</lastmod>` : "",
-          `<changefreq>${entry.changefreq}</changefreq>`,
-          `<priority>${entry.priority.toFixed(1)}</priority>`,
-          "</url>",
-        ].join("");
-      }),
-    )
-    .join("");
-
-  return (
-    '<?xml version="1.0" encoding="UTF-8"?>' +
-    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" ' +
-    'xmlns:xhtml="http://www.w3.org/1999/xhtml" ' +
-    'xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">' +
-    body +
-    "</urlset>"
-  );
-}
-
-/**
- * The index document — the filename `public/robots.txt` advertises and Search
- * Console already knows. `@astrojs/sitemap` produced this exact pair.
- */
-export function renderSitemapIndex(lastmod?: string): string {
-  return (
-    '<?xml version="1.0" encoding="UTF-8"?>' +
-    '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' +
-    "<sitemap>" +
-    `<loc>${escapeXml(absolute("/sitemap-0.xml"))}</loc>` +
-    (lastmod ? `<lastmod>${escapeXml(lastmod)}</lastmod>` : "") +
-    "</sitemap>" +
-    "</sitemapindex>"
+  return renderUrlsetXml(
+    paths.flatMap((entry) =>
+      langs.map((lang) => ({
+        loc: absolute(localizedPath(entry.path, lang)),
+        alternates: EN_ENABLED
+          ? { de: absolute(localizedPath(entry.path, "de")), en: absolute(localizedPath(entry.path, "en")) }
+          : undefined,
+        image: entry.image ? { loc: absolute(entry.image[lang]), title: entry.image.title } : undefined,
+        lastmod: entry.lastmod ?? fallbackLastmod,
+        changefreq: entry.changefreq,
+        priority: entry.priority,
+      })),
+    ),
   );
 }
 

@@ -79,4 +79,5 @@ Rendered at build time: `/og/default.png` and `/og/tools/<slug>.png` (one per en
   API means nothing excluded. The `sitemap` cache event rebuilds the sitemaps, the catalog and every tool page.
 - `/llms.txt` is a generated route (`src/lib/llmsTxt.ts`, `src/pages/llms.txt.ts`). Don't add a static
   `public/llms.txt`; it would shadow the route.
-- `npm run audit:geo -- <url>` runs the shared geo audit (`scripts/geo-audit.mjs`, `src/lib/geoAudit.test.ts`).
+- `npm run audit:geo -- <url>` runs tds-shared's geo audit (`tds-geo-audit`) with `scripts/geo-audit.profile.mjs`;
+  `src/lib/geoAudit.test.ts` checks the profile against robots.txt.

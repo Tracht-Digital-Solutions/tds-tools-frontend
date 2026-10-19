@@ -1,5 +1,6 @@
 import type { ToolCategory } from "@tracht-digital-solutions/tds-tools-contract";
 import { categoryLabels as labels, copy } from "./i18n";
+import { LEGAL_LINKS } from "@tracht-digital-solutions/tds-shared/nav";
 
 /** Site-wide constants + copy. Keep the NAP in sync with the Impressum + seo.ts
  *  of the other TDS properties (SEO convention).
@@ -60,8 +61,8 @@ export const links = {
   blog: "https://blog.tracht-digital.de",
   contact: "https://tracht-digital.de/#contact",
   portal: "https://app.tracht-digital.de",
-  impressum: "https://tracht-digital.de/legal/impressum",
-  datenschutz: "https://tracht-digital.de/legal/datenschutz",
+  impressum: LEGAL_LINKS.imprint,
+  datenschutz: LEGAL_LINKS.privacy,
 } as const;
 
 /** German labels for the tool categories (catalog section headings). */
