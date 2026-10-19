@@ -86,17 +86,16 @@ const groups = [
 <footer class="mt-20 tds-tone-navy tools-footer">
   <div class="tds-shell grid gap-9 py-12 md:grid-cols-[1.4fr_repeat(3,1fr)]">
     <div>
-      {/* The wordmark reads TD Tools with the MARK carrying the "TD", the
-          same construction as the header's and as the journal footer's.
+      {/* The TD mark and the name "Online-Tools", the same construction as
+          the header's and as the Ratgeber footer's.
           `--inverse` because this ground is fixed-dark: the mask paints in
           the page's ink token otherwise, which disappears on navy.
 
-          The mark is decorative to assistive tech, so the "TD" it stands for
-          is restated `sr-only` — without it the brand block announces as the
-          bare word "Tools". */}
+          The mark is decorative to assistive tech, so the business it stands
+          for is restated `sr-only`. */}
       <p class="brand-wordmark mb-3 inline-flex items-center gap-2 text-lg" style="color: #fff;">
         <span class="brand-logo brand-logo--inverse" aria-hidden="true"></span>
-        <span><span class="sr-only">TD </span><span style="color: var(--color-accent-pink);">Tools</span></span>
+        <span><span style="color: var(--color-accent-pink);">Online-Tools</span><span class="sr-only"> von Tracht Digital Solutions</span></span>
       </p>
       {/* The three-part brand accent as the footer's closing detail — the same
           mark the blog and the landingpage footers carry, which is what makes

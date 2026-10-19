@@ -15,6 +15,7 @@
  * read as one entity.
  */
 import { seoConfig, type Lang } from "./seo";
+import { site } from "./site";
 
 type WithContext<T extends Record<string, unknown> = Record<string, unknown>> =
   T & { "@context": "https://schema.org" };
@@ -91,7 +92,8 @@ export function websiteSchema(description: string) {
     "@type": "WebSite",
     "@id": WEBSITE_ID,
     url: seoConfig.url,
-    name: `${seoConfig.shortName} Tools`,
+    name: site.fullName,
+    alternateName: site.name,
     description,
     publisher: { "@id": ORG_ID },
     inLanguage: ["de-DE", "en-GB"],

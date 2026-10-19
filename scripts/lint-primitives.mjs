@@ -141,7 +141,7 @@ for (const file of files) {
       // the same case: the tab-bar item, the sheet's close button and a
       // segmented option each carry their own geometry, hover and
       // focus-visible treatment — a `.btn` would turn a tab into a pill.
-      if (!/\b(btn|chip|tds-dropdown__(trigger|item)|tds-tabbar__item|tds-sheet__close|tds-segmented__option|tds-tile|tds-filterbar__reset)\b/.test(cls)) {
+      if (!/\b(btn|chip|tds-dropdown__(trigger|item)|tds-tabbar__item|tds-sheet__close|tds-segmented__option|tds-tile|tds-filterbar__(?:reset|close))\b/.test(cls)) {
         findings.push(`${where}  <button> needs "btn btn-*" (or "chip")`);
       }
       // …and the VARIANT has to exist. `btn btn-secondary` passed the check

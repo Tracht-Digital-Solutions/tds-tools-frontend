@@ -8,8 +8,8 @@ export const GET: APIRoute = () =>
   new Response(
     JSON.stringify(
       buildManifest({
-        name: "TD Tools — Werkzeuge für deinen Betrieb",
-        shortName: "TD Tools",
+        name: "Online-Tools von Tracht Digital Solutions",
+        shortName: "Online-Tools",
         description: "Kostenlose Werkzeuge, die direkt im Browser laufen — auch offline.",
         lang: "de",
         themeColor: "#fafaf7",

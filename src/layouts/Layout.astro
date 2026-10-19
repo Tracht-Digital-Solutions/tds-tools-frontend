@@ -170,7 +170,7 @@ const jsonLdText = jsonLd ? serializeJsonLd(jsonLd) : null;
     <link rel="manifest" href="/manifest.webmanifest" />
     <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
     <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-title" content="TD Tools" />
+    <meta name="apple-mobile-web-app-title" content="Online-Tools" />
     <meta name="robots" content={hidden ? "noindex,nofollow,max-image-preview:large" : "index,follow,max-image-preview:large"} />
     {/* The brand mark shared by every TDS property — byte-identical to the
         landingpage's and the blog's. It used to be a hand-drawn SVG unique to
@@ -212,7 +212,7 @@ const jsonLdText = jsonLd ? serializeJsonLd(jsonLd) : null;
     <link
       rel="alternate"
       type="application/rss+xml"
-      title="Tracht Digital — Journal"
+      title="Tracht Digital — Ratgeber"
       href={`${seoConfig.blogUrl}/rss.xml`}
     />
 
@@ -239,7 +239,7 @@ const jsonLdText = jsonLd ? serializeJsonLd(jsonLd) : null;
     {EN_ENABLED && !hidden && (
       <meta property="og:locale:alternate" content={altOgLocale} />
     )}
-    <meta property="og:site_name" content={site.name} />
+    <meta property="og:site_name" content={site.fullName} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />

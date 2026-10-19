@@ -53,7 +53,7 @@ layer as `blog.tracht-digital.de`: no radii, nothing elevated, display voice at 
 - **The brand mark is `.brand-logo`**, a CSS mask over `--color-primary` using `public/brand/td-logomark.webp`
   (identical to the landing page's and the blog's). Only `--tds-brand-logo-mask` and `--tds-brand-logo-size` are
   local; never override `--tds-brand-logo-ratio` (713 × 483).
-- **The site is called TD Tools and the mark is the "TD".** Header and footer set only `Tools` beside the mark.
+- **The site is called Online-Tools (since 2026-10-19), beside the TD mark.** Header and footer set `Online-Tools`; `site.fullName` ("… von Tracht Digital Solutions") is the accessible name, WebSite name and og:site_name.
   `site.name` is the same string, used where the name is written out (SEO suffix, OG eyebrow, 404, header label).
 - The mark is `aria-hidden`, so the header link has `aria-label={`${site.name} — …`}` and the footer restates
   `TD` as `sr-only`. `components/header.test.ts` pins this.

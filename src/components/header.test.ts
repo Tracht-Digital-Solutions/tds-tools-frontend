@@ -25,13 +25,12 @@ const source = raw
   .replace(/^\s*\/\/.*$/gm, "");
 
 describe("the wordmark", () => {
-  it("lets the logomark carry the TD and sets only Tools in type", () => {
-    // The site is called TD Tools and the MARK is the "TD" — the same
-    // construction as the journal's (`.brand-logo` + "Journal"), which is
-    // what makes the two public properties read as one brand. Spelling the
-    // letters out beside the mark would render the name twice.
+  it("sets the TD mark beside the name Online-Tools", () => {
+    // Since 2026-10-19 the site is called "Online-Tools", beside the TD mark —
+    // the same construction as the Ratgeber's and the Digitalmarkt's, which
+    // is what makes the public properties read as one brand.
     expect(source).toContain('<span class="brand-logo" aria-hidden="true">');
-    expect(source).toContain("<span class=\"accent-italic\">Tools</span>");
+    expect(source).toContain("<span class=\"accent-italic\">Online-Tools</span>");
     // Not "TDS Tools" and not "TD Tools" beside the mark: the mark already
     // says it, and the two together render the name twice.
     expect(source, "the mark already says TD").not.toContain("TDS ");
@@ -42,8 +41,8 @@ describe("the wordmark", () => {
     // The mark is `aria-hidden`, so without this the home link announces as
     // the bare word "Tools" — the one place where replacing text with a
     // graphic actually costs something.
-    expect(source).toContain("aria-label={`${site.name} — ${s.navAllTools}`}");
-    expect(site).toContain('name: "TD Tools"');
+    expect(source).toContain("aria-label={`${site.fullName} — ${s.navAllTools}`}");
+    expect(site).toContain('name: "Online-Tools"');
   });
 });
 describe("mobile navigation", () => {

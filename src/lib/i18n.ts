@@ -54,6 +54,7 @@ export interface SiteCopy {
     access: string;
     accesses: { all: string; free: string; premium: string; login: string };
     reset: string;
+    close: string;
     none: string;
   };
   guideHeading: string;
@@ -103,10 +104,10 @@ export const copy = {
     heroBody:
       "Bilder komprimieren, QR-Codes erstellen, UTM-Links bauen, PDF-Werkzeuge, Texterkennung und mehr. Vieles kostenlos und ohne Anmeldung, alles ohne Installation. Von Tracht Digital Solutions aus Schwarzenbek bei Hamburg.",
     navAllTools: "Alle Tools",
-    navBlog: "Blog",
+    navBlog: "Ratgeber",
     navHome: "Startseite",
     navMenu: "Menü",
-    toBlog: "Zum Blog",
+    toBlog: "Zum Ratgeber",
     toHome: "Zur Startseite",
     cta: "Unverbindlich anfragen",
     skipToContent: "Zum Inhalt springen",
@@ -121,6 +122,7 @@ export const copy = {
       access: "Zugang",
       accesses: { all: "Alle", free: "Kostenlos", premium: "Premium", login: "Mit Anmeldung" },
       reset: "Filter zurücksetzen",
+      close: "Filter schließen",
       none: "Kein Werkzeug passt zu diesen Filtern.",
     },
     guideHeading: "Ratgeber",
@@ -136,7 +138,7 @@ export const copy = {
     footerGroupLegal: "Rechtliches",
     footerGroupServices: "Leistungen",
     footerHome: "Startseite",
-    footerBlog: "Blog",
+    footerBlog: "Ratgeber",
     footerPortal: "Kundenportal",
     footerContact: "Kontakt",
     footerImprint: "Impressum",
@@ -170,10 +172,10 @@ export const copy = {
     heroBody:
       "Compress images, create QR codes, build UTM links, PDF tools, text recognition and more. Much of it free and without sign-up, all of it without installing anything. By Tracht Digital Solutions in Schwarzenbek near Hamburg.",
     navAllTools: "All tools",
-    navBlog: "Blog",
+    navBlog: "Ratgeber",
     navHome: "Main site",
     navMenu: "Menu",
-    toBlog: "To the blog",
+    toBlog: "To the Ratgeber",
     toHome: "To the home page",
     cta: "Get in touch",
     skipToContent: "Skip to content",
@@ -188,6 +190,7 @@ export const copy = {
       access: "Access",
       accesses: { all: "All", free: "Free", premium: "Premium", login: "Sign-in required" },
       reset: "Reset filters",
+      close: "Close filters",
       none: "No tool matches these filters.",
     },
     guideHeading: "Guide",
@@ -203,7 +206,7 @@ export const copy = {
     footerGroupLegal: "Legal",
     footerGroupServices: "Services",
     footerHome: "Main site",
-    footerBlog: "Blog",
+    footerBlog: "Ratgeber",
     footerPortal: "Customer portal",
     footerContact: "Contact",
     footerImprint: "Imprint",

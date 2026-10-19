@@ -14,13 +14,15 @@ export const site = {
    * The site's name, as it is written everywhere it is written OUT — the SEO
    * title suffix, the OG eyebrow, the header's accessible name, the 404.
    *
-   * "TD Tools", not "TDS Tools": the header and footer set only "Tools" in
-   * type and let `.brand-logo` carry the "TD", the same construction the
-   * journal uses. The rendered mark and the written name have to agree, or
-   * the site is called one thing on the page and another in every search
-   * result and share card.
+   * "Online-Tools" since 2026-10-19 (was "TD Tools"): a name that says what
+   * the site is, for search engines and answer engines. The header and
+   * footer set it beside the TD mark; the rendered and the written name have
+   * to agree, or the site is called one thing on the page and another in
+   * every search result and share card. `fullName` ties it to the business
+   * where there is room (WebSite node, og:site_name, manifest).
    */
-  name: "TD Tools",
+  name: "Online-Tools",
+  fullName: "Online-Tools von Tracht Digital Solutions",
   origin: "https://tools.tracht-digital.de",
   tagline: copy.de.tagline,
   /**

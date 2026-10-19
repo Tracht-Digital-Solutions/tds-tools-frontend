@@ -33,7 +33,7 @@ const base = lang === "de" ? "" : "/en";
 const path = Astro.url.pathname;
 const onCatalog = neutralPath(path) === "/";
 
-/** Journal · Tools · Shop · Tracht Digital, with this site marked current. */
+/** Ratgeber · Online-Tools · Digitalmarkt · Startseite, with this site marked current. */
 const nav = propertyNav("tools", lang, `${base}/`);
 const contact = propertyContact(lang);
 
@@ -65,18 +65,18 @@ const langHrefs: { code: Lang; href: string; label: string }[] = [
         reader acts with in the second. Below 64rem the wrappers vanish
         from layout. */}
     <div class="tds-sitebar__island">
-      {/* The mark IS the "TD" of the name — the wordmark reads TD Tools and the
-          mark carries the first half, so only "Tools" is set in type, as the
-          journal's and the shop's do. Because the mark replaces text, the
+      {/* The TD mark, then the site's name "Online-Tools" (since 2026-10-19),
+          the same construction as the Ratgeber's and the Digitalmarkt's.
+          Because the mark is decorative, the
           `aria-label` restates the full name and the mark is `aria-hidden`;
           drop that and the link announces as "Tools". */}
       <a
         href={`${base}/`}
         class="tds-sitebar__brand brand-wordmark"
-        aria-label={`${site.name} — ${s.navAllTools}`}
+        aria-label={`${site.fullName} — ${s.navAllTools}`}
       >
         <span class="brand-logo" aria-hidden="true"></span>
-        <span class="accent-italic">Tools</span>
+        <span class="accent-italic">Online-Tools</span>
       </a>
       <span class="tds-sitebar__divider" aria-hidden="true"></span>
 

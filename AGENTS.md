@@ -1,6 +1,6 @@
 # AGENTS.md — tds-tools-frontend
 
-The public, indexable tools site at `tools.tracht-digital.de` (DE at `/`, EN at `/en/`, same slugs).
+The public, indexable tools site — named **Online-Tools** since 2026-10-19 (was "TD Tools") — at `tools.tracht-digital.de` (DE at `/`, EN at `/en/`, same slugs).
 It composes the `tds-tool-*` packs via `tds-tools-contract-pkg`'s `toolHost` into a catalog, merges the
 admin catalog and premium settings from `tds-ext-tools-pkg`, and shows consent-gated AdSense. Astro
 `output: "server"` (`@astrojs/node`, standalone under Passenger) behind a file-backed page cache, on the

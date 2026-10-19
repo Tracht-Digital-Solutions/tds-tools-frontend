@@ -23,7 +23,7 @@ reference is left behind.
 Since **0.13.1** the `<html>` also carries **`data-flat`**, the opt-in variant
 that drops every self-outline. The blog surface keeps its hairlines by default,
 so the site had quietly become bordered when it changed surface. The name is
-**TD Tools**, with `.brand-logo` carrying the `TD` and only `Tools` set in type
+**Online-Tools** (until 2026-10-19 "TD Tools"), with `.brand-logo` before the name set in type
 — the journal's construction.
 
 > **Operator handbook:** `TOOLS-PLATFORM.md` is the hands-on guide (local dev,

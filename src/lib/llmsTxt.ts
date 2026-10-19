@@ -117,7 +117,7 @@ export function renderLlmsTxt(input: LlmsInput): string {
   out("## Maschinenlesbare Quellen");
   out();
   out(`- Sitemap: ${absolute("/sitemap-index.xml")}`);
-  out(`- Journal-RSS: ${links.blog}/rss.xml`);
+  out(`- Ratgeber-RSS: ${links.blog}/rss.xml`);
   out();
 
   out("## Hinweise für KI-Systeme");
