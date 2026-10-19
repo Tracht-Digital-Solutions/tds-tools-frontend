@@ -18,6 +18,7 @@ import {
   itemListSchema,
   organizationSchema,
   personSchema,
+  webPageNode,
   websiteSchema,
 } from "~/lib/jsonld";
 import type { ToolCategory } from "@tracht-digital-solutions/tds-tools-contract";
@@ -69,6 +70,15 @@ const jsonLd = asGraph(
   organizationSchema(),
   personSchema(),
   websiteSchema(s.description),
+  /* The catalogue as a page (2026-10-19). Its hero image is `about` this node,
+     and without it that reference dangled (the geo audit's warning on both
+     front pages). */
+  { ...webPageNode({
+      url: `${site.origin}${base}/`,
+      name: `${site.name} — ${s.tagline}`,
+      description: s.description,
+      lang,
+    }), "@type": "CollectionPage" },
   imageObject(editorialSrc('hero'), lang, `${site.origin}${base}/`),
   itemListSchema(
     // The listed NAMES follow the page language too. They used to come
