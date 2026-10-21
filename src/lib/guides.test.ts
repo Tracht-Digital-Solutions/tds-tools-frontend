@@ -209,14 +209,17 @@ describe("the guides as a set", () => {
     expect(all.toLowerCase()).not.toMatch(/hofladen|referenzkunde|case study|fallstudie/);
   });
 
-  it("keeps the same voice throughout", () => {
-    // The guides address the reader as "Sie", matching the landingpage and
-    // the money pages. A single "du" would read as a different author.
+  it("addresses no one directly", () => {
+    // Neutral like the landingpage (decided 2026-10-21, tds-tools-frontend#6):
+    // the guides say what the tool does and what to do, never "Sie" or "du".
+    // The whole guide is checked, steps and FAQ included — those are where
+    // the imperative used to live. A sentence that starts with "Sie" meaning
+    // "they" trips the rule too, on purpose: it reads as an address anyway.
+    // Site-wide guard for the remaining copy: `addressForm.test.ts`.
     for (const [slug, guide] of allDe) {
-      const text = [...guide.intro, guide.privacy].join(" ");
-      expect(text, `${slug} slips into the du-form`).not.toMatch(
-        /\b(du|dein|deine|deinem|deinen|deiner)\b/i,
-      );
+      const text = JSON.stringify(guide);
+      expect(text, `${slug} addresses the reader formally`).not.toMatch(/\b(Sie|Ihnen|Ihr|Ihre|Ihren|Ihrem|Ihrer|Ihres)\b/);
+      expect(text, `${slug} slips into the du-form`).not.toMatch(/\b(du|dein|deine|deinem|deinen|deiner|dich|dir)\b/i);
     }
   });
 });

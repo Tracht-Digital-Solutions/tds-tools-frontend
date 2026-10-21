@@ -1,12 +1,12 @@
 import type { ToolGuideSet } from "~/lib/guides";
 
 const guide: ToolGuideSet = {
-  updatedAt: "2026-08-18",
+  updatedAt: "2026-10-21",
   de: {
     intro: [
       "Manchmal ist ein PDF das falsche Format. In eine Präsentation lässt es sich nicht einfügen, in einem Social-Media-Beitrag zeigt es niemand an, und für eine Vorschau auf der eigenen Website braucht es ohnehin ein Bild. Dann hilft der umgekehrte Weg: die gewünschte Seite als PNG oder JPG herausrechnen und wie jedes andere Bild weiterverwenden.",
-      "Dieses Werkzeug rendert die Seiten so, wie ein Betrachter sie anzeigen würde — mit Schriften, Vektorgrafiken und Layout, nicht als Ausschnitt eines Screenshots. Die Auflösung bestimmen Sie: 96 dpi für den Bildschirm, 150 dpi als guter Mittelweg, 300 dpi, wenn das Ergebnis gedruckt wird.",
-      "Die erzeugten Seiten erscheinen als Vorschau, mit Größe und Abmessung je Bild und einem eigenen Knopf zum Herunterladen. So laden Sie gezielt die eine Seite, die Sie brauchen, statt einen Ordner voller Dateien zu sortieren, von denen Sie neun wieder löschen.",
+      "Dieses Werkzeug rendert die Seiten so, wie ein Betrachter sie anzeigen würde — mit Schriften, Vektorgrafiken und Layout, nicht als Ausschnitt eines Screenshots. Die Auflösung ist wählbar: 96 dpi für den Bildschirm, 150 dpi als guter Mittelweg, 300 dpi, wenn das Ergebnis gedruckt wird.",
+      "Die erzeugten Seiten erscheinen als Vorschau, mit Größe und Abmessung je Bild und einem eigenen Knopf zum Herunterladen. So lässt sich gezielt die eine Seite laden, die gebraucht wird, statt einen Ordner voller Dateien zu sortieren, von denen neun wieder im Papierkorb landen.",
     ],
     useCases: [
       {
@@ -33,7 +33,7 @@ const guide: ToolGuideSet = {
     steps: [
       {
         title: "PDF auswählen",
-        description: "Wählen Sie die Datei aus. Sie wird im Browser gelesen; die Anzeige-Engine dafür wird erst beim ersten Umwandeln geladen, damit das bloße Öffnen der Seite nicht schon ein Megabyte kostet.",
+        description: "Die Datei auswählen. Gelesen wird sie im Browser; die Anzeige-Engine dafür wird erst beim ersten Umwandeln geladen, damit das bloße Öffnen der Seite nicht schon ein Megabyte kostet.",
       },
       {
         title: "Seiten eingrenzen",
@@ -41,11 +41,11 @@ const guide: ToolGuideSet = {
       },
       {
         title: "Auflösung und Format wählen",
-        description: "PNG ist die richtige Wahl für Text, Linien und Pläne, weil es scharfe Kanten sauber wiedergibt. JPG lohnt sich bei fotolastigen Seiten und liefert dort deutlich kleinere Dateien; die Qualität stellen Sie dann selbst ein.",
+        description: "PNG ist die richtige Wahl für Text, Linien und Pläne, weil es scharfe Kanten sauber wiedergibt. JPG lohnt sich bei fotolastigen Seiten und liefert dort deutlich kleinere Dateien; die Qualität ist dann frei einstellbar.",
       },
       {
         title: "Vorschau prüfen und laden",
-        description: "Unter jeder Seite stehen Abmessung und Dateigröße. Laden Sie einzelne Seiten über den Knopf daneben oder alle auf einmal — der Browser fragt je nach Einstellung einmal nach, ob er mehrere Dateien speichern darf.",
+        description: "Unter jeder Seite stehen Abmessung und Dateigröße. Einzelne Seiten kommen über den Knopf daneben, alle auf einmal über den Sammelknopf — der Browser fragt je nach Einstellung einmal nach, ob er mehrere Dateien speichern darf.",
       },
     ],
     privacy:

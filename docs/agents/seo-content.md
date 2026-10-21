@@ -53,7 +53,8 @@ Every tool page carries a guide; a 40-word tool page is thin content against hun
 
 - No free or time-limited initial consultation anywhere.
 - No customer named, not even anonymously.
-- "Sie" form.
+- Neutral voice since 2026-10-21 (#6): no "Sie", no "du" in German copy, guides included. Steps are infinitives
+  ("Die Datei auswählen."), not imperatives. `addressForm.test.ts` and `guides.test.ts` hold it.
 - Canonical CTA "Unverbindlich anfragen" / "Get in touch".
 
 ## Marketing

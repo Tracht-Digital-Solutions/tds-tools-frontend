@@ -27,7 +27,7 @@ npm run audit:geo -- <url>
 - `postcss.config.mjs` and the `@source` lines (tds-shared + every pack) are required.
 - `.htaccess` sets only `Options -Indexes`.
 - Every meta description is 80 < n ≤ 160, titles ≤ 60 and never brand-leading, in both languages.
-- No free or time-limited initial consultation, no named customer, "Sie" form; CTA "Unverbindlich anfragen".
+- No free or time-limited initial consultation, no named customer; German copy addresses no one (no "Sie", no "du" — `addressForm.test.ts`); CTA "Unverbindlich anfragen".
 - Every manifest icon needs a path in `Icon.astro`. NAP values are verbatim copies of the landing page's.
 - OCR assets are served from this site; never let tesseract.js call a CDN.
 - `TDS_SITE_KEY` comes from `process.env`; it must also be set in the host's Node app environment.

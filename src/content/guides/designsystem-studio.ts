@@ -1,12 +1,12 @@
 import type { ToolGuideSet } from "~/lib/guides";
 
 const guide: ToolGuideSet = {
-  updatedAt: "2026-10-10",
+  updatedAt: "2026-10-21",
   de: {
     intro: [
       "Ein Designsystem ist die Sammlung von Regeln, nach denen eine Website aussieht: welche Farben, welche Schriften, welche Abstände, wie ein Button aussieht und wie er reagiert, wenn man mit der Maus darüberfährt. Wer diese Regeln einmal festlegt, statt jede Seite einzeln zu gestalten, bekommt einen einheitlichen Auftritt und spart bei jeder Erweiterung Zeit.",
-      "Das Designsystem-Studio beginnt bei einer einzigen Komponente. Sie gestalten zum Beispiel einen Button — Farbe, Ecken, Schrift, Schatten, Hover- und Fokuszustand — und das Studio leitet daraus nach festen Regeln alles Weitere ab: Farbrollen für Text, Flächen und Rahmen, eine Schriftgrößen-Skala, Abstände, Karten, Formularfelder, Navigation und Footer, jeweils mit hellem und dunklem Farbschema. Es gibt dabei keinen Zufall und keine künstliche Intelligenz: Dieselben Eingaben ergeben immer dasselbe Ergebnis.",
-      "Danach passen Sie global oder pro Komponente an, prüfen Kontraste und Fokuszustände nach WCAG und exportieren das Ergebnis als reines CSS, als CSS-Variablen, SCSS, JSON-Design-Tokens, für Tailwind CSS oder Bootstrap. Alternativ starten Sie mit vorhandenem CSS, einer eigenen HTML-Komponente oder dem Stil einer öffentlichen Website.",
+      "Das Designsystem-Studio beginnt bei einer einzigen Komponente, zum Beispiel einem Button — Farbe, Ecken, Schrift, Schatten, Hover- und Fokuszustand — und das Studio leitet daraus nach festen Regeln alles Weitere ab: Farbrollen für Text, Flächen und Rahmen, eine Schriftgrößen-Skala, Abstände, Karten, Formularfelder, Navigation und Footer, jeweils mit hellem und dunklem Farbschema. Es gibt dabei keinen Zufall und keine künstliche Intelligenz: Dieselben Eingaben ergeben immer dasselbe Ergebnis.",
+      "Danach lässt sich global oder pro Komponente anpassen, Kontrast und Fokuszustand werden nach WCAG geprüft, und das Ergebnis geht als reines CSS, als CSS-Variablen, SCSS, JSON-Design-Tokens, für Tailwind CSS oder Bootstrap hinaus. Alternativ beginnt die Arbeit mit vorhandenem CSS, einer eigenen HTML-Komponente oder dem Stil einer öffentlichen Website.",
     ],
     useCases: [
       {
@@ -34,31 +34,31 @@ const guide: ToolGuideSet = {
       {
         title: "Einstieg wählen",
         description:
-          "Wählen Sie, ob Sie eine neue Komponente gestalten, vorhandenes CSS beziehungsweise eine HTML-Komponente importieren oder eine Website per HTTPS-Adresse analysieren möchten.",
+          "Zur Wahl stehen: eine neue Komponente gestalten, vorhandenes CSS beziehungsweise eine HTML-Komponente importieren oder eine Website per HTTPS-Adresse analysieren.",
       },
       {
         title: "Komponente gestalten",
         description:
-          "Stellen Sie im einfachen Modus Farben, Ecken, Schrift, Abstände, Schatten und den Hover-Effekt ein. Der Expertenmodus öffnet einzelne Rahmenseiten, Ecken, Transparenzen und Animationen.",
+          "Der einfache Modus stellt Farben, Ecken, Schrift, Abstände, Schatten und den Hover-Effekt ein. Der Expertenmodus öffnet einzelne Rahmenseiten, Ecken, Transparenzen und Animationen.",
       },
       {
         title: "Designsystem erzeugen und anpassen",
         description:
-          "Ein Klick leitet das ganze System ab. Danach wählen Sie eine Stilrichtung, ändern globale Werte oder einzelne Komponenten und legen eigene Themes an — Ihre Anpassungen bleiben dabei erhalten.",
+          "Ein Klick leitet das ganze System ab. Danach folgen Stilrichtung, globale Werte, einzelne Komponenten und eigene Themes — eigene Anpassungen bleiben dabei erhalten.",
       },
       {
         title: "Vorschau und Barrierefreiheit prüfen",
         description:
-          "Betrachten Sie das Ergebnis als Komponenten-Übersicht, Verwaltungsoberfläche und Landingpage auf Desktop, Tablet und Smartphone und übernehmen Sie bei Bedarf die Kontrast-Vorschläge.",
+          "Das Ergebnis erscheint als Komponenten-Übersicht, Verwaltungsoberfläche und Landingpage auf Desktop, Tablet und Smartphone; die Kontrast-Vorschläge lassen sich bei Bedarf übernehmen.",
       },
       {
         title: "Exportieren",
         description:
-          "Laden Sie das Designsystem im gewünschten Format herunter. Das Paket enthält ausschließlich HTML und CSS beziehungsweise CSS-nahe Konfiguration, keinen JavaScript-Code.",
+          "Das Designsystem im gewünschten Format herunterladen. Das Paket enthält ausschließlich HTML und CSS beziehungsweise CSS-nahe Konfiguration, keinen JavaScript-Code.",
       },
     ],
     privacy:
-      "Gestaltung, Vorschau, Import und Barrierefreiheits-Prüfung laufen in Ihrem Browser; ohne Premium wird nichts gespeichert, auch nicht im Browser-Speicher. Für eine Website-Analyse lädt unser Server genau die angegebene Seite und ihre Stylesheets, entfernt Skripte und gibt nur das an Ihren Browser weiter — Texte, Bilder und Logos der Seite werden nicht übernommen. Beim Export erzeugt der Server die Datei aus Ihrem aktuellen Entwurf und speichert ihn nicht.",
+      "Gestaltung, Vorschau, Import und Barrierefreiheits-Prüfung laufen im Browser; ohne Premium wird nichts gespeichert, auch nicht im Browser-Speicher. Für eine Website-Analyse lädt unser Server genau die angegebene Seite und ihre Stylesheets, entfernt Skripte und gibt nur das an den Browser weiter — Texte, Bilder und Logos der Seite werden nicht übernommen. Beim Export erzeugt der Server die Datei aus dem aktuellen Entwurf und speichert ihn nicht.",
     faq: [
       {
         q: "Brauche ich CSS-Kenntnisse?",
@@ -66,7 +66,7 @@ const guide: ToolGuideSet = {
       },
       {
         q: "Was passiert mit meinen eigenen CSS-Regeln, wenn ich neu generiere?",
-        a: "Sie bleiben erhalten. Eigene Regeln stehen am Ende des Stylesheets außerhalb der Kaskadenebenen und haben damit immer Vorrang. Das Studio zeigt an, welche erzeugten Werte sie überschreiben.",
+        a: "Eigene Anpassungen bleiben erhalten. Eigene Regeln stehen am Ende des Stylesheets außerhalb der Kaskadenebenen und haben damit immer Vorrang. Das Studio zeigt an, welche erzeugten Werte sie überschreiben.",
       },
       {
         q: "Ist das exportierte Designsystem barrierefrei?",
@@ -78,7 +78,7 @@ const guide: ToolGuideSet = {
       },
       {
         q: "Werden bei der Website-Analyse auch Unterseiten gelesen?",
-        a: "Nein. Analysiert wird ausschließlich die eingegebene HTTPS-Adresse mit ihren Stylesheets. Leitet die Seite weiter, nennt das Studio das Ziel, lädt es aber erst, wenn Sie es selbst eingeben.",
+        a: "Nein. Analysiert wird ausschließlich die eingegebene HTTPS-Adresse mit ihren Stylesheets. Leitet die Seite weiter, nennt das Studio das Ziel, lädt es aber erst, wenn es selbst eingegeben wird.",
       },
     ],
     related: ["kontrast-checker", "visitenkarten-designer", "json-formatter"],

@@ -1,17 +1,17 @@
 import type { ToolGuideSet } from "~/lib/guides";
 
 const guide: ToolGuideSet = {
-  updatedAt: "2026-09-02",
+  updatedAt: "2026-10-21",
   de: {
     intro: [
-      "Eine Datenschutzerklärung beantwortet eine einzige Frage, und zwar für jede Verarbeitung einzeln: Was passiert mit meinen Daten, und mit welchem Recht? Genau daran scheitern die meisten frei verfügbaren Muster. Sie zählen auf, welche Dienste eine Website einsetzt, nennen aber weder den Zweck noch die Rechtsgrundlage — und damit erfüllen sie Art. 13 der Datenschutz-Grundverordnung nicht, obwohl der Text vollständig aussieht.",
-      "Dieser Generator arbeitet mit Bausteinen. Sie tragen den Verantwortlichen ein und kreuzen an, was auf Ihre Website zutrifft: externes Hosting, Server-Logdateien, Kontaktformular, Cookies, Webanalyse, Newsletter, Kartendienst, Schriftarten, Videos, soziale Netzwerke, Zahlungsdienstleister, Buchungssystem, Chat, Bewerbungen, Übermittlung in ein Drittland. Zu jedem gesetzten Haken erscheint ein Abschnitt mit Zweck und Rechtsgrundlage; ein entfernter Haken nimmt ihn wieder heraus.",
-      "Der Unterschied zwischen Einwilligung und berechtigtem Interesse ist dabei fest verdrahtet und nicht Geschmackssache. Webanalyse, eingebundene Karten, Videos und von außen geladene Schriftarten werden hier auf Art. 6 Abs. 1 lit. a DSGVO in Verbindung mit § 25 Abs. 1 TDDDG gestützt, also auf eine Einwilligung. Ein Muster, das an diesen Stellen ein berechtigtes Interesse behauptet, schreibt eine falsche Angabe auf Ihre Seite — und sie steht dort schwarz auf weiß.",
+      "Eine Datenschutzerklärung beantwortet eine einzige Frage, und zwar für jede Verarbeitung einzeln: Was passiert mit meinen Daten, und mit welchem Recht? Genau daran scheitern die meisten frei verfügbaren Muster. Diese Muster zählen auf, welche Dienste eine Website einsetzt, nennen aber weder den Zweck noch die Rechtsgrundlage — und damit erfüllen sie Art. 13 der Datenschutz-Grundverordnung nicht, obwohl der Text vollständig aussieht.",
+      "Dieser Generator arbeitet mit Bausteinen. Erst kommt der Verantwortliche hinein, dann ein Haken bei allem, was auf die Website zutrifft: externes Hosting, Server-Logdateien, Kontaktformular, Cookies, Webanalyse, Newsletter, Kartendienst, Schriftarten, Videos, soziale Netzwerke, Zahlungsdienstleister, Buchungssystem, Chat, Bewerbungen, Übermittlung in ein Drittland. Zu jedem gesetzten Haken erscheint ein Abschnitt mit Zweck und Rechtsgrundlage; ein entfernter Haken nimmt ihn wieder heraus.",
+      "Der Unterschied zwischen Einwilligung und berechtigtem Interesse ist dabei fest verdrahtet und nicht Geschmackssache. Webanalyse, eingebundene Karten, Videos und von außen geladene Schriftarten werden hier auf Art. 6 Abs. 1 lit. a DSGVO in Verbindung mit § 25 Abs. 1 TDDDG gestützt, also auf eine Einwilligung. Ein Muster, das an diesen Stellen ein berechtigtes Interesse behauptet, schreibt eine falsche Angabe auf die eigene Seite — und sie steht dort schwarz auf weiß.",
     ],
     useCases: [
       {
         title: "Website ohne Analyse und ohne Werbung",
-        text: "Der häufigste Fall bei kleinen Betrieben: Hosting, Server-Logdateien, ein Kontaktformular, sonst nichts. Nehmen Sie die Haken bei allem heraus, was Sie nicht einsetzen — der Text wird dadurch kürzer und richtiger.",
+        text: "Der häufigste Fall bei kleinen Betrieben: Hosting, Server-Logdateien, ein Kontaktformular, sonst nichts. Alles, was nicht im Einsatz ist, bleibt ohne Haken — der Text wird dadurch kürzer und richtiger.",
       },
       {
         title: "Onlineshop mit Zahlungsdienstleister",
@@ -27,19 +27,19 @@ const guide: ToolGuideSet = {
       },
       {
         title: "Die eigene Erklärung gegenlesen",
-        text: "Stellen Sie den Text neu zusammen und vergleichen Sie ihn Abschnitt für Abschnitt mit dem, was auf Ihrer Seite steht. Auffällig sind meist Dienste, die längst abgeschaltet sind, und fehlende Rechtsgrundlagen.",
+        text: "Den Text neu zusammenstellen und Abschnitt für Abschnitt mit dem vergleichen, was auf der Seite steht. Auffällig sind meist Dienste, die längst abgeschaltet sind, und fehlende Rechtsgrundlagen.",
       },
     ],
     steps: [
       {
         title: "Verantwortlichen eintragen",
         description:
-          "Name, vollständige Anschrift und eine Kontaktmöglichkeit. Wenn Sie eine datenschutzbeauftragte Person benannt haben, kommt deren Kontakt dazu; ohne Benennung bleibt der Abschnitt weg, statt eine Stelle zu erfinden, die es nicht gibt.",
+          "Name, vollständige Anschrift und eine Kontaktmöglichkeit. Ist eine datenschutzbeauftragte Person benannt, kommt deren Kontakt dazu; ohne Benennung bleibt der Abschnitt weg, statt eine Stelle zu erfinden, die es nicht gibt.",
       },
       {
         title: "Betrieb der Website ankreuzen",
         description:
-          "Externes Hosting und Server-Logdateien treffen auf nahezu jede Website zu. Wo Sie den Anbieter und den Serverstandort kennen, tragen Sie beides ein — die Angabe macht aus einer allgemeinen Formel eine überprüfbare Aussage.",
+          "Externes Hosting und Server-Logdateien treffen auf nahezu jede Website zu. Wo Anbieter und Serverstandort bekannt sind, gehören beide hinein — die Angabe macht aus einer allgemeinen Formel eine überprüfbare Aussage.",
       },
       {
         title: "Kontaktwege und Auswertung wählen",
@@ -54,11 +54,11 @@ const guide: ToolGuideSet = {
       {
         title: "Prüfen, kopieren, einbinden",
         description:
-          "Lesen Sie die Vorschau gegen das, was Ihre Seite tatsächlich lädt. Dann kopieren Sie den Text oder laden ihn als Datei herunter und verlinken ihn von jeder Seite aus — üblicherweise aus der Fußzeile.",
+          "Die Vorschau gegen das lesen, was die Seite tatsächlich lädt. Dann den Text kopieren oder als Datei herunterladen und von jeder Seite aus verlinken — üblicherweise aus der Fußzeile.",
       },
     ],
     privacy:
-      "Alles, was Sie eintragen, bleibt auf Ihrem Gerät: die Anschrift Ihres Betriebs, die Namen Ihrer Dienstleister, der Kontakt Ihrer datenschutzbeauftragten Person. Der Text entsteht im Browser, es gibt keine Übertragung an einen Server und nichts wird gespeichert. Bei einem Werkzeug für Datenschutztexte wäre alles andere auch schwer zu erklären — die Liste der eingesetzten Dienste ist ein recht genaues Abbild der technischen Ausstattung eines Betriebs.",
+      "Alles, was eingetragen wird, bleibt auf dem Gerät: die Anschrift des Betriebs, die Namen der Dienstleister, der Kontakt der datenschutzbeauftragten Person. Der Text entsteht im Browser, es gibt keine Übertragung an einen Server und nichts wird gespeichert. Bei einem Werkzeug für Datenschutztexte wäre alles andere auch schwer zu erklären — die Liste der eingesetzten Dienste ist ein recht genaues Abbild der technischen Ausstattung eines Betriebs.",
     faq: [
       {
         q: "Warum stützt der Text die Webanalyse nicht auf ein berechtigtes Interesse?",
@@ -74,11 +74,11 @@ const guide: ToolGuideSet = {
       },
       {
         q: "Brauche ich eine datenschutzbeauftragte Person?",
-        a: "Nicht jeder Betrieb. Eine Benennungspflicht besteht unter anderem, wenn die Kerntätigkeit in umfangreicher Verarbeitung besonderer Datenkategorien oder in umfangreicher regelmäßiger Beobachtung besteht. Kreuzen Sie das Feld nur an, wenn Sie tatsächlich jemanden benannt haben — eine erfundene Stelle im Text ist schlechter als keine.",
+        a: "Nicht jeder Betrieb. Eine Benennungspflicht besteht unter anderem, wenn die Kerntätigkeit in umfangreicher Verarbeitung besonderer Datenkategorien oder in umfangreicher regelmäßiger Beobachtung besteht. Das Feld gehört nur angekreuzt, wenn tatsächlich jemand benannt ist — eine erfundene Stelle im Text ist schlechter als keine.",
       },
       {
         q: "Ersetzt dieses Werkzeug eine anwaltliche Prüfung?",
-        a: "Nein. Es setzt ein Muster aus Bausteinen zusammen und zeigt, welche Angaben zu welcher Verarbeitung gehören. Ob die Auswahl zu Ihrem Betrieb passt und ob Sie alle Verarbeitungen erfasst haben, kann es nicht wissen. Lassen Sie den Text prüfen, bevor Sie ihn veröffentlichen.",
+        a: "Nein. Es setzt ein Muster aus Bausteinen zusammen und zeigt, welche Angaben zu welcher Verarbeitung gehören. Ob die Auswahl zum Betrieb passt und ob alle Verarbeitungen erfasst sind, kann es nicht wissen. Vor der Veröffentlichung gehört der Text in eine rechtliche Prüfung.",
       },
     ],
     related: ["impressum-generator", "ki-kennzeichnung-bilder"],

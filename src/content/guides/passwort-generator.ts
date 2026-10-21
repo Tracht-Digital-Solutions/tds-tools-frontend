@@ -1,12 +1,12 @@
 import type { ToolGuideSet } from "~/lib/guides";
 
 const guide: ToolGuideSet = {
-  updatedAt: "2026-08-18",
+  updatedAt: "2026-10-21",
   de: {
     intro: [
       "Die meisten Passwörter in kleinen Betrieben sind gewachsen, nicht gewählt: der Firmenname mit einer Jahreszahl, der Ort mit einem Ausrufezeichen, ein Muster, das sich auf der Tastatur gut anfühlt. Angriffe raten heute aber nicht Zeichen für Zeichen, sondern probieren Listen aus geleakten Passwörtern und ihre naheliegenden Abwandlungen durch. Gegen diese Listen hilft nur eines: ein Passwort, das niemand gewählt hat, sondern der Zufall.",
-      "Dieser Generator erzeugt genau solche Passwörter. Länge und Zeichenauswahl — Großbuchstaben, Kleinbuchstaben, Ziffern, Sonderzeichen — stellen Sie selbst ein, und eine Anzeige schätzt die Stärke des Ergebnisses ein. Auf Wunsch bleiben leicht verwechselbare Zeichen wie große i, kleine L, Null und großes O außen vor: sinnvoll überall dort, wo ein Passwort auch einmal vorgelesen oder abgeschrieben werden muss.",
-      "Zur Einordnung: Länge wirkt stärker als Sonderzeichen. Ein zwanzig Zeichen langes Passwort aus Buchstaben und Ziffern ist erheblich schwerer zu brechen als ein achtstelliges mit drei Sonderzeichen — und Sie müssen sich ohnehin keines von beiden merken, wenn Sie einen Passwortmanager verwenden.",
+      "Dieser Generator erzeugt genau solche Passwörter. Länge und Zeichenauswahl — Großbuchstaben, Kleinbuchstaben, Ziffern, Sonderzeichen — sind frei einstellbar, und eine Anzeige schätzt die Stärke des Ergebnisses ein. Auf Wunsch bleiben leicht verwechselbare Zeichen wie große i, kleine L, Null und großes O außen vor: sinnvoll überall dort, wo ein Passwort auch einmal vorgelesen oder abgeschrieben werden muss.",
+      "Zur Einordnung: Länge wirkt stärker als Sonderzeichen. Ein zwanzig Zeichen langes Passwort aus Buchstaben und Ziffern ist erheblich schwerer zu brechen als ein achtstelliges mit drei Sonderzeichen — und mit einem Passwortmanager muss ohnehin niemand eines von beiden auswendig kennen.",
     ],
     useCases: [
       {
@@ -34,26 +34,26 @@ const guide: ToolGuideSet = {
       {
         title: "Länge festlegen",
         description:
-          "Stellen Sie die gewünschte Länge über den Schieberegler ein. Für Zugänge, die ein Mensch tippt, sind sechzehn Zeichen ein guter Ausgangspunkt; für alles, was in einem Passwortmanager liegt, dürfen es deutlich mehr sein.",
+          "Die gewünschte Länge über den Schieberegler einstellen. Für Zugänge, die ein Mensch tippt, sind sechzehn Zeichen ein guter Ausgangspunkt; für alles, was in einem Passwortmanager liegt, dürfen es deutlich mehr sein.",
       },
       {
         title: "Zeichenarten auswählen",
         description:
-          "Aktivieren Sie Großbuchstaben, Kleinbuchstaben, Ziffern und Sonderzeichen nach Bedarf. Manche Systeme verbieten bestimmte Sonderzeichen — dann schalten Sie sie hier ab, statt das Ergebnis hinterher von Hand zu verändern.",
+          "Großbuchstaben, Kleinbuchstaben, Ziffern und Sonderzeichen nach Bedarf aktivieren. Manche Systeme verbieten bestimmte Sonderzeichen — die werden dann hier abgeschaltet, statt das Ergebnis hinterher von Hand zu verändern.",
       },
       {
         title: "Verwechselbare Zeichen ausschließen",
         description:
-          "Wenn das Passwort vorgelesen, abgeschrieben oder ausgedruckt wird, blenden Sie große i, kleine L, Null und großes O aus. Das kostet etwas Stärke und erspart die Rückfrage, ob das nun eine Eins oder ein L war.",
+          "Wenn das Passwort vorgelesen, abgeschrieben oder ausgedruckt wird, bleiben große i, kleine L, Null und großes O besser draußen. Das kostet etwas Stärke und erspart die Rückfrage, ob das nun eine Eins oder ein L war.",
       },
       {
         title: "Erzeugen, prüfen, übernehmen",
         description:
-          "Lassen Sie sich ein neues Passwort erzeugen, achten Sie auf die Stärkeanzeige und kopieren Sie es direkt in Ihren Passwortmanager. Legen Sie es dort ab, bevor Sie die Seite schließen — das Werkzeug speichert nichts.",
+          "Ein neues Passwort erzeugen, auf die Stärkeanzeige achten und es direkt in den Passwortmanager kopieren. Dort gehört es abgelegt, bevor die Seite zugeht — das Werkzeug speichert nichts.",
       },
     ],
     privacy:
-      "Das Passwort entsteht in Ihrem Browser über den kryptografischen Zufallsgenerator des Systems und verlässt Ihr Gerät nicht. Es wird nicht übertragen, nicht protokolliert und nirgends zwischengespeichert; nach dem Schließen der Seite ist es weg. Bei einem Passwortgenerator ist das der entscheidende Punkt — ein Dienst, der das Passwort auf seinem Server erzeugt, kennt es, und Sie können nicht überprüfen, was er damit tut.",
+      "Das Passwort entsteht im Browser über den kryptografischen Zufallsgenerator des Systems und verlässt das Gerät nicht. Es wird nicht übertragen, nicht protokolliert und nirgends zwischengespeichert; nach dem Schließen der Seite ist es weg. Bei einem Passwortgenerator ist das der entscheidende Punkt — ein Dienst, der das Passwort auf seinem Server erzeugt, kennt es, und niemand kann überprüfen, was er damit tut.",
     faq: [
       {
         q: "Wie lang sollte ein Passwort sein?",
@@ -61,7 +61,7 @@ const guide: ToolGuideSet = {
       },
       {
         q: "Ist der Zufall hier wirklich zufällig?",
-        a: "Das Werkzeug nutzt die Schnittstelle crypto.getRandomValues des Browsers, also den kryptografisch sicheren Zufallsgenerator des Betriebssystems. Das ist derselbe Mechanismus, auf dem auch die Verschlüsselung Ihrer Verbindungen aufbaut — kein simpler Zufall wie bei Math.random.",
+        a: "Das Werkzeug nutzt die Schnittstelle crypto.getRandomValues des Browsers, also den kryptografisch sicheren Zufallsgenerator des Betriebssystems. Das ist derselbe Mechanismus, auf dem auch die Verschlüsselung jeder sicheren Verbindung aufbaut — kein simpler Zufall wie bei Math.random.",
       },
       {
         q: "Muss ich Passwörter regelmäßig wechseln?",
@@ -69,11 +69,11 @@ const guide: ToolGuideSet = {
       },
       {
         q: "Wie merke ich mir solche Passwörter?",
-        a: "Gar nicht. Nutzen Sie einen Passwortmanager und merken Sie sich genau ein starkes Hauptpasswort. Alles andere liegt verschlüsselt im Manager und wird beim Anmelden eingesetzt.",
+        a: "Gar nicht. Ein Passwortmanager braucht genau ein starkes Hauptpasswort im Kopf. Alles andere liegt verschlüsselt im Manager und wird beim Anmelden eingesetzt.",
       },
       {
         q: "Kann ich das Werkzeug im Betrieb einsetzen?",
-        a: "Ja, es ist kostenlos, ohne Anmeldung nutzbar und läuft lokal — es gibt keine Übertragung, die eine betriebliche Richtlinie verletzen könnte. Wenn Sie Zugänge für mehrere Personen strukturiert verwalten wollen, ist ein Passwortmanager der nächste Schritt.",
+        a: "Ja, es ist kostenlos, ohne Anmeldung nutzbar und läuft lokal — es gibt keine Übertragung, die eine betriebliche Richtlinie verletzen könnte. Sollen Zugänge für mehrere Personen strukturiert verwaltet werden, ist ein Passwortmanager der nächste Schritt.",
       },
     ],
     related: ["qr-code-generator", "json-formatter"],

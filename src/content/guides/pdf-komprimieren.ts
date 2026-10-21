@@ -1,10 +1,10 @@
 import type { ToolGuideSet } from "~/lib/guides";
 
 const guide: ToolGuideSet = {
-  updatedAt: "2026-08-18",
+  updatedAt: "2026-10-21",
   de: {
     intro: [
-      "Ein PDF wird fast nie vom Text groß, sondern von den Bildern darin. Ein eingescannter Vertrag, ein Angebot mit Produktfotos, ein bebildertes Protokoll — der Text darin wiegt ein paar Kilobyte, die Fotos einige Megabyte. Genau dort setzt dieses Werkzeug an: Es sucht die eingebetteten Bilder, rechnet sie in der von Ihnen gewählten Qualität neu und schreibt sie an dieselbe Stelle zurück.",
+      "Ein PDF wird fast nie vom Text groß, sondern von den Bildern darin. Ein eingescannter Vertrag, ein Angebot mit Produktfotos, ein bebildertes Protokoll — der Text darin wiegt ein paar Kilobyte, die Fotos einige Megabyte. Genau dort setzt dieses Werkzeug an: Es sucht die eingebetteten Bilder, rechnet sie in der gewählten Qualität neu und schreibt sie an dieselbe Stelle zurück.",
       "Der Rest des Dokuments bleibt dabei unangetastet. Text bleibt Text und damit durchsuchbar und markierbar, Vektorgrafiken bleiben scharf, Verlinkungen und die Seitenreihenfolge bleiben, wie sie waren. Das ist der Unterschied zu Werkzeugen, die jede Seite in ein Bild verwandeln: Die Datei wird zwar auch kleiner, aber aus einem Dokument wird ein Stapel Fotos, in dem sich nichts mehr suchen lässt.",
       "Wie viel dabei herauskommt, hängt am Ausgangsmaterial. Ein Scan mit 300 dpi lässt sich meist auf ein Viertel eindampfen, ohne dass es am Bildschirm auffällt. Ein reines Textdokument dagegen enthält nichts, was sich neu rechnen ließe — dann sagt das Werkzeug genau das, statt eine Verbesserung zu behaupten, die es nicht gibt.",
     ],
@@ -33,23 +33,23 @@ const guide: ToolGuideSet = {
     steps: [
       {
         title: "PDF auswählen",
-        description: "Wählen Sie die Datei aus, die kleiner werden soll. Sie wird ausschließlich in Ihrem Browser geöffnet und nirgendwohin übertragen; auch sehr große Dateien sind kein Problem, sie brauchen nur etwas länger.",
+        description: "Die Datei auswählen, die kleiner werden soll. Geöffnet wird sie ausschließlich im Browser und nirgendwohin übertragen; auch sehr große Dateien sind kein Problem, sie brauchen nur etwas länger.",
       },
       {
         title: "Bildqualität festlegen",
-        description: "Der Regler steuert, wie stark die enthaltenen Bilder neu gerechnet werden. 65 Prozent ist ein guter Startwert für Dokumente, die am Bildschirm gelesen werden; für einen Ausdruck in guter Qualität sollten Sie eher bei 80 Prozent bleiben.",
+        description: "Der Regler steuert, wie stark die enthaltenen Bilder neu gerechnet werden. 65 Prozent ist ein guter Startwert für Dokumente, die am Bildschirm gelesen werden; für einen Ausdruck in guter Qualität passen eher 80 Prozent.",
       },
       {
         title: "Bildbreite begrenzen",
-        description: "Ein Foto mit 4000 Pixeln Breite bringt in einem A4-Dokument nichts, das nie größer als 2000 Pixel gedruckt wird. Die Begrenzung ist deshalb oft der größere Hebel als die Qualität — probieren Sie 1600 Pixel, bevor Sie die Qualität weiter senken.",
+        description: "Ein Foto mit 4000 Pixeln Breite bringt in einem A4-Dokument nichts, das nie größer als 2000 Pixel gedruckt wird. Die Begrenzung ist deshalb oft der größere Hebel als die Qualität — erst 1600 Pixel ausprobieren, dann die Qualität weiter senken.",
       },
       {
         title: "Ergebnis prüfen",
-        description: "Nach dem Herunterladen steht die Ersparnis in Prozent unter dem Knopf. Öffnen Sie die Datei einmal und sehen Sie sich die bildlastigste Seite an: Was dort gut aussieht, sieht im ganzen Dokument gut aus.",
+        description: "Nach dem Herunterladen steht die Ersparnis in Prozent unter dem Knopf. Ein Blick auf die bildlastigste Seite der fertigen Datei genügt: Was dort gut aussieht, sieht im ganzen Dokument gut aus.",
       },
     ],
     privacy:
-      "Die Datei wird vollständig in Ihrem Browser geöffnet, verarbeitet und wieder gespeichert. Nichts davon wird auf einen Server übertragen, und es entsteht auch keine Kopie im Netz — das ist bei Verträgen, Personalunterlagen und Angeboten der eigentliche Punkt, denn ein Dokument, das man zum Verkleinern hochlädt, hat man aus der Hand gegeben.",
+      "Die Datei wird vollständig im Browser geöffnet, verarbeitet und wieder gespeichert. Nichts davon wird auf einen Server übertragen, und es entsteht auch keine Kopie im Netz — das ist bei Verträgen, Personalunterlagen und Angeboten der eigentliche Punkt, denn ein Dokument, das man zum Verkleinern hochlädt, hat man aus der Hand gegeben.",
     faq: [
       {
         q: "Leidet die Qualität des Textes?",

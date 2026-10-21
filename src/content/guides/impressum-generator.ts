@@ -1,12 +1,12 @@
 import type { ToolGuideSet } from "~/lib/guides";
 
 const guide: ToolGuideSet = {
-  updatedAt: "2026-09-02",
+  updatedAt: "2026-10-21",
   de: {
     intro: [
       "Ein Impressum ist keine Höflichkeit, sondern eine Auskunft: Wer betreibt diese Seite, und wo ist diese Person erreichbar, wenn etwas zu klären ist? § 5 des Digitale-Dienste-Gesetzes verlangt diese Angaben von jedem, der eine Website geschäftsmäßig betreibt — und „geschäftsmäßig“ beginnt deutlich früher, als die meisten annehmen. Eine Seite, auf der eine Leistung beschrieben und eine Telefonnummer genannt wird, ist bereits erfasst.",
-      "Dieser Generator stellt ein Muster aus Ihren Angaben zusammen. Sie wählen die Rechtsform, tragen Anschrift und Kontakt ein und kreuzen an, was auf Ihren Betrieb zutrifft: Registereintrag, Umsatzsteuer-Identifikationsnummer, ein reglementierter Beruf mit Kammer, eine Aufsichtsbehörde, eine redaktionell verantwortliche Person nach dem Medienstaatsvertrag. Jede Ankreuzung fügt genau einen Abschnitt hinzu, jede zurückgenommene Ankreuzung entfernt ihn wieder.",
-      "Zwei Dinge unterscheiden das Ergebnis von den Mustern, die seit Jahren unverändert im Netz stehen. Es verweist nicht auf die Online-Streitbeilegungsplattform der Europäischen Kommission — die wurde im Juli 2025 abgeschaltet, der Link führt seither ins Leere. Und es fragt nicht nach Ihrer Steuernummer: Ins Impressum gehört die Umsatzsteuer-Identifikationsnummer, nicht die Nummer, unter der Ihr Finanzamt Sie führt.",
+      "Dieser Generator stellt ein Muster aus den eigenen Angaben zusammen: Rechtsform, Anschrift und Kontakt, dazu ein Haken bei allem, was auf den Betrieb zutrifft: Registereintrag, Umsatzsteuer-Identifikationsnummer, ein reglementierter Beruf mit Kammer, eine Aufsichtsbehörde, eine redaktionell verantwortliche Person nach dem Medienstaatsvertrag. Jede Ankreuzung fügt genau einen Abschnitt hinzu, jede zurückgenommene Ankreuzung entfernt ihn wieder.",
+      "Zwei Dinge unterscheiden das Ergebnis von den Mustern, die seit Jahren unverändert im Netz stehen. Es verweist nicht auf die Online-Streitbeilegungsplattform der Europäischen Kommission — die wurde im Juli 2025 abgeschaltet, der Link führt seither ins Leere. Und es fragt nicht nach der Steuernummer: Ins Impressum gehört die Umsatzsteuer-Identifikationsnummer, nicht die Nummer, unter der das Finanzamt einen Betrieb führt.",
     ],
     useCases: [
       {
@@ -27,7 +27,7 @@ const guide: ToolGuideSet = {
       },
       {
         title: "Ein altes Impressum überprüfen",
-        text: "Stellen Sie Ihre Angaben neu zusammen und vergleichen Sie das Ergebnis mit dem, was auf Ihrer Seite steht. Vor allem der ODR-Verweis steht noch in erstaunlich vielen Impressen.",
+        text: "Die Angaben neu zusammenstellen und das Ergebnis mit dem vergleichen, was auf der Seite steht. Vor allem der ODR-Verweis steht noch in erstaunlich vielen Impressen.",
       },
     ],
     steps: [
@@ -49,16 +49,16 @@ const guide: ToolGuideSet = {
       {
         title: "Streitbeilegung entscheiden",
         description:
-          "Sie erklären entweder, dass Sie an einem Schlichtungsverfahren vor einer Verbraucherschlichtungsstelle nicht teilnehmen, oder Sie benennen die zuständige Stelle. Beides ist zulässig; die Angabe selbst ist es, die nicht fehlen darf.",
+          "Entweder steht dort, dass der Betrieb an einem Schlichtungsverfahren vor einer Verbraucherschlichtungsstelle nicht teilnimmt, oder die zuständige Stelle ist benannt. Beides ist zulässig; die Angabe selbst ist es, die nicht fehlen darf.",
       },
       {
         title: "Prüfen und übernehmen",
         description:
-          "Lesen Sie die Vorschau Zeile für Zeile gegen Ihren Registerauszug und Ihre Gewerbeanmeldung. Dann kopieren Sie den Text oder laden ihn als Datei herunter und fügen ihn in Ihr Redaktionssystem ein.",
+          "Die Vorschau Zeile für Zeile gegen Registerauszug und Gewerbeanmeldung lesen. Dann den Text kopieren oder als Datei herunterladen und ins Redaktionssystem einfügen.",
       },
     ],
     privacy:
-      "Ihre Firmendaten bleiben in Ihrem Browser. Der Text entsteht während der Eingabe im Gerät und wird an keinen Server übertragen, gespeichert oder ausgewertet — dieses Werkzeug hat gar keine Gegenstelle, an die es etwas senden könnte. Das ist bei einem Impressum kein akademischer Unterschied: Die Angaben, die Sie hier eintragen, umfassen die private Anschrift, wenn Sie von zu Hause aus arbeiten, und einige verbreitete Generatoren senden genau diese Eingaben zur Erzeugung an ihren Server.",
+      "Die Firmendaten bleiben im Browser. Der Text entsteht während der Eingabe im Gerät und wird an keinen Server übertragen, gespeichert oder ausgewertet — dieses Werkzeug hat gar keine Gegenstelle, an die es etwas senden könnte. Das ist bei einem Impressum kein akademischer Unterschied: Die Angaben hier umfassen die private Anschrift, wenn von zu Hause aus gearbeitet wird, und einige verbreitete Generatoren senden genau diese Eingaben zur Erzeugung an ihren Server.",
     faq: [
       {
         q: "Brauche ich ein Impressum, wenn ich nur eine kleine Seite ohne Shop habe?",
@@ -74,11 +74,11 @@ const guide: ToolGuideSet = {
       },
       {
         q: "Reicht ein Postfach als Anschrift?",
-        a: "Nein. Verlangt ist eine ladungsfähige Anschrift, unter der Post tatsächlich zugestellt werden kann. Wer von zu Hause aus arbeitet, muss deshalb in aller Regel die Wohnanschrift angeben. Eine Geschäftsadresse bei einem Anbieter, der Post entgegennimmt und weiterleitet, kann eine Alternative sein — das sollten Sie im Einzelfall prüfen lassen.",
+        a: "Nein. Verlangt ist eine ladungsfähige Anschrift, unter der Post tatsächlich zugestellt werden kann. Wer von zu Hause aus arbeitet, muss deshalb in aller Regel die Wohnanschrift angeben. Eine Geschäftsadresse bei einem Anbieter, der Post entgegennimmt und weiterleitet, kann eine Alternative sein — das gehört im Einzelfall geprüft.",
       },
       {
         q: "Ersetzt dieses Werkzeug die Prüfung durch eine Kanzlei?",
-        a: "Nein. Es stellt ein Muster aus Ihren Angaben zusammen und macht sichtbar, welche Abschnitte üblicherweise dazugehören. Welche Pflichtangaben Ihr Betrieb tatsächlich schuldet, hängt an Rechtsform, Branche und Tätigkeit — und diese Umstände kennt das Werkzeug nicht. Lassen Sie den fertigen Text prüfen, bevor Sie ihn veröffentlichen.",
+        a: "Nein. Es stellt ein Muster aus den Angaben zusammen und macht sichtbar, welche Abschnitte üblicherweise dazugehören. Welche Pflichtangaben ein Betrieb tatsächlich schuldet, hängt an Rechtsform, Branche und Tätigkeit — und diese Umstände kennt das Werkzeug nicht. Vor der Veröffentlichung gehört der fertige Text in eine rechtliche Prüfung.",
       },
     ],
     related: ["datenschutzerklaerung-generator", "barrierefreiheitserklaerung-generator"],

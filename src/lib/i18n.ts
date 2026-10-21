@@ -127,8 +127,8 @@ export const copy = {
     },
     guideHeading: "Ratgeber",
     guideUseCases: "Typische Anwendungsfälle",
-    guideSteps: "So gehen Sie vor",
-    guidePrivacy: "Was mit Ihren Daten passiert",
+    guideSteps: "Schritt für Schritt",
+    guidePrivacy: "Was mit den Daten passiert",
     guideFaq: "Häufige Fragen",
     relatedHeading: "Passt dazu",
     breadcrumbAll: "Alle Tools",
@@ -152,7 +152,7 @@ export const copy = {
      * ever named. `marketing.test.ts` pins both.
      */
     serviceNote:
-      "Diese Werkzeuge lösen kleine Aufgaben. Wenn bei Ihnen ein ganzer Ablauf hakt, baue ich Websites, Webshops und individuelle Lösungen für kleine Betriebe.",
+      "Diese Werkzeuge lösen kleine Aufgaben. Wo ein ganzer Ablauf hakt, entwickelt Tracht Digital Solutions Websites, Webshops und individuelle Lösungen für kleine Betriebe.",
     serviceNoteCta: "Unverbindlich anfragen",
     languageSwitch: "Sprache",
     languageOther: "English",

@@ -1,11 +1,11 @@
 import type { ToolGuideSet } from "~/lib/guides";
 
 const guide: ToolGuideSet = {
-  updatedAt: "2026-10-12",
+  updatedAt: "2026-10-21",
   de: {
     intro: [
-      "Ein abfotografierter Beleg ist für einen Computer ein Bild und sonst nichts. Der Betrag darauf ist nicht suchbar, die Adresse nicht kopierbar, die Rechnungsnummer nicht in ein Formular zu übernehmen — obwohl alles davon gut lesbar vor einem liegt. Texterkennung schließt diese Lücke: Sie liest die Buchstaben aus dem Bild heraus und gibt sie als Text zurück.",
-      "Die Texterkennung (OCR) auf dieser Seite liest Text aus Bildern, Fotos und Scans, erkennt deutsche und englische Sprache und arbeitet dabei vollständig auf Ihrem Gerät. Auch die Spracherkennungsdaten kommen von dieser Website und nicht von einem fremden Anbieter — beim Öffnen des Werkzeugs entsteht also keine Verbindung nach außen, und das Bild selbst wird ohnehin nicht übertragen.",
+      "Ein abfotografierter Beleg ist für einen Computer ein Bild und sonst nichts. Der Betrag darauf ist nicht suchbar, die Adresse nicht kopierbar, die Rechnungsnummer nicht in ein Formular zu übernehmen — obwohl alles davon gut lesbar vor einem liegt. Texterkennung schließt diese Lücke: Das Verfahren liest die Buchstaben aus dem Bild heraus und gibt sie als Text zurück.",
+      "Die Texterkennung (OCR) auf dieser Seite liest Text aus Bildern, Fotos und Scans, erkennt deutsche und englische Sprache und arbeitet dabei vollständig auf dem eigenen Gerät. Auch die Spracherkennungsdaten kommen von dieser Website und nicht von einem fremden Anbieter — beim Öffnen des Werkzeugs entsteht also keine Verbindung nach außen, und das Bild selbst wird ohnehin nicht übertragen.",
       "Wie gut das Ergebnis wird, entscheidet fast ausschließlich die Vorlage. Ein gerade aufgenommener, scharfer Ausschnitt mit gutem Kontrast liefert Text, den man nur noch überfliegen muss. Ein schräges Foto bei Kunstlicht liefert Bruchstücke. Es lohnt sich deshalb mehr, die Aufnahme zu wiederholen, als am Ergebnis herumzubessern.",
     ],
     useCases: [
@@ -33,11 +33,11 @@ const guide: ToolGuideSet = {
     steps: [
       {
         title: "Bild auswählen",
-        description: "Wählen Sie ein Foto, einen Screenshot oder einen Bildscan. Direkt aus einem PDF wird hier nicht gelesen — wandeln Sie in dem Fall zuerst die betreffende Seite in ein Bild um, am besten mit 300 dpi.",
+        description: "Ein Foto, einen Screenshot oder einen Bildscan auswählen. Direkt aus einem PDF wird hier nicht gelesen — in dem Fall wird die betreffende Seite zuerst zu einem Bild, am besten mit 300 dpi.",
       },
       {
         title: "Sprache festlegen",
-        description: "Wählen Sie die Sprache, in der der Text verfasst ist. Beide gleichzeitig ist möglich und sinnvoll bei gemischten Vorlagen, kostet aber etwas Genauigkeit und Zeit — bei rein deutschem Text bleiben Sie besser bei Deutsch.",
+        description: "Die Sprache wählen, in der der Text verfasst ist. Beide gleichzeitig ist möglich und sinnvoll bei gemischten Vorlagen, kostet aber etwas Genauigkeit und Zeit — bei rein deutschem Text ist Deutsch allein die bessere Wahl.",
       },
       {
         title: "Erkennung starten",
@@ -45,11 +45,11 @@ const guide: ToolGuideSet = {
       },
       {
         title: "Ergebnis nachsehen und übernehmen",
-        description: "Der erkannte Text erscheint in einem bearbeitbaren Feld — Zahlen und Eigennamen sollten Sie kurz gegenlesen, denn dort sind Verwechslungen am wahrscheinlichsten. Danach kopieren Sie ihn oder speichern ihn als Textdatei.",
+        description: "Der erkannte Text erscheint in einem bearbeitbaren Feld — Zahlen und Eigennamen lohnen ein kurzes Gegenlesen, denn dort sind Verwechslungen am wahrscheinlichsten. Danach lässt er sich kopieren oder als Textdatei speichern.",
       },
     ],
     privacy:
-      "Die Erkennung läuft vollständig auf Ihrem Gerät: Das Bild wird nicht hochgeladen, und die dafür nötige Software samt Sprachdaten wird von dieser Website ausgeliefert statt von einem fremden Anbieter. Beim Öffnen des Werkzeugs wird also keine dritte Seite aufgerufen — was gerade dann zählt, wenn auf der Vorlage Kundendaten oder Beträge stehen.",
+      "Die Erkennung läuft vollständig auf dem eigenen Gerät: Das Bild wird nicht hochgeladen, und die dafür nötige Software samt Sprachdaten wird von dieser Website ausgeliefert statt von einem fremden Anbieter. Beim Öffnen des Werkzeugs wird also keine dritte Seite aufgerufen — was gerade dann zählt, wenn auf der Vorlage Kundendaten oder Beträge stehen.",
     faq: [
       {
         q: "Warum ist die Erkennung stellenweise falsch?",

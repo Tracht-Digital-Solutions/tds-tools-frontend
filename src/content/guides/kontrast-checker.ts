@@ -1,11 +1,11 @@
 import type { ToolGuideSet } from "~/lib/guides";
 
 const guide: ToolGuideSet = {
-  updatedAt: "2026-09-02",
+  updatedAt: "2026-10-21",
   de: {
     intro: [
       "Ob Text lesbar ist, entscheidet nicht der Geschmack, sondern der Unterschied zwischen Schrift- und Hintergrundhelligkeit. Die Web-Richtlinien für Barrierefreiheit drücken ihn als Verhältnis aus: 1:1 bedeutet identische Farben, 21:1 ist Schwarz auf Weiß. Ab 4,5:1 gilt normaler Text als ausreichend lesbar, große Schrift ab 3:1 — das ist die Stufe AA. Wer strenger sein will, zielt auf AAA mit 7:1.",
-      "Dieses Werkzeug rechnet das Verhältnis für ein Farbpaar aus und sagt Ihnen unmittelbar, welche Stufen bestanden sind: AA und AAA, jeweils für normale und für große Schrift. Sie geben die beiden Farben als Hex-Wert ein oder wählen sie über die Farbfelder.",
+      "Dieses Werkzeug rechnet das Verhältnis für ein Farbpaar aus und zeigt unmittelbar, welche Stufen bestanden sind: AA und AAA, jeweils für normale und für große Schrift. Die beiden Farben kommen als Hex-Wert hinein oder über die Farbfelder.",
       "Der praktische Nutzen liegt weniger in der Note als in der Korrektur: Fast jedes Corporate-Grau auf Weiß scheitert knapp, und fast immer reicht es, die Schrift eine Spur dunkler zu ziehen, statt die Gestaltung umzuwerfen. Wichtig ist außerdem, was oft vergessen wird — geprüft wird jede Kombination, die tatsächlich vorkommt: heller Text auf einem Farbbutton, Text auf einem Bild, der Hinweistext in einem Formularfeld.",
     ],
     useCases: [
@@ -34,7 +34,7 @@ const guide: ToolGuideSet = {
       {
         title: "Textfarbe eintragen",
         description:
-          "Geben Sie die Schriftfarbe als Hex-Wert ein oder wählen Sie sie über das Farbfeld. Kurzformen wie #fff werden ebenso verstanden wie die lange Schreibweise.",
+          "Die Schriftfarbe als Hex-Wert eingeben oder über das Farbfeld wählen. Kurzformen wie #fff werden ebenso verstanden wie die lange Schreibweise.",
       },
       {
         title: "Hintergrundfarbe eintragen",
@@ -49,11 +49,11 @@ const guide: ToolGuideSet = {
       {
         title: "Nachjustieren",
         description:
-          "Reicht es nicht, verändern Sie zuerst die Helligkeit der Schriftfarbe und lassen den Farbton stehen — so bleibt der Markeneindruck erhalten und der Text wird trotzdem lesbar.",
+          "Reicht es nicht, ändert sich zuerst die Helligkeit der Schriftfarbe, und der Farbton bleibt stehen — so bleibt der Markeneindruck erhalten und der Text wird trotzdem lesbar.",
       },
     ],
     privacy:
-      "Die Berechnung läuft vollständig in Ihrem Browser; es werden keine Farbwerte übertragen oder gespeichert. Das Werkzeug prüft ausschließlich das Kontrastverhältnis nach WCAG 2.1 — es ist damit ein Baustein der Barrierefreiheit, nicht deren Nachweis. Tastaturbedienbarkeit, sinnvolle Alternativtexte, Formularbeschriftungen und eine schlüssige Überschriftenstruktur gehören ebenso dazu.",
+      "Die Berechnung läuft vollständig im Browser; es werden keine Farbwerte übertragen oder gespeichert. Das Werkzeug prüft ausschließlich das Kontrastverhältnis nach WCAG 2.1 — es ist damit ein Baustein der Barrierefreiheit, nicht deren Nachweis. Tastaturbedienbarkeit, sinnvolle Alternativtexte, Formularbeschriftungen und eine schlüssige Überschriftenstruktur gehören ebenso dazu.",
     faq: [
       {
         q: "Was ist der Unterschied zwischen AA und AAA?",
@@ -69,7 +69,7 @@ const guide: ToolGuideSet = {
       },
       {
         q: "Mein Grau scheitert knapp. Was tun?",
-        a: "Ziehen Sie die Helligkeit der Schriftfarbe herunter und lassen Sie den Farbton unverändert. In den meisten Fällen genügen wenige Prozent, um von 4,1:1 auf über 4,5:1 zu kommen, ohne dass sich der Gesamteindruck sichtbar ändert.",
+        a: "Die Helligkeit der Schriftfarbe herunterziehen und den Farbton unverändert lassen. In den meisten Fällen genügen wenige Prozent, um von 4,1:1 auf über 4,5:1 zu kommen, ohne dass sich der Gesamteindruck sichtbar ändert.",
       },
       {
         q: "Muss meine Website barrierefrei sein?",

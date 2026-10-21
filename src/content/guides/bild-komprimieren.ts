@@ -1,11 +1,11 @@
 import type { ToolGuideSet } from "~/lib/guides";
 
 const guide: ToolGuideSet = {
-  updatedAt: "2026-10-12",
+  updatedAt: "2026-10-21",
   de: {
     intro: [
       "Bilder aus einer Handy- oder Systemkamera sind für das Web unnötig groß: vier bis zwölf Megabyte, mehrere tausend Pixel breit. Auf einer Website wird davon meist ein Ausschnitt von tausend Pixeln angezeigt — der Rest wird übertragen, bezahlt und dann verworfen. Auf dem Telefon im Mobilfunknetz entscheidet das darüber, ob eine Seite in einer oder in acht Sekunden steht.",
-      "Mit diesem Werkzeug komprimieren Sie Bilder und verkleinern die Größe von JPG-Dateien, ohne sie irgendwo hochzuladen. Sie wählen mehrere Fotos auf einmal aus oder ziehen sie in das Feld, legen eine maximale Breite und Höhe in Pixeln fest und speichern das Ergebnis als JPG, WebP, PNG oder — in aktuellen Browsern — als AVIF. Muss eine feste Grenze eingehalten werden, etwa höchstens 500 KB für ein Bewerbungsportal, tragen Sie eine Zielgröße ein: Die Qualität wird dann automatisch gerade so weit gesenkt, bis die Datei passt.",
+      "Dieses Werkzeug komprimiert Bilder und verkleinert JPG-Dateien, ohne sie irgendwo hochzuladen. Mehrere Fotos lassen sich auf einmal auswählen oder in das Feld ziehen; dazu kommen eine maximale Breite und Höhe in Pixeln und das Ausgabeformat JPG, WebP, PNG oder — in aktuellen Browsern — AVIF. Muss eine feste Grenze eingehalten werden, etwa höchstens 500 KB für ein Bewerbungsportal, genügt eine Zielgröße: Die Qualität wird dann automatisch gerade so weit gesenkt, bis die Datei passt.",
       "Für die Bildkomprimierung im Alltag gilt eine einfache Faustregel: Zielbreite 1600 Pixel für großflächige Bilder, 800 für Bilder in Textbreite, Qualität um 80 Prozent. Damit landen die meisten Fotos zwischen 60 und 300 Kilobyte — statt bei acht Megabyte — ohne dass ein Unterschied auffällt. Den größten Anteil daran hat übrigens das Verkleinern der Pixelmaße, nicht die Qualitätsstufe.",
     ],
     useCases: [
@@ -38,31 +38,31 @@ const guide: ToolGuideSet = {
       {
         title: "Bilder auswählen",
         description:
-          "Wählen Sie eine oder mehrere Dateien im Format JPG, PNG, WebP, AVIF oder GIF, ziehen Sie sie in das Feld oder fügen Sie einen Screenshot mit Strg+V ein. Jede Datei erscheint mit ihrer Größe und ihren Pixelmaßen.",
+          "Eine oder mehrere Dateien im Format JPG, PNG, WebP, AVIF oder GIF auswählen, in das Feld ziehen oder einen Screenshot mit Strg+V einfügen. Jede Datei erscheint mit ihrer Größe und ihren Pixelmaßen.",
       },
       {
         title: "Voreinstellung wählen oder Maße festlegen",
         description:
-          "Die Voreinstellungen Website, E-Mail, Social Media und Vorschaubild füllen Format, Qualität und Maße passend aus. Alternativ legen Sie selbst eine maximale Breite und Höhe in Pixeln fest; das Seitenverhältnis bleibt erhalten, kleinere Bilder werden nie vergrößert.",
+          "Die Voreinstellungen Website, E-Mail, Social Media und Vorschaubild füllen Format, Qualität und Maße passend aus. Alternativ lassen sich maximale Breite und Höhe in Pixeln selbst festlegen; das Seitenverhältnis bleibt erhalten, kleinere Bilder werden nie vergrößert.",
       },
       {
         title: "Qualität oder Zielgröße einstellen",
         description:
-          "Zwischen 70 und 85 Prozent Qualität liegt der brauchbare Bereich; darunter werden Kanten und Flächen sichtbar unruhig. Muss die Datei unter eine feste Grenze, tragen Sie die Zielgröße in KB ein — das Werkzeug senkt die Qualität und notfalls die Pixelmaße, bis sie passt.",
+          "Zwischen 70 und 85 Prozent Qualität liegt der brauchbare Bereich; darunter werden Kanten und Flächen sichtbar unruhig. Muss die Datei unter eine feste Grenze, kommt die Zielgröße in KB ins Feld — das Werkzeug senkt die Qualität und notfalls die Pixelmaße, bis sie passt.",
       },
       {
         title: "Komprimieren und vergleichen",
         description:
-          "Ein Klick auf „Komprimieren“ verarbeitet alle Bilder nacheinander. Neben jeder Datei stehen alte und neue Größe samt Ersparnis; unter „Vorher und nachher vergleichen“ sehen Sie beide Fassungen nebeneinander.",
+          "Ein Klick auf „Komprimieren“ verarbeitet alle Bilder nacheinander. Neben jeder Datei stehen alte und neue Größe samt Ersparnis; unter „Vorher und nachher vergleichen“ stehen beide Fassungen nebeneinander.",
       },
       {
         title: "Herunterladen",
         description:
-          "Speichern Sie jedes Bild einzeln oder alle zusammen als ZIP-Datei. Der ursprüngliche Dateiname bleibt erhalten und bekommt den Zusatz „-komprimiert“, damit nichts versehentlich überschrieben wird.",
+          "Jedes Bild lässt sich einzeln speichern, alle zusammen als ZIP-Datei. Der ursprüngliche Dateiname bleibt erhalten und bekommt den Zusatz „-komprimiert“, damit nichts versehentlich überschrieben wird.",
       },
     ],
     privacy:
-      "Die Bilder werden nicht hochgeladen. Sie werden im Browser über ein Canvas-Element neu gezeichnet und dort komprimiert, und auch die ZIP-Datei entsteht auf Ihrem Gerät — die Fotos verlassen es zu keinem Zeitpunkt. Das ist der eigentliche Unterschied zu den verbreiteten Kompressionsdiensten: Dort landen Ihre Aufnahmen auf einem fremden Server, was bei Baustellen-, Schadens- oder Personenaufnahmen nicht nur eine Geschmacksfrage ist, sondern eine datenschutzrechtliche.",
+      "Die Bilder werden nicht hochgeladen. Der Browser zeichnet sie über ein Canvas-Element neu und komprimiert sie dort, und auch die ZIP-Datei entsteht auf dem eigenen Gerät — die Fotos verlassen es zu keinem Zeitpunkt. Das ist der eigentliche Unterschied zu den verbreiteten Kompressionsdiensten: Dort landen die Aufnahmen auf einem fremden Server, was bei Baustellen-, Schadens- oder Personenaufnahmen nicht nur eine Geschmacksfrage ist, sondern eine datenschutzrechtliche.",
     faq: [
       {
         q: "Wie verkleinere ich die Größe einer JPG-Datei?",
@@ -70,11 +70,11 @@ const guide: ToolGuideSet = {
       },
       {
         q: "Kann ich ein Bild auf eine bestimmte Größe in KB komprimieren?",
-        a: "Ja. Tragen Sie unter „Zielgröße (KB)“ die Grenze ein, zum Beispiel 200 oder 500. Das Werkzeug sucht die höchste Qualität, mit der die Datei darunter bleibt, und verkleinert erst danach die Pixelmaße. Ist die Grenze selbst so nicht erreichbar, erhalten Sie die kleinstmögliche Datei und einen Hinweis.",
+        a: "Ja. Unter „Zielgröße (KB)“ kommt die Grenze hinein, zum Beispiel 200 oder 500. Das Werkzeug sucht die höchste Qualität, mit der die Datei darunter bleibt, und verkleinert erst danach die Pixelmaße. Ist die Grenze selbst so nicht erreichbar, entsteht die kleinstmögliche Datei, zusammen mit einem Hinweis.",
       },
       {
         q: "Kann ich mehrere Bilder gleichzeitig komprimieren?",
-        a: "Ja. Wählen Sie beliebig viele Dateien aus oder ziehen Sie einen ganzen Stapel hinein; alle werden mit denselben Einstellungen verarbeitet und lassen sich gesammelt als ZIP herunterladen. Fallen bei Ihnen regelmäßig ganze Ordner an, lässt sich das auch dauerhaft automatisieren.",
+        a: "Ja. Beliebig viele Dateien lassen sich auswählen oder als ganzer Stapel hineinziehen; alle werden mit denselben Einstellungen verarbeitet und lassen sich gesammelt als ZIP herunterladen. Fallen in einem Betrieb regelmäßig ganze Ordner an, lässt sich das auch dauerhaft automatisieren.",
       },
       {
         q: "Was ist der Unterschied zwischen Bild komprimieren und Bildgröße ändern?",
@@ -82,7 +82,7 @@ const guide: ToolGuideSet = {
       },
       {
         q: "Verliert das Bild sichtbar an Qualität?",
-        a: "Bei 80 Prozent Qualität sehen die wenigsten Betrachter einen Unterschied zum Original, während die Datei um ein Vielfaches kleiner wird. Deutlich sichtbar wird die Kompression meist erst unterhalb von 60 Prozent, zuerst an weichen Farbverläufen wie einem Himmel. Der Vorher-nachher-Vergleich zeigt es Ihnen direkt.",
+        a: "Bei 80 Prozent Qualität sehen die wenigsten Betrachter einen Unterschied zum Original, während die Datei um ein Vielfaches kleiner wird. Deutlich sichtbar wird die Kompression meist erst unterhalb von 60 Prozent, zuerst an weichen Farbverläufen wie einem Himmel. Der Vorher-nachher-Vergleich zeigt es direkt.",
       },
       {
         q: "JPEG, WebP, PNG oder AVIF?",
@@ -90,11 +90,11 @@ const guide: ToolGuideSet = {
       },
       {
         q: "Werden meine Bilder auf einen Server geladen?",
-        a: "Nein. Die gesamte Verarbeitung findet in Ihrem Browser statt; es gibt keine Gegenstelle, die die Dateien entgegennehmen könnte. Sie können die Seite nach dem Laden vom Netz trennen und weiterarbeiten.",
+        a: "Nein. Die gesamte Verarbeitung findet im Browser statt; es gibt keine Gegenstelle, die die Dateien entgegennehmen könnte. Nach dem Laden funktioniert die Seite auch ohne Netz weiter.",
       },
       {
         q: "Bleiben Aufnahmedatum und Ort erhalten?",
-        a: "Nein. Beim Neuzeichnen im Browser gehen die EXIF-Daten verloren, also auch GPS-Koordinaten und Kameramodell. Für Bilder im Internet ist das ein Vorteil — wenn Sie die Angaben brauchen, bewahren Sie das Original auf.",
+        a: "Nein. Beim Neuzeichnen im Browser gehen die EXIF-Daten verloren, also auch GPS-Koordinaten und Kameramodell. Für Bilder im Internet ist das ein Vorteil — wer die Angaben braucht, bewahrt das Original auf.",
       },
     ],
     related: ["pdf-komprimieren", "bilder-zu-pdf", "pdf-werkzeuge", "ki-kennzeichnung-bilder"],

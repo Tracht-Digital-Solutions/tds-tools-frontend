@@ -1,12 +1,12 @@
 import type { ToolGuideSet } from "~/lib/guides";
 
 const guide: ToolGuideSet = {
-  updatedAt: "2026-10-12",
+  updatedAt: "2026-10-21",
   de: {
     intro: [
-      "Wer Werbung schaltet, einen Newsletter verschickt oder einen Flyer verteilt, sieht in der Website-Statistik hinterher meist nur eines: Es kamen Besucher. Woher genau, bleibt offen — und damit auch die Frage, welche Maßnahme sich gelohnt hat. UTM-Parameter lösen das, indem sie die Herkunft an den Link selbst hängen. Ihre Statistik liest sie aus und ordnet den Besuch der richtigen Quelle zu.",
-      "Ein solcher Link sieht aus wie Ihre normale Adresse, ergänzt um Angaben wie utm_source, utm_medium und utm_campaign. Dieser UTM-Generator baut ihn kostenlos und korrekt zusammen: Es kodiert Sonderzeichen, wandelt Ihre Eingaben in saubere Kleinschreibung ohne Leerzeichen um und zeigt den fertigen Link zum Kopieren an.",
-      "Der Nutzen steht und fällt mit der Einheitlichkeit. Newsletter, newsletter und Newsletter-Mai sind für die Auswertung drei verschiedene Quellen, und niemand merkt es, bis der Bericht in fünf Zeilen zerfällt, die alle dasselbe meinen. Legen Sie sich einmal eine Schreibweise fest und halten Sie sich daran.",
+      "Wer Werbung schaltet, einen Newsletter verschickt oder einen Flyer verteilt, sieht in der Website-Statistik hinterher meist nur eines: Es kamen Besucher. Woher genau, bleibt offen — und damit auch die Frage, welche Maßnahme sich gelohnt hat. UTM-Parameter lösen das, indem sie die Herkunft an den Link selbst hängen. Die Statistik liest sie aus und ordnet den Besuch der richtigen Quelle zu.",
+      "Ein solcher Link sieht aus wie die normale Adresse, ergänzt um Angaben wie utm_source, utm_medium und utm_campaign. Dieser UTM-Generator baut ihn kostenlos und korrekt zusammen: Es kodiert Sonderzeichen, wandelt die Eingaben in saubere Kleinschreibung ohne Leerzeichen um und zeigt den fertigen Link zum Kopieren an.",
+      "Der Nutzen steht und fällt mit der Einheitlichkeit. Newsletter, newsletter und Newsletter-Mai sind für die Auswertung drei verschiedene Quellen, und niemand merkt es, bis der Bericht in fünf Zeilen zerfällt, die alle dasselbe meinen. Einmal eine Schreibweise festlegen und dabei bleiben.",
     ],
     useCases: [
       {
@@ -23,7 +23,7 @@ const guide: ToolGuideSet = {
       },
       {
         title: "Einträge in Verzeichnissen",
-        text: "Branchenbücher, Kleinanzeigen und Kartendienste bekommen jeweils eigene Links — so sehen Sie, welcher Eintrag seinen Preis wert ist.",
+        text: "Branchenbücher, Kleinanzeigen und Kartendienste bekommen jeweils eigene Links — so zeigt sich, welcher Eintrag seinen Preis wert ist.",
       },
       {
         title: "Social-Media-Profile",
@@ -34,7 +34,7 @@ const guide: ToolGuideSet = {
       {
         title: "Zieladresse eintragen",
         description:
-          "Beginnen Sie mit der Seite, auf der die Besucher landen sollen — vollständig mit https:// und möglichst genau die passende Unterseite, nicht pauschal die Startseite.",
+          "Am Anfang steht die Seite, auf der die Besucher landen sollen — vollständig mit https:// und möglichst genau die passende Unterseite, nicht pauschal die Startseite.",
       },
       {
         title: "Quelle und Medium angeben",
@@ -44,24 +44,24 @@ const guide: ToolGuideSet = {
       {
         title: "Kampagne benennen",
         description:
-          "Die Kampagne fasst eine Maßnahme zusammen, etwa fruehjahr-2026 oder tag-der-offenen-tuer. Verwenden Sie denselben Namen über alle Kanäle einer Aktion, sonst lässt sie sich später nicht als Ganzes auswerten.",
+          "Die Kampagne fasst eine Maßnahme zusammen, etwa fruehjahr-2026 oder tag-der-offenen-tuer. Derselbe Name gilt über alle Kanäle einer Aktion, sonst lässt sie sich später nicht als Ganzes auswerten.",
       },
       {
         title: "Link kopieren und einsetzen",
         description:
-          "Kopieren Sie den fertigen Link und verwenden Sie ihn überall dort, wo diese Quelle verlinkt. Prüfen Sie ihn einmal im Browser: Die Seite muss normal laden, die Parameter stehen sichtbar in der Adresszeile.",
+          "Den fertigen Link kopieren und überall dort verwenden, wo diese Quelle verlinkt. Einmal im Browser prüfen: Die Seite muss normal laden, die Parameter stehen sichtbar in der Adresszeile.",
       },
     ],
     privacy:
-      "Der Link wird ausschließlich in Ihrem Browser zusammengesetzt; weder Zieladresse noch Kampagnenname werden übertragen oder gespeichert. Ein Hinweis zur Sache selbst: UTM-Parameter sind für Ihre Besucher sichtbar, sie stehen in der Adresszeile. Schreiben Sie deshalb nichts hinein, was nicht öffentlich sein soll — interne Kürzel, Budgetzahlen oder Kundennamen haben dort nichts verloren.",
+      "Der Link wird ausschließlich im Browser zusammengesetzt; weder Zieladresse noch Kampagnenname werden übertragen oder gespeichert. Ein Hinweis zur Sache selbst: UTM-Parameter sind für Besucher sichtbar, sie stehen in der Adresszeile. Hinein gehört deshalb nichts, was nicht öffentlich sein soll — interne Kürzel, Budgetzahlen oder Kundennamen haben dort nichts verloren.",
     faq: [
       {
         q: "Welche Parameter brauche ich wirklich?",
-        a: "utm_source und utm_medium sind das Minimum, utm_campaign kommt dazu, sobald Sie mehrere Aktionen unterscheiden wollen. utm_term und utm_content sind Feinheiten für Suchanzeigen und A/B-Tests und können in den meisten Fällen leer bleiben.",
+        a: "utm_source und utm_medium sind das Minimum, utm_campaign kommt dazu, sobald mehrere Aktionen zu unterscheiden sind. utm_term und utm_content sind Feinheiten für Suchanzeigen und A/B-Tests und können in den meisten Fällen leer bleiben.",
       },
       {
         q: "Schadet ein UTM-Link meinem SEO?",
-        a: "Für Links, die auf Ihre eigene Seite zeigen und in Werbung, Newslettern oder auf Druckerzeugnissen stehen, ist das unkritisch. Verwenden Sie UTM-Parameter aber nicht für die interne Verlinkung innerhalb Ihrer Website — dort erzeugen sie mehrere Adressen für dieselbe Seite und stören die Auswertung.",
+        a: "Für Links, die auf die eigene Seite zeigen und in Werbung, Newslettern oder auf Druckerzeugnissen stehen, ist das unkritisch. Für die interne Verlinkung innerhalb der eigenen Website taugen UTM-Parameter aber nicht — dort erzeugen sie mehrere Adressen für dieselbe Seite und stören die Auswertung.",
       },
       {
         q: "Warum werden meine Eingaben kleingeschrieben?",

@@ -1,12 +1,12 @@
 import type { ToolGuideSet } from "~/lib/guides";
 
 const guide: ToolGuideSet = {
-  updatedAt: "2026-08-18",
+  updatedAt: "2026-10-21",
   de: {
     intro: [
       "Arbeitszeiten müssen aufgezeichnet werden, und in vielen kleinen Betrieben passiert das bis heute auf einem Zettel im Fahrzeug oder in einer Tabelle, die jeden Monat neu zusammenkopiert wird. Beides funktioniert, solange niemand nachfragt — und beides ist mühsam in genau dem Moment, in dem jemand nachfragt.",
-      "Dieses Werkzeug erzeugt einen Arbeitszeitnachweis für einen ganzen Monat als PDF. Sie tragen Beginn, Ende und Pause ein, die Tagesstunden und die Monatssumme werden gerechnet, und heraus kommt ein Blatt zum Ausdrucken und Unterschreiben — mit Namen, Betrieb, Monat und je einem Feld für beide Unterschriften.",
-      "Damit das Ausfüllen nicht dreißigmal dasselbe ist, gibt es eine Vorbelegung: Sie geben die üblichen Zeiten einmal an, übernehmen sie für alle Werktage und ändern danach nur noch die Ausnahmen. Wochenenden bleiben leer, sind aber vorhanden — ein Samstagseinsatz muss schließlich irgendwo hin.",
+      "Dieses Werkzeug erzeugt einen Arbeitszeitnachweis für einen ganzen Monat als PDF. Beginn, Ende und Pause eintragen, Tagesstunden und Monatssumme werden gerechnet, und heraus kommt ein Blatt zum Ausdrucken und Unterschreiben — mit Namen, Betrieb, Monat und je einem Feld für beide Unterschriften.",
+      "Damit das Ausfüllen nicht dreißigmal dasselbe ist, gibt es eine Vorbelegung: Die üblichen Zeiten einmal angeben, für alle Werktage übernehmen und danach nur noch die Ausnahmen ändern. Wochenenden bleiben leer, sind aber vorhanden — ein Samstagseinsatz muss schließlich irgendwo hin.",
     ],
     useCases: [
       {
@@ -37,19 +37,19 @@ const guide: ToolGuideSet = {
       },
       {
         title: "Werktage vorbelegen",
-        description: "Tragen Sie die üblichen Zeiten und die Pause ein und übernehmen Sie sie. Alle Montage bis Freitage des Monats werden damit gefüllt; Wochenenden bleiben bewusst leer, lassen sich aber einzeln ausfüllen.",
+        description: "Die üblichen Zeiten und die Pause eintragen und übernehmen. Alle Montage bis Freitage des Monats werden damit gefüllt; Wochenenden bleiben bewusst leer, lassen sich aber einzeln ausfüllen.",
       },
       {
         title: "Abweichungen eintragen",
-        description: "Ändern Sie danach nur noch die Tage, die anders liefen: Urlaub und Krankheit bleiben leer und zählen nicht mit, verkürzte Tage bekommen andere Zeiten, und in die Bemerkung passt ein kurzer Hinweis wie Urlaub oder Baustelle.",
+        description: "Danach nur noch die Tage ändern, die anders liefen: Urlaub und Krankheit bleiben leer und zählen nicht mit, verkürzte Tage bekommen andere Zeiten, und in die Bemerkung passt ein kurzer Hinweis wie Urlaub oder Baustelle.",
       },
       {
         title: "Summe prüfen und erzeugen",
-        description: "Unter der Tabelle stehen die Monatssumme und die Zahl der Arbeitstage. Stimmen beide, erzeugen Sie das PDF; die Unterschriftenfelder stehen am unteren Rand des Blattes bereit.",
+        description: "Unter der Tabelle stehen die Monatssumme und die Zahl der Arbeitstage. Stimmen beide, ist das PDF an der Reihe; die Unterschriftenfelder stehen am unteren Rand des Blattes bereit.",
       },
     ],
     privacy:
-      "Alle Eingaben bleiben in Ihrem Browser, und das PDF entsteht ebenfalls dort; weder Namen noch Arbeitszeiten werden übertragen oder gespeichert. Arbeitszeitdaten sind Personaldaten, und ein Werkzeug, das sie zur Verarbeitung an einen Server schickt, wäre für diesen Zweck die falsche Wahl.",
+      "Alle Eingaben bleiben im Browser, und das PDF entsteht ebenfalls dort; weder Namen noch Arbeitszeiten werden übertragen oder gespeichert. Arbeitszeitdaten sind Personaldaten, und ein Werkzeug, das sie zur Verarbeitung an einen Server schickt, wäre für diesen Zweck die falsche Wahl.",
     faq: [
       {
         q: "Ersetzt das Blatt eine Zeiterfassung?",
@@ -65,7 +65,7 @@ const guide: ToolGuideSet = {
       },
       {
         q: "Bleiben meine Eingaben erhalten, wenn ich die Seite neu lade?",
-        a: "Nein, die Angaben stehen nur im geöffneten Tab. Erzeugen Sie das PDF, bevor Sie die Seite verlassen — die fertige Datei ist die Fassung, die bleibt.",
+        a: "Nein, die Angaben stehen nur im geöffneten Tab. Das PDF also erzeugen, bevor die Seite zugeht — die fertige Datei ist die Fassung, die bleibt.",
       },
     ],
     related: ["etiketten-drucken", "pdf-werkzeuge"],

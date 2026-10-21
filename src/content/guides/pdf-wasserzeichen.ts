@@ -1,11 +1,11 @@
 import type { ToolGuideSet } from "~/lib/guides";
 
 const guide: ToolGuideSet = {
-  updatedAt: "2026-08-18",
+  updatedAt: "2026-10-21",
   de: {
     intro: [
       "Ein Wasserzeichen sagt einem Dokument an, was es ist. „Entwurf“ quer über der Seite verhindert, dass eine Zwischenfassung als endgültige Rechnung durchgeht; „Kopie“ trennt das Zweitexemplar vom Original; ein Firmenname über einem Angebot macht sichtbar, von wem es stammt, auch wenn nur eine einzelne Seite ausgedruckt weitergereicht wird.",
-      "Dieses Werkzeug setzt einen solchen Schriftzug in ein vorhandenes PDF — mit frei wählbarer Größe, Farbe, Deckkraft und Neigung, auf allen Seiten oder nur auf denen, die Sie angeben. Die vier Anordnungen decken die üblichen Fälle ab: diagonal über die Seite, waagerecht in der Mitte, dezent als Fußzeile oder gekachelt über die gesamte Fläche.",
+      "Dieses Werkzeug setzt einen solchen Schriftzug in ein vorhandenes PDF — mit frei wählbarer Größe, Farbe, Deckkraft und Neigung, auf allen Seiten oder nur auf ausgewählten. Die vier Anordnungen decken die üblichen Fälle ab: diagonal über die Seite, waagerecht in der Mitte, dezent als Fußzeile oder gekachelt über die gesamte Fläche.",
       "Wichtig ist die Erwartung: Ein Wasserzeichen ist eine Kennzeichnung, kein Kopierschutz. Es macht den Status eines Dokuments auf einen Blick erkennbar und erschwert die unbemerkte Weiterverwendung einzelner Seiten. Wer es technisch entfernen will, kann das mit genügend Aufwand — dagegen hilft kein Werkzeug dieser Art, und Anbieter, die etwas anderes versprechen, überversprechen.",
     ],
     useCases: [
@@ -33,7 +33,7 @@ const guide: ToolGuideSet = {
     steps: [
       {
         title: "PDF und Text wählen",
-        description: "Laden Sie das Dokument und tragen Sie den Schriftzug ein. Kurz ist besser: Ein Wort bleibt bei jeder Größe lesbar, ein ganzer Satz zwingt Sie zu einer Schriftgröße, bei der das Wasserzeichen kaum noch auffällt.",
+        description: "Das Dokument laden und den Schriftzug eintragen. Kurz ist besser: Ein Wort bleibt bei jeder Größe lesbar, ein ganzer Satz zwingt zu einer Schriftgröße, bei der das Wasserzeichen kaum noch auffällt.",
       },
       {
         title: "Anordnung festlegen",
@@ -41,15 +41,15 @@ const guide: ToolGuideSet = {
       },
       {
         title: "Deckkraft und Farbe abstimmen",
-        description: "Zwischen 15 und 25 Prozent liegt der Bereich, in dem der Aufdruck deutlich zu sehen ist, ohne den Text darunter zu stören. Prüfen Sie das Ergebnis am besten auf einer Seite mit viel Text, nicht auf dem Deckblatt.",
+        description: "Zwischen 15 und 25 Prozent liegt der Bereich, in dem der Aufdruck deutlich zu sehen ist, ohne den Text darunter zu stören. Geprüft wird das Ergebnis am besten auf einer Seite mit viel Text, nicht auf dem Deckblatt.",
       },
       {
         title: "Seiten eingrenzen und speichern",
-        description: "Bleibt das Feld leer, bekommt jede Seite den Aufdruck. Für eine Kennzeichnung nur auf dem Deckblatt genügt eine 1, für einen Bereich eine Angabe wie 1-3,5. Danach laden Sie das fertige Dokument herunter.",
+        description: "Bleibt das Feld leer, bekommt jede Seite den Aufdruck. Für eine Kennzeichnung nur auf dem Deckblatt genügt eine 1, für einen Bereich eine Angabe wie 1-3,5. Danach steht das fertige Dokument zum Herunterladen bereit.",
       },
     ],
     privacy:
-      "Das Dokument wird ausschließlich in Ihrem Browser geöffnet und dort mit dem Aufdruck versehen; weder die Datei noch der Text des Wasserzeichens verlässt Ihr Gerät. Gerade bei als vertraulich gekennzeichneten Unterlagen wäre alles andere widersinnig — ein Dokument zum Anbringen des Vermerks „Vertraulich“ auf einen fremden Server zu laden, hebt genau die Vertraulichkeit auf, um die es geht.",
+      "Das Dokument wird ausschließlich im Browser geöffnet und dort mit dem Aufdruck versehen; weder die Datei noch der Text des Wasserzeichens verlässt das Gerät. Gerade bei als vertraulich gekennzeichneten Unterlagen wäre alles andere widersinnig — ein Dokument zum Anbringen des Vermerks „Vertraulich“ auf einen fremden Server zu laden, hebt genau die Vertraulichkeit auf, um die es geht.",
     faq: [
       {
         q: "Lässt sich das Wasserzeichen wieder entfernen?",

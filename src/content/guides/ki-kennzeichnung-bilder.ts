@@ -1,12 +1,12 @@
 import type { ToolGuideSet } from "~/lib/guides";
 
 const guide: ToolGuideSet = {
-  updatedAt: "2026-09-02",
+  updatedAt: "2026-10-21",
   de: {
     intro: [
       "Ein Bild, das eine Maschine erzeugt hat, sieht man ihm immer seltener an. Genau deshalb verlangt die KI-Verordnung der Europäischen Union eine Kennzeichnung — und sie verlangt sie zweimal: Wer ein System betreibt, das synthetische Inhalte erzeugt, muss die Ausgabe maschinenlesbar als künstlich erzeugt markieren; wer ein solches Bild veröffentlicht, muss das für die Betrachter offenlegen. Die Transparenzpflichten des Art. 50 greifen ab dem 2. August 2026.",
-      "Dieses Werkzeug bedient beide Hälften. Es brennt eine Plakette mit einem Hinweis wie „KI-generiert“ in das Bild — Ecke, Größe, Deckkraft und Stil wählen Sie selbst — und es schreibt zusätzlich einen maschinenlesbaren Vermerk in die Datei: als Textabschnitt in ein PNG, als Kommentarsegment in ein JPEG. Beides passiert im Browser, ohne Upload und ohne Anmeldung.",
-      "Zwei Dinge sagt das Werkzeug offen, statt sie zu verschweigen. WebP kann den maschinenlesbaren Vermerk nicht tragen; wählen Sie dieses Format, bekommen Sie nur die sichtbare Kennzeichnung, und die Insel weist darauf hin. Und das Bild wird beim Erzeugen neu gezeichnet, wodurch vorhandene Aufnahmedaten des Originals verloren gehen — bei einem Werkzeug, das Metadaten hinzufügt, ist das eine Nebenwirkung, die man kennen sollte.",
+      "Dieses Werkzeug bedient beide Hälften. Es brennt eine Plakette mit einem Hinweis wie „KI-generiert“ in das Bild — Ecke, Größe, Deckkraft und Stil sind frei wählbar — und es schreibt zusätzlich einen maschinenlesbaren Vermerk in die Datei: als Textabschnitt in ein PNG, als Kommentarsegment in ein JPEG. Beides passiert im Browser, ohne Upload und ohne Anmeldung.",
+      "Zwei Dinge sagt das Werkzeug offen, statt sie zu verschweigen. WebP kann den maschinenlesbaren Vermerk nicht tragen; in diesem Format gibt es nur die sichtbare Kennzeichnung, und die Insel weist darauf hin. Und das Bild wird beim Erzeugen neu gezeichnet, wodurch vorhandene Aufnahmedaten des Originals verloren gehen — bei einem Werkzeug, das Metadaten hinzufügt, ist das eine Nebenwirkung, die man kennen sollte.",
     ],
     useCases: [
       {
@@ -19,7 +19,7 @@ const guide: ToolGuideSet = {
       },
       {
         title: "Redaktionelle Illustrationen auf der eigenen Seite",
-        text: "Für den Blog eines Betriebs ist die Plakette die einfachste ehrliche Lösung: Sie steht im Bild und bleibt auch dann erhalten, wenn das Bild weiterverwendet wird.",
+        text: "Für den Blog eines Betriebs ist die Plakette die einfachste ehrliche Lösung: Die Plakette steht im Bild und bleibt auch dann erhalten, wenn das Bild weiterverwendet wird.",
       },
       {
         title: "Bestand nachträglich kennzeichnen",
@@ -39,12 +39,12 @@ const guide: ToolGuideSet = {
       {
         title: "Text und Ecke festlegen",
         description:
-          "Wählen Sie einen der Vorschläge oder schreiben Sie einen eigenen Hinweis. Die Ecke sollte dorthin zeigen, wo im Bild wenig passiert — eine Plakette über einem Gesicht liest sich schlecht und wird beim Zuschneiden zuerst geopfert.",
+          "Einen der Vorschläge nehmen oder einen eigenen Hinweis schreiben. Die Ecke sollte dorthin zeigen, wo im Bild wenig passiert — eine Plakette über einem Gesicht liest sich schlecht und wird beim Zuschneiden zuerst geopfert.",
       },
       {
         title: "Größe, Deckkraft und Stil einstellen",
         description:
-          "Die Größe ist ein Anteil der Bildbreite, damit die Plakette auf einem großen Foto genauso wirkt wie auf einem kleinen. Der Stil kehrt Fläche und Schrift um; wählen Sie den, der sich vom Bildhintergrund an dieser Stelle deutlich absetzt.",
+          "Die Größe ist ein Anteil der Bildbreite, damit die Plakette auf einem großen Foto genauso wirkt wie auf einem kleinen. Der Stil kehrt Fläche und Schrift um; richtig ist der, der sich vom Bildhintergrund an dieser Stelle deutlich absetzt.",
       },
       {
         title: "Format wählen und Hinweis einbetten",
@@ -54,11 +54,11 @@ const guide: ToolGuideSet = {
       {
         title: "Erzeugen und herunterladen",
         description:
-          "Das fertige Bild erscheint unter dem Werkzeug, zusammen mit der Auskunft, ob der Vermerk in der Datei gelandet ist. Prüfen Sie das Ergebnis einmal in voller Größe, bevor Sie es veröffentlichen.",
+          "Das fertige Bild erscheint unter dem Werkzeug, zusammen mit der Auskunft, ob der Vermerk in der Datei gelandet ist. Vor der Veröffentlichung lohnt ein Blick auf das Ergebnis in voller Größe.",
       },
     ],
     privacy:
-      "Ihr Bild verlässt das Gerät nicht. Es wird über eine Zeichenfläche im Browser gelesen, mit der Plakette versehen und dort auch wieder als Datei zusammengesetzt; einen Server, an den es gehen könnte, gibt es in diesem Werkzeug nicht. Das ist bei Bildern eine andere Größenordnung als bei einem Textschnipsel: Ein Foto trägt oft mehr Nebeninformation, als der Absender vermutet — Aufnahmeort, Gerät, Zeitpunkt. Und genau diese Aufnahmedaten verwirft der Zeichenvorgang, worauf das Werkzeug auch hinweist.",
+      "Das Bild verlässt das Gerät nicht. Es wird über eine Zeichenfläche im Browser gelesen, mit der Plakette versehen und dort auch wieder als Datei zusammengesetzt; einen Server, an den es gehen könnte, gibt es in diesem Werkzeug nicht. Das ist bei Bildern eine andere Größenordnung als bei einem Textschnipsel: Ein Foto trägt oft mehr Nebeninformation, als der Absender vermutet — Aufnahmeort, Gerät, Zeitpunkt. Und genau diese Aufnahmedaten verwirft der Zeichenvorgang, worauf das Werkzeug auch hinweist.",
     faq: [
       {
         q: "Ab wann muss ich KI-Bilder kennzeichnen?",
@@ -74,11 +74,11 @@ const guide: ToolGuideSet = {
       },
       {
         q: "Bleiben die EXIF-Daten des Originals erhalten?",
-        a: "Nein. Das Bild wird auf eine Zeichenfläche neu gezeichnet, und dabei gehen Aufnahmedaten wie Kamera, Zeitpunkt und Aufnahmeort verloren. Wenn Sie diese Angaben brauchen, bewahren Sie das Original auf. Für ein rein synthetisches Bild ist der Verlust ohne Bedeutung — es hatte nie welche.",
+        a: "Nein. Das Bild wird auf eine Zeichenfläche neu gezeichnet, und dabei gehen Aufnahmedaten wie Kamera, Zeitpunkt und Aufnahmeort verloren. Wer diese Angaben braucht, bewahrt das Original auf. Für ein rein synthetisches Bild ist der Verlust ohne Bedeutung — es hatte nie welche.",
       },
       {
         q: "Kann jemand die Kennzeichnung wieder entfernen?",
-        a: "Der Vermerk in der Datei lässt sich mit einem Metadatenwerkzeug löschen, und die Plakette lässt sich wegschneiden oder überdecken. Eine fälschungssichere Herkunft ist etwas anderes und braucht kryptografisch signierte Daten. Für die Offenlegung gegenüber Ihrem Publikum ist diese Kennzeichnung dennoch das, was verlangt ist.",
+        a: "Der Vermerk in der Datei lässt sich mit einem Metadatenwerkzeug löschen, und die Plakette lässt sich wegschneiden oder überdecken. Eine fälschungssichere Herkunft ist etwas anderes und braucht kryptografisch signierte Daten. Für die Offenlegung gegenüber dem eigenen Publikum ist diese Kennzeichnung dennoch das, was verlangt ist.",
       },
     ],
     related: ["bild-komprimieren", "datenschutzerklaerung-generator"],

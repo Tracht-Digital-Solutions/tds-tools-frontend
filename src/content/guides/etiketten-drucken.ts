@@ -1,11 +1,11 @@
 import type { ToolGuideSet } from "~/lib/guides";
 
 const guide: ToolGuideSet = {
-  updatedAt: "2026-08-18",
+  updatedAt: "2026-10-21",
   de: {
     intro: [
       "Etikettenbogen sind billig, das Beschriften ist es nicht. Wer einmal versucht hat, dreißig Adressen in einer Textverarbeitung so auf ein Raster zu bringen, dass sie nach dem Druck auch auf den Aufklebern landen, kennt das Ergebnis: zwei verschwendete Bogen und eine Tabelle, die beim nächsten Mal niemand mehr wiederfindet.",
-      "Dieses Werkzeug erzeugt den Bogen als fertiges PDF. Sie wählen das Raster, fügen die Adressen ein — eine je Absatz — und bekommen eine Datei, die Sie ohne weitere Einstellung auf den Etikettenbogen drucken. Die gängigen Formate von 24 bis 40 Etiketten je A4-Seite sind hinterlegt, samt der Ränder und Abstände, die das jeweilige Raster braucht.",
+      "Dieses Werkzeug erzeugt den Bogen als fertiges PDF. Raster wählen, Adressen einfügen — eine je Absatz —, und heraus kommt eine Datei, die ohne weitere Einstellung auf den Etikettenbogen passt. Die gängigen Formate von 24 bis 40 Etiketten je A4-Seite sind hinterlegt, samt der Ränder und Abstände, die das jeweilige Raster braucht.",
       "Zwei Kleinigkeiten machen den Unterschied im Alltag. „Erstes benutztes Feld“ nimmt einen angebrochenen Bogen auf, sodass die ersten, schon abgezogenen Felder freibleiben. Und die Schnittlinien lassen sich zum Prüfen einblenden: einmal auf normalem Papier drucken, gegen den Etikettenbogen halten, und die Passgenauigkeit ist geklärt, bevor der teure Bogen durch den Drucker läuft.",
     ],
     useCases: [
@@ -33,7 +33,7 @@ const guide: ToolGuideSet = {
     steps: [
       {
         title: "Bogen auswählen",
-        description: "Suchen Sie das Raster, das zu Ihrem Etikettenbogen passt. Entscheidend sind die Maße und die Anzahl je Seite, nicht die Marke — ein Bogen eines anderen Herstellers mit demselben Raster passt genauso.",
+        description: "Das Raster suchen, das zum Etikettenbogen passt. Entscheidend sind die Maße und die Anzahl je Seite, nicht die Marke — ein Bogen eines anderen Herstellers mit demselben Raster passt genauso.",
       },
       {
         title: "Adressen einfügen",
@@ -41,19 +41,19 @@ const guide: ToolGuideSet = {
       },
       {
         title: "Angebrochenen Bogen berücksichtigen",
-        description: "Wurden von einem Bogen schon Felder abgezogen, tragen Sie unter „Erstes benutztes Feld“ die Nummer des ersten freien Feldes ein. Gezählt wird zeilenweise von links oben, wie beim Lesen.",
+        description: "Wurden von einem Bogen schon Felder abgezogen, gehört unter „Erstes benutztes Feld“ die Nummer des ersten freien Feldes. Gezählt wird zeilenweise von links oben, wie beim Lesen.",
       },
       {
         title: "Probedruck und Druck",
-        description: "Schalten Sie für den ersten Versuch die Schnittlinien ein und drucken Sie auf normales Papier. Wichtig ist dabei, dass der Drucker das PDF in Originalgröße ausgibt und nicht „an Seite anpassen“ — sonst verschiebt sich das ganze Raster um wenige Millimeter.",
+        description: "Für den ersten Versuch die Schnittlinien einschalten und auf normales Papier drucken. Wichtig ist dabei, dass der Drucker das PDF in Originalgröße ausgibt und nicht „an Seite anpassen“ — sonst verschiebt sich das ganze Raster um wenige Millimeter.",
       },
     ],
     privacy:
-      "Der Bogen entsteht vollständig in Ihrem Browser; die eingefügten Adressen werden weder übertragen noch gespeichert. Bei einer Empfängerliste ist das keine Formalie, sondern der Unterschied zwischen einer internen Arbeitsdatei und einer Kundenliste, die auf einem fremden Server gelandet ist.",
+      "Der Bogen entsteht vollständig im Browser; die eingefügten Adressen werden weder übertragen noch gespeichert. Bei einer Empfängerliste ist das keine Formalie, sondern der Unterschied zwischen einer internen Arbeitsdatei und einer Kundenliste, die auf einem fremden Server gelandet ist.",
     faq: [
       {
         q: "Mein Etikettenbogen steht nicht in der Liste — was nun?",
-        a: "Vergleichen Sie die Maße auf der Verpackung mit den angebotenen Rastern; viele Hersteller verwenden identische Geometrien unter eigenen Nummern. Passt keines exakt, ist das nächstkleinere Raster meist noch brauchbar, weil der Text mittig auf dem Feld sitzt.",
+        a: "Die Maße auf der Verpackung mit den angebotenen Rastern vergleichen; viele Hersteller verwenden identische Geometrien unter eigenen Nummern. Passt keines exakt, ist das nächstkleinere Raster meist noch brauchbar, weil der Text mittig auf dem Feld sitzt.",
       },
       {
         q: "Warum sitzt der Druck ein paar Millimeter daneben?",

@@ -1,17 +1,17 @@
 import type { ToolGuideSet } from "~/lib/guides";
 
 const guide: ToolGuideSet = {
-  updatedAt: "2026-08-18",
+  updatedAt: "2026-10-21",
   de: {
     intro: [
       "JSON ist das Format, in dem sich Programme heute Daten schicken: Schnittstellen antworten damit, Konfigurationsdateien sind darin geschrieben, Exporte aus Warenwirtschaft, Shop oder Buchhaltung liegen oft in dieser Form vor. Solange alles funktioniert, sieht man es nie. Man sieht es genau dann, wenn etwas klemmt — und dann meist als eine einzige, endlos lange Zeile ohne Umbrüche.",
       "Dieses Werkzeug macht daraus lesbaren Text: Es rückt die Struktur ein, prüft sie auf Gültigkeit und nennt bei einem Fehler die Stelle mit Zeile und Spalte, statt nur zu behaupten, irgendwo stimme etwas nicht. Umgekehrt minimiert es auch — entfernt also alle überflüssigen Leerzeichen, wenn die Daten wieder kompakt weitergegeben werden sollen.",
-      "Für den Alltag heißt das: Sie können eine Schnittstellenantwort selbst ansehen, bevor Sie sie weitergeben, und eine abgelehnte Konfigurationsdatei prüfen, ohne zu raten. Häufigste Ursachen sind ein Komma hinter dem letzten Eintrag, einfache statt doppelte Anführungszeichen und eine Klammer, die nicht geschlossen wurde.",
+      "Für den Alltag heißt das: Eine Schnittstellenantwort lässt sich selbst ansehen, bevor sie weitergeht, und eine abgelehnte Konfigurationsdatei prüfen, ohne zu raten. Häufigste Ursachen sind ein Komma hinter dem letzten Eintrag, einfache statt doppelte Anführungszeichen und eine Klammer, die nicht geschlossen wurde.",
     ],
     useCases: [
       {
         title: "Schnittstellenantwort lesbar machen",
-        text: "Eine API-Antwort als eine Zeile ist für Menschen unbrauchbar. Eingerückt sehen Sie in Sekunden, welche Felder tatsächlich geliefert werden.",
+        text: "Eine API-Antwort als eine Zeile ist für Menschen unbrauchbar. Eingerückt ist in Sekunden zu sehen, welche Felder tatsächlich geliefert werden.",
       },
       {
         title: "Abgelehnte Konfiguration prüfen",
@@ -34,7 +34,7 @@ const guide: ToolGuideSet = {
       {
         title: "JSON einfügen",
         description:
-          "Fügen Sie den Inhalt in das Eingabefeld ein — eine ganze Datei, eine Schnittstellenantwort oder auch nur den Ausschnitt, um den es geht.",
+          "Den Inhalt in das Eingabefeld einfügen — eine ganze Datei, eine Schnittstellenantwort oder auch nur den Ausschnitt, um den es geht.",
       },
       {
         title: "Formatieren oder prüfen",
@@ -44,20 +44,20 @@ const guide: ToolGuideSet = {
       {
         title: "Fehlerstelle beheben",
         description:
-          "Springen Sie an die genannte Stelle und prüfen Sie zuerst die üblichen Verdächtigen: ein Komma nach dem letzten Element, einfache Anführungszeichen, ein fehlendes Klammerpaar oder ein Zeilenumbruch mitten in einer Zeichenkette.",
+          "An die genannte Stelle springen und zuerst die üblichen Verdächtigen prüfen: ein Komma nach dem letzten Element, einfache Anführungszeichen, ein fehlendes Klammerpaar oder ein Zeilenumbruch mitten in einer Zeichenkette.",
       },
       {
         title: "Ergebnis übernehmen",
         description:
-          "Kopieren Sie das eingerückte Ergebnis zur Weiterverwendung — oder minimieren Sie es vorher, wenn es maschinell weiterverarbeitet wird.",
+          "Das eingerückte Ergebnis zur Weiterverwendung kopieren — oder vorher minimieren, wenn es maschinell weiterverarbeitet wird.",
       },
     ],
     privacy:
-      "Die Verarbeitung findet vollständig in Ihrem Browser statt; der eingefügte Inhalt wird nicht übertragen, nicht gespeichert und nicht protokolliert. Das ist bei diesem Werkzeug mehr als eine Formalie: In JSON-Daten stehen regelmäßig Kundendaten, Bestellungen, Zugangsschlüssel oder Preise. Wer solche Inhalte in ein beliebiges Online-Formular einfügt, gibt sie aus der Hand — hier verlassen sie das Gerät nicht.",
+      "Die Verarbeitung findet vollständig im Browser statt; der eingefügte Inhalt wird nicht übertragen, nicht gespeichert und nicht protokolliert. Das ist bei diesem Werkzeug mehr als eine Formalie: In JSON-Daten stehen regelmäßig Kundendaten, Bestellungen, Zugangsschlüssel oder Preise. Wer solche Inhalte in ein beliebiges Online-Formular einfügt, gibt sie aus der Hand — hier verlassen sie das Gerät nicht.",
     faq: [
       {
         q: "Werden meine Daten hochgeladen?",
-        a: "Nein. Das Formatieren und Prüfen läuft als JavaScript in Ihrem Browser. Es gibt keinen Server, der den Inhalt entgegennimmt — Sie können die Seite nach dem Laden vom Netz trennen und weiterarbeiten.",
+        a: "Nein. Das Formatieren und Prüfen läuft als JavaScript im Browser. Es gibt keinen Server, der den Inhalt entgegennimmt — nach dem Laden funktioniert die Seite auch ohne Netz weiter.",
       },
       {
         q: "Was bedeutet die Fehlermeldung mit Position?",
@@ -69,7 +69,7 @@ const guide: ToolGuideSet = {
       },
       {
         q: "Kann ich sehr große Dateien verarbeiten?",
-        a: "Bis in den Bereich einiger Megabyte arbeitet das Werkzeug problemlos. Weil alles im Browser läuft, ist die Grenze der Arbeitsspeicher Ihres Geräts — bei sehr großen Exporten wird die Seite langsam, statt eine Fehlermeldung zu zeigen.",
+        a: "Bis in den Bereich einiger Megabyte arbeitet das Werkzeug problemlos. Weil alles im Browser läuft, ist die Grenze der Arbeitsspeicher des Geräts — bei sehr großen Exporten wird die Seite langsam, statt eine Fehlermeldung zu zeigen.",
       },
       {
         q: "Verändert das Formatieren meine Daten?",

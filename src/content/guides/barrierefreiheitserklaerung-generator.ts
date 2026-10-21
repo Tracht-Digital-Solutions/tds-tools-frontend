@@ -1,12 +1,12 @@
 import type { ToolGuideSet } from "~/lib/guides";
 
 const guide: ToolGuideSet = {
-  updatedAt: "2026-09-02",
+  updatedAt: "2026-10-21",
   de: {
     intro: [
       "Seit dem 28. Juni 2025 gilt das Barrierefreiheitsstärkungsgesetz. Es verpflichtet Unternehmen, die bestimmte Dienstleistungen an Verbraucher erbringen — Onlineshops, Buchungs- und Terminsysteme, Bankdienste, Personenbeförderung —, ihre digitalen Angebote barrierefrei zu gestalten und darüber öffentlich Auskunft zu geben. Öffentliche Stellen trifft dieselbe Auskunftspflicht schon länger, allerdings über einen anderen Weg: § 12b des Behindertengleichstellungsgesetzes und die Barrierefreie-Informationstechnik-Verordnung.",
       "Das sind zwei verschiedene Erklärungen, und sie sehen einander zum Verwechseln ähnlich. Der Unterschied steht am Ende: Eine öffentliche Stelle verweist auf die Schlichtungsstelle nach § 16 BGG, ein Unternehmen auf die Marktüberwachungsstelle der Länder. Vertauscht sind beide Texte falsch — und zwar an einer Stelle, die niemand liest, solange sich niemand beschwert. Dieser Generator fragt deshalb als Erstes, wer die Erklärung abgibt, und richtet den ganzen Text danach aus.",
-      "Alles Weitere ist die ehrliche Bestandsaufnahme: Ist das Angebot vollständig, teilweise oder nicht mit dem angewandten Standard vereinbar? Welche Inhalte sind es nicht, und warum? Wie erreicht man Sie, wenn jemand an eine Hürde stößt, und wie schnell antworten Sie? Eine Erklärung, die überall „vollständig vereinbar“ behauptet, ist selten glaubwürdig und im Zweifel eine falsche Angabe.",
+      "Alles Weitere ist die ehrliche Bestandsaufnahme: Ist das Angebot vollständig, teilweise oder nicht mit dem angewandten Standard vereinbar? Welche Inhalte sind es nicht, und warum? Wie erreicht man den Betreiber, wenn jemand an eine Hürde stößt, und wie schnell kommt eine Antwort? Eine Erklärung, die überall „vollständig vereinbar“ behauptet, ist selten glaubwürdig und im Zweifel eine falsche Angabe.",
     ],
     useCases: [
       {
@@ -23,7 +23,7 @@ const guide: ToolGuideSet = {
       },
       {
         title: "Erklärung nach einer Überprüfung fortschreiben",
-        text: "Die Erklärung ist kein einmaliges Dokument. Tragen Sie das neue Prüfdatum ein und kürzen Sie die Liste der Mängel um das, was inzwischen behoben ist.",
+        text: "Die Erklärung ist kein einmaliges Dokument. Nach jeder Prüfung kommt das neue Datum hinein, und die Liste der Mängel verliert, was inzwischen behoben ist.",
       },
       {
         title: "Bestandsaufnahme vor dem Umbau",
@@ -39,7 +39,7 @@ const guide: ToolGuideSet = {
       {
         title: "Angebot und Anbieter benennen",
         description:
-          "Wer gibt die Erklärung ab, und wofür gilt sie? Benennen Sie das Angebot so, wie es die Nutzer kennen — „der Onlineshop shop.beispiel.de“ ist eine bessere Angabe als „unsere digitalen Angebote“.",
+          "Wer gibt die Erklärung ab, und wofür gilt sie? Das Angebot wird so benannt, wie es die Nutzer kennen — „der Onlineshop shop.beispiel.de“ ist eine bessere Angabe als „unsere digitalen Angebote“.",
       },
       {
         title: "Stand der Vereinbarkeit festhalten",
@@ -54,15 +54,15 @@ const guide: ToolGuideSet = {
       {
         title: "Rückmeldeweg festlegen und veröffentlichen",
         description:
-          "Ein erreichbarer Kontaktweg und eine Frist, innerhalb derer Sie antworten. Anschließend den Text übernehmen und dauerhaft auffindbar veröffentlichen, üblicherweise aus der Fußzeile heraus verlinkt.",
+          "Ein erreichbarer Kontaktweg und eine Frist, innerhalb derer eine Antwort kommt. Anschließend den Text übernehmen und dauerhaft auffindbar veröffentlichen, üblicherweise aus der Fußzeile heraus verlinkt.",
       },
     ],
     privacy:
-      "Der Text entsteht vollständig in Ihrem Browser; weder die Angaben zu Ihrem Betrieb noch die Liste Ihrer bekannten Mängel verlassen das Gerät. Gerade der zweite Punkt ist hier relevant: Was Sie in das Feld für die nicht barrierefreien Inhalte schreiben, ist eine ungeschönte Aufstellung dessen, was an Ihrem Angebot noch nicht funktioniert. Diese Aufstellung geht an keinen Server, und sie wird nirgends zwischengespeichert.",
+      "Der Text entsteht vollständig im Browser; weder die Angaben zum Betrieb noch die Liste der bekannten Mängel verlassen das Gerät. Gerade der zweite Punkt ist hier relevant: Was im Feld für die nicht barrierefreien Inhalte steht, ist eine ungeschönte Aufstellung dessen, was am eigenen Angebot noch nicht funktioniert. Diese Aufstellung geht an keinen Server, und sie wird nirgends zwischengespeichert.",
     faq: [
       {
         q: "Gilt das BFSG auch für meinen kleinen Betrieb?",
-        a: "Das Gesetz kennt eine Ausnahme für Kleinstunternehmen, die Dienstleistungen erbringen: weniger als zehn Beschäftigte und höchstens zwei Millionen Euro Jahresumsatz oder Jahresbilanzsumme. Für Produkte gilt diese Ausnahme nicht. Ob Ihr Angebot als Dienstleistung in den Anwendungsbereich fällt, sollten Sie im Einzelfall prüfen lassen.",
+        a: "Das Gesetz kennt eine Ausnahme für Kleinstunternehmen, die Dienstleistungen erbringen: weniger als zehn Beschäftigte und höchstens zwei Millionen Euro Jahresumsatz oder Jahresbilanzsumme. Für Produkte gilt diese Ausnahme nicht. Ob ein Angebot als Dienstleistung in den Anwendungsbereich fällt, gehört im Einzelfall geprüft.",
       },
       {
         q: "Worin unterscheiden sich BFSG und BITV 2.0?",
@@ -70,15 +70,15 @@ const guide: ToolGuideSet = {
       },
       {
         q: "Was schreibe ich in die Liste der nicht barrierefreien Inhalte?",
-        a: "Konkret das, was Sie wissen: ein nicht getaggtes PDF, ein Video ohne Untertitel, ein Formular ohne verbundene Beschriftungen, eine Karte ohne Textalternative. Je genauer die Angabe, desto eher findet jemand den Weg zu der Fassung, die er nutzen kann — und desto glaubwürdiger ist die Erklärung insgesamt.",
+        a: "Konkret das, was bekannt ist: ein nicht getaggtes PDF, ein Video ohne Untertitel, ein Formular ohne verbundene Beschriftungen, eine Karte ohne Textalternative. Je genauer die Angabe, desto eher findet jemand den Weg zu der Fassung, die er nutzen kann — und desto glaubwürdiger ist die Erklärung insgesamt.",
       },
       {
         q: "Wie oft muss ich die Erklärung überprüfen?",
-        a: "Sie soll den tatsächlichen Stand wiedergeben, also nach jeder wesentlichen Änderung am Angebot und ansonsten regelmäßig. Für öffentliche Stellen ist eine jährliche Überprüfung vorgesehen. Das Feld für das Datum der letzten Überprüfung ist deshalb kein Beiwerk: Es macht sichtbar, wie alt die Aussage ist.",
+        a: "Die Erklärung soll den tatsächlichen Stand wiedergeben, also nach jeder wesentlichen Änderung am Angebot und ansonsten regelmäßig. Für öffentliche Stellen ist eine jährliche Überprüfung vorgesehen. Das Feld für das Datum der letzten Überprüfung ist deshalb kein Beiwerk: Es macht sichtbar, wie alt die Aussage ist.",
       },
       {
         q: "Reicht die Erklärung, oder muss ich die Seite auch umbauen?",
-        a: "Die Erklärung ist die Auskunftspflicht, nicht die Erfüllung. Sie beschreibt den Stand und benennt einen Rückmeldeweg; barrierefrei wird das Angebot dadurch nicht. Wer sie ernst nimmt, hat mit der Liste der Mängel allerdings genau den Arbeitsplan, den der Umbau braucht.",
+        a: "Die Erklärung ist die Auskunftspflicht, nicht die Erfüllung. Das Dokument beschreibt den Stand und benennt einen Rückmeldeweg; barrierefrei wird das Angebot dadurch nicht. Wer sie ernst nimmt, hat mit der Liste der Mängel allerdings genau den Arbeitsplan, den der Umbau braucht.",
       },
     ],
     related: ["kontrast-checker", "impressum-generator"],

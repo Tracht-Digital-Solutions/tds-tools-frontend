@@ -14,12 +14,12 @@ import type { ToolGuideSet } from "~/lib/guides";
  * for the shadow — there is no bleed and there are no crop marks.
  */
 const guide: ToolGuideSet = {
-  updatedAt: "2026-10-02",
+  updatedAt: "2026-10-21",
   de: {
     intro: [
-      "Der Visitenkarten-Designer entwirft eine Visitenkarte im Browser: Sie tragen Name, Position, Firma und Kontaktdaten ein, wählen Farbe, Fläche, Ecken, Schatten und Aufteilung, und sehen das Ergebnis sofort in der Vorschau. Heraus kommt ein PNG im Format 85 × 55 mm mit 300 dpi — der Auflösung, die eine Druckerei für eine Karte dieser Größe erwartet.",
-      "Gedacht ist das für den Fall, in dem eine Karte schnell gebraucht wird und niemand ein Layoutprogramm öffnen will: eine neue Mitarbeiterin, eine Messe in zwei Wochen, ein Betrieb ohne Hausgestaltung. Sie sehen beim Tippen, wie die Karte aussieht, statt eine Vorlage auszufüllen und auf die Korrektur zu warten.",
-      "Eine Einschränkung vorweg, damit es keine Überraschung beim Druck gibt: Die Datei ist ein PNG in Endformat — ohne Anschnitt und ohne Schnittmarken. Online-Druckdienste, die PNG oder JPG annehmen, verarbeiten das direkt. Eine Druckerei, die eine PDF mit 3 mm Anschnitt verlangt, wird nachfragen. Wenn Sie eine randabfallende Fläche drucken wollen, ist das der Punkt, an dem ein Layoutprogramm beziehungsweise ein Gestalter die bessere Wahl ist.",
+      "Der Visitenkarten-Designer entwirft eine Visitenkarte im Browser: Name, Position, Firma und Kontaktdaten eintragen, Farbe, Fläche, Ecken, Schatten und Aufteilung wählen, und das Ergebnis steht sofort in der Vorschau. Heraus kommt ein PNG im Format 85 × 55 mm mit 300 dpi — der Auflösung, die eine Druckerei für eine Karte dieser Größe erwartet.",
+      "Gedacht ist das für den Fall, in dem eine Karte schnell gebraucht wird und niemand ein Layoutprogramm öffnen will: eine neue Mitarbeiterin, eine Messe in zwei Wochen, ein Betrieb ohne Hausgestaltung. Schon beim Tippen ist zu sehen, wie die Karte aussieht, statt eine Vorlage auszufüllen und auf die Korrektur zu warten.",
+      "Eine Einschränkung vorweg, damit es keine Überraschung beim Druck gibt: Die Datei ist ein PNG in Endformat — ohne Anschnitt und ohne Schnittmarken. Online-Druckdienste, die PNG oder JPG annehmen, verarbeiten das direkt. Eine Druckerei, die eine PDF mit 3 mm Anschnitt verlangt, wird nachfragen. Soll eine randabfallende Fläche gedruckt werden, ist das der Punkt, an dem ein Layoutprogramm beziehungsweise ein Gestalter die bessere Wahl ist.",
     ],
     useCases: [
       {
@@ -32,7 +32,7 @@ const guide: ToolGuideSet = {
       },
       {
         title: "Betrieb ohne festgelegtes Erscheinungsbild",
-        text: "Die vier Flächen und drei Aufteilungen sind eine Vorauswahl, die zusammenpasst. Sie entscheiden zwischen vorgefertigten Kombinationen statt über Typografie.",
+        text: "Die vier Flächen und drei Aufteilungen sind eine Vorauswahl, die zusammenpasst. Die Entscheidung fällt zwischen vorgefertigten Kombinationen statt über Typografie.",
       },
       {
         title: "Entwurf, über den sich reden lässt",
@@ -47,34 +47,34 @@ const guide: ToolGuideSet = {
       {
         title: "Inhalt eintragen",
         description:
-          "Unter „Inhalt“ stehen Name, Position, Firma, Telefon, E-Mail und Webseite. Leere Felder werden nicht gedruckt, Sie können also weglassen, was auf die Karte nicht gehört.",
+          "Unter „Inhalt“ stehen Name, Position, Firma, Telefon, E-Mail und Webseite. Leere Felder werden nicht gedruckt; was nicht auf die Karte gehört, bleibt einfach leer.",
       },
       {
         title: "Aussehen festlegen",
         description:
-          "Unter „Aussehen“ wählen Sie Akzentfarbe, Fläche (Papier, Sand, Navy, Anthrazit), Ecken, Schatten und Aufteilung (linksbündig, zentriert, mit Farbband). Reicht der Kontrast einer Akzentfarbe auf der gewählten Fläche nicht, hellt das Werkzeug sie auf und sagt es — die Karte bleibt lesbar, auch wenn die Farbe nicht genau die eingegebene ist.",
+          "Unter „Aussehen“ stehen Akzentfarbe, Fläche (Papier, Sand, Navy, Anthrazit), Ecken, Schatten und Aufteilung (linksbündig, zentriert, mit Farbband). Reicht der Kontrast einer Akzentfarbe auf der gewählten Fläche nicht, hellt das Werkzeug sie auf und sagt es — die Karte bleibt lesbar, auch wenn die Farbe nicht genau die eingegebene ist.",
       },
       {
         title: "Vorschau prüfen",
         description:
-          "Die Vorschau ist dieselbe Zeichnung wie der Druck, nur kleiner gerechnet. Lesen Sie sie einmal auf Armlänge: Was dort schwer zu entziffern ist, ist auf 85 mm Papier nicht besser.",
+          "Die Vorschau ist dieselbe Zeichnung wie der Druck, nur kleiner gerechnet. Ein Blick auf Armlänge genügt: Was dort schwer zu entziffern ist, ist auf 85 mm Papier nicht besser.",
       },
       {
         title: "Als PNG herunterladen",
         description:
-          "Der Download gibt 85 × 55 mm bei 300 dpi. Prüfen Sie beim Druckdienst, ob PNG angenommen wird und ob ein Anschnitt verlangt ist. „Zurücksetzen“ stellt den Ausgangsentwurf wieder her.",
+          "Der Download gibt 85 × 55 mm bei 300 dpi. Beim Druckdienst vorher klären, ob PNG angenommen wird und ob ein Anschnitt verlangt ist. „Zurücksetzen“ stellt den Ausgangsentwurf wieder her.",
       },
     ],
     privacy:
-      "Die Karte wird vollständig in Ihrem Browser gezeichnet. Name, Telefonnummer und E-Mail-Adresse verlassen das Gerät nicht: Vorschau und Download sind derselbe Zeichenaufruf auf ein Canvas-Element, einmal in Bildschirm- und einmal in Druckauflösung, und es gibt keine Gegenstelle, an die etwas gesendet werden könnte. Das ist bei Kontaktdaten kein nebensächlicher Unterschied — bei vielen Online-Kartengestaltern entsteht die Druckdatei auf einem Server, und die Angaben liegen dort anschließend in einem Konto.",
+      "Die Karte wird vollständig im Browser gezeichnet. Name, Telefonnummer und E-Mail-Adresse verlassen das Gerät nicht: Vorschau und Download sind derselbe Zeichenaufruf auf ein Canvas-Element, einmal in Bildschirm- und einmal in Druckauflösung, und es gibt keine Gegenstelle, an die etwas gesendet werden könnte. Das ist bei Kontaktdaten kein nebensächlicher Unterschied — bei vielen Online-Kartengestaltern entsteht die Druckdatei auf einem Server, und die Angaben liegen dort anschließend in einem Konto.",
     faq: [
       {
         q: "Kann ich das PNG direkt in den Druck geben?",
-        a: "Bei Online-Druckdiensten, die PNG oder JPG annehmen, ja — die Datei hat mit 85 × 55 mm bei 300 dpi die übliche Auflösung für dieses Format. Eine Druckerei, die eine PDF mit 3 mm Anschnitt und Schnittmarken verlangt, bekommt das hier nicht; fragen Sie vorher nach, was angenommen wird.",
+        a: "Bei Online-Druckdiensten, die PNG oder JPG annehmen, ja — die Datei hat mit 85 × 55 mm bei 300 dpi die übliche Auflösung für dieses Format. Eine Druckerei, die eine PDF mit 3 mm Anschnitt und Schnittmarken verlangt, bekommt das hier nicht; eine Nachfrage vorher klärt, was angenommen wird.",
       },
       {
         q: "Warum ist meine Akzentfarbe heller als eingegeben?",
-        a: "Weil sie auf der gewählten Fläche sonst nicht genug Kontrast hätte. Das Werkzeug hellt sie so weit auf, dass der Text lesbar bleibt, und weist darauf hin. Wollen Sie den Farbton genau treffen, wählen Sie eine hellere Fläche — auf Papier oder Sand bleibt mehr Spielraum als auf Navy oder Anthrazit.",
+        a: "Weil sie auf der gewählten Fläche sonst nicht genug Kontrast hätte. Das Werkzeug hellt sie so weit auf, dass der Text lesbar bleibt, und weist darauf hin. Soll der Farbton genau stimmen, hilft eine hellere Fläche — auf Papier oder Sand bleibt mehr Spielraum als auf Navy oder Anthrazit.",
       },
       {
         q: "Kann ich mein Logo einsetzen?",
@@ -82,11 +82,11 @@ const guide: ToolGuideSet = {
       },
       {
         q: "Wie bekomme ich die Rückseite?",
-        a: "Der Designer entwirft eine Seite. Für die Rückseite laden Sie eine zweite Variante herunter — etwa nur mit Logo-Fläche und QR-Code — und geben beide Dateien als Vorder- und Rückseite in den Druck. Den QR-Code mit Ihren Kontaktdaten als vCard erzeugt der QR-Code-Generator.",
+        a: "Der Designer entwirft eine Seite. Für die Rückseite gibt es eine zweite Variante zum Herunterladen — etwa nur mit Logo-Fläche und QR-Code —, und beide Dateien gehen als Vorder- und Rückseite in den Druck. Den QR-Code mit den eigenen Kontaktdaten als vCard erzeugt der QR-Code-Generator.",
       },
       {
         q: "Bleiben meine Eingaben erhalten, wenn ich die Seite neu lade?",
-        a: "Nein. Da nichts gespeichert und nichts gesendet wird, ist die Seite nach dem Neuladen wieder im Ausgangszustand. Laden Sie den Entwurf herunter, bevor Sie den Tab schließen.",
+        a: "Nein. Da nichts gespeichert und nichts gesendet wird, ist die Seite nach dem Neuladen wieder im Ausgangszustand. Der Entwurf gehört also heruntergeladen, bevor der Tab zugeht.",
       },
     ],
     related: ["qr-code-generator", "bild-komprimieren"],

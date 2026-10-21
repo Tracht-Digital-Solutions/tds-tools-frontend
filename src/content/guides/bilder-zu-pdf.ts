@@ -1,11 +1,11 @@
 import type { ToolGuideSet } from "~/lib/guides";
 
 const guide: ToolGuideSet = {
-  updatedAt: "2026-08-18",
+  updatedAt: "2026-10-21",
   de: {
     intro: [
       "Der Scanner steht im Büro, die Belege liegen im Fahrzeug — und abfotografiert ist ein Lieferschein in drei Sekunden. Was danach fehlt, ist die Form: Zwölf einzelne Handybilder sind kein Dokument, sie sind zwölf Anhänge in unklarer Reihenfolge, mit denen in der Buchhaltung niemand etwas anfangen kann.",
-      "Dieses Werkzeug macht daraus ein PDF. Sie wählen die Bilder, bringen sie in die richtige Reihenfolge und legen fest, wie die Seiten aussehen sollen: A4, A5 oder Letter, hoch oder quer, mit Rand oder randlos. Jedes Bild wird eine Seite, und heraus kommt eine Datei, die sich verschicken, ablegen und ausdrucken lässt wie jedes andere Dokument.",
+      "Dieses Werkzeug macht daraus ein PDF. Die Bilder werden ausgewählt, in die richtige Reihenfolge gebracht, und dann steht fest, wie die Seiten aussehen sollen: A4, A5 oder Letter, hoch oder quer, mit Rand oder randlos. Jedes Bild wird eine Seite, und heraus kommt eine Datei, die sich verschicken, ablegen und ausdrucken lässt wie jedes andere Dokument.",
       "Für die Ausrichtung gibt es bewusst eine Automatik: Ein querformatiges Foto bekommt eine querformatige Seite, ein hochkant aufgenommenes eine hochkante. Damit passt der Stapel auch dann, wenn er gemischt ist — was er bei zwischendurch abfotografierten Belegen praktisch immer ist.",
     ],
     useCases: [
@@ -33,7 +33,7 @@ const guide: ToolGuideSet = {
     steps: [
       {
         title: "Bilder auswählen",
-        description: "Wählen Sie alle Aufnahmen auf einmal aus. JPG, PNG und WebP werden gelesen; die Bilder werden vor dem Einbetten einheitlich aufbereitet, sodass auch gemischte Formate im selben Dokument landen.",
+        description: "Alle Aufnahmen auf einmal auswählen. JPG, PNG und WebP werden gelesen; die Bilder werden vor dem Einbetten einheitlich aufbereitet, sodass auch gemischte Formate im selben Dokument landen.",
       },
       {
         title: "Reihenfolge sortieren",
@@ -53,7 +53,7 @@ const guide: ToolGuideSet = {
     faq: [
       {
         q: "Werden die Bilder in der Auswahlreihenfolge eingefügt?",
-        a: "Zunächst ja, und viele Dateisysteme sortieren dabei alphabetisch statt nach Aufnahmezeit. Deshalb gibt es die Liste zum Umsortieren — prüfen Sie sie einmal, bevor Sie das PDF erzeugen.",
+        a: "Zunächst ja, und viele Dateisysteme sortieren dabei alphabetisch statt nach Aufnahmezeit. Deshalb gibt es die Liste zum Umsortieren — ein kurzer Blick darauf lohnt sich, bevor das PDF entsteht.",
       },
       {
         q: "Kann ich mehrere Bilder auf eine Seite legen?",
@@ -65,7 +65,7 @@ const guide: ToolGuideSet = {
       },
       {
         q: "Lässt sich das entstandene PDF durchsuchen?",
-        a: "Nein. Es enthält Bilder, keinen Text — das ist bei jedem aus Fotos erzeugten PDF so. Wenn Sie den Inhalt als Text brauchen, ist die Texterkennung der passende Schritt davor.",
+        a: "Nein. Es enthält Bilder, keinen Text — das ist bei jedem aus Fotos erzeugten PDF so. Wird der Inhalt als Text gebraucht, ist die Texterkennung der passende Schritt davor.",
       },
     ],
     related: ["pdf-zu-bildern", "bild-komprimieren"],
