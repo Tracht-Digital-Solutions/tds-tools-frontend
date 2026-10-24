@@ -10,7 +10,7 @@ import PremiumNote from "~/components/PremiumNote.astro";
 import AdSlot from "~/components/AdSlot.astro";
 import ServiceNote from "~/components/ServiceNote.astro";
 import { enabledTools, adsConfig } from "~/lib/catalog";
-import { site, links, categoryOrder } from "~/lib/site";
+import { site, categoryOrder } from "~/lib/site";
 import { t, toolCopyFor, categoryLabels } from "~/lib/i18n";
 import { localizedPath, type Lang } from "~/lib/seo";
 import {
@@ -22,8 +22,6 @@ import {
   websiteSchema,
 } from "~/lib/jsonld";
 import type { ToolCategory } from "@tracht-digital-solutions/tds-tools-contract";
-import { imageHints, imageObject } from '~/lib/imageCatalog';
-import { editorialSrc, editorialSrcset } from '~/lib/editorialImages';
 
 interface Props {
   lang: Lang;
@@ -70,16 +68,13 @@ const jsonLd = asGraph(
   organizationSchema(),
   personSchema(),
   websiteSchema(s.description),
-  /* The catalogue as a page (2026-10-19). Its hero image is `about` this node,
-     and without it that reference dangled (the geo audit's warning on both
-     front pages). */
+  /* The catalogue as a page (2026-10-19). */
   { ...webPageNode({
       url: `${site.origin}${base}/`,
       name: `${site.name} — ${s.tagline}`,
       description: s.description,
       lang,
     }), "@type": "CollectionPage" },
-  imageObject(editorialSrc('hero'), lang, `${site.origin}${base}/`),
   itemListSchema(
     // The listed NAMES follow the page language too. They used to come
     // straight off the manifest, so the English catalog advertised
@@ -99,51 +94,10 @@ const jsonLd = asGraph(
   ogImage={lang === "de" ? "/og/default.png" : "/og/en/default.png"}
   jsonLd={jsonLd}
 >
-  {/* Flat navy hero band, the journal's own hero treatment: an `.eyebrow` in
-      coral, a `.display` headline with one accent word, the brand accent bar.
-      `.display` and `.eyebrow` are shared type primitives — the blog surface
-      is what makes them read at weight 800 with the display face, so neither
-      the weight nor the family belongs in this markup. */}
-  <section class="tools-hero">
-    {/* `.tds-shell`, not `max-w-6xl`: the blog surface's 120rem is the width
-        the journal and the shop use too, so the edges line up with the header
-        on every property. The headline and body keep their own measure. */}
-    <div class="tds-shell py-16 sm:py-20 tools-hero__layout">
-      <div>
-      <p class="eyebrow" style="color: var(--color-accent-pink);">{s.heroEyebrow}</p>
-      <h1 class="display mt-3 max-w-3xl text-4xl leading-tight sm:text-5xl">
-        {s.heroHeadlineLead}{" "}
-        <span class="accent-italic" style="color: var(--color-accent-pink);">
-          {s.heroHeadlineAccent}
-        </span>{" "}
-        {s.heroHeadlineTail}
-      </h1>
-      {/* The three-part brand accent, on its lifted run because the hero
-          band is a fixed dark surface in both themes. */}
-      <span aria-hidden="true" class="tds-brandbar tds-brandbar--on-dark mt-5"></span>
-      <p class="mt-4 max-w-2xl text-lg" style="color: rgb(255 255 255 / 0.75); line-height: 1.6;">
-        {s.heroBody}
-      </p>
-      {/* The sibling properties, named in the hero as well as the nav: this
-          band is the one thing every visitor sees, including the ones who
-          arrived on a deep link from a search result. */}
-      {/* No colour utility on these: `.link-underline` is unlayered tds-shared
-          CSS and declares `color: inherit`, which beats a layered
-          `text-white/80`. Inheriting is right here anyway — the band's own
-          white — and the underline follows as `currentColor`. */}
-      <p class="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
-        <a href={links.blog} class="link-underline">{s.toBlog}</a>
-        <a href={links.main} class="link-underline">{s.toHome}</a>
-      </p>
-      </div>
-      <img class="tools-hero__photo" src={editorialSrc('hero')} srcset={imageHints(editorialSrc('hero'), lang)?.srcSet ?? editorialSrcset('hero')} sizes="(min-width: 64rem) 40vw, 100vw" width="960" height="540" alt="" decoding="async" />
-    </div>
-  </section>
-
   {/* The catalog body runs the FULL viewport width, gutter aside: the grid
       answers a wider screen with more columns. The ceiling is lifted through
       the token, never a utility — `.tds-shell` is unlayered and would beat
-      one. The header and the hero keep the shared 120rem. The notes below the
+      one. The header keeps the shared 120rem. The notes below the
       grid share this wrapper so their edges stay flush with it; their text
       keeps its own 68ch measure. */}
   <div class="tds-shell py-12" style="--tds-shell-max: none;">
@@ -154,10 +108,15 @@ const jsonLd = asGraph(
     ) : (
       <section aria-labelledby="catalog-heading">
         <div class="cat-head">
-          {/* Heading and counter wrap as one group, so on a phone the counter
-              drops under the heading while the filter toggle keeps its line. */}
+          {/* Counter (and the hidden h1) as one group; the filter toggle keeps
+              the right end of the line. */}
           <div class="cat-head__title">
-            <h2 id="catalog-heading" class="cat-head__label">{s.catalogHeading}</h2>
+            {/* No visible heading and no hero (2026-10-24): the catalogue opens
+                on the tools. The page still needs its one h1, for screen
+                readers and crawlers alike. */}
+            <h1 id="catalog-heading" class="sr-only">
+              {s.heroHeadlineLead} {s.heroHeadlineAccent} {s.heroHeadlineTail}
+            </h1>
             <span class="cat-head__count" data-tool-count aria-live="polite">{s.toolCount(orderedTools.length)}</span>
           </div>
           {/* The filter toggle (tds-shared .tds-filterbar__toggle, a brand
@@ -204,7 +163,8 @@ const jsonLd = asGraph(
               <div class="tds-toolbar">
                 <button type="button" class="chip" data-filter-group="category" data-value="all" aria-pressed="true">{s.filter.all}</button>
                 {presentCategories.map((cat) => (
-                  <button type="button" class="chip" data-filter-group="category" data-value={cat} aria-pressed="false">
+                  <button type="button" class="chip" data-filter-group="category" data-value={cat} data-category={cat} aria-pressed="false">
+                    <span class="tool-cat-swatch" aria-hidden="true"></span>
                     {categoryLabels[lang][cat]}
                   </button>
                 ))}

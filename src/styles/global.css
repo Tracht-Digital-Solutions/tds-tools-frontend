@@ -116,37 +116,7 @@
   color: var(--color-ink);
 }
 
-/* ---- Hero band ---- */
-/* A flat navy block, the journal's hero treatment (see the blog's
-   /aktuelles). `--color-surface-navy` is a FIXED-dark token, so the band stays
-   dark in both themes and the white type on it never inverts.
-   It used to be a gradient over the panel's rail tokens, which do not exist on
-   this surface — and a gradient is elevation-adjacent anyway, which this kit
-   does not do. */
-.tools-hero {
-  background: var(--color-surface-navy);
-  color: #fff;
-}
-/* Desktop: the header is a transparent strip with two islands, in flow above
-   the hero, so its 84px showed the light page ground as a bar above the navy
-   band. The band starts under the header (pulled up by more than the header is
-   tall; nothing above the page top is painted) and pads its content back down.
-   The islands take black ink over the navy, as the journal's do. */
-@media (min-width: 64rem) {
-  .tools-hero {
-    margin-top: -7rem;
-    padding-top: 7rem;
-  }
-  body:has(.tools-hero) .brand-header {
-    --tds-shadow-ink: rgb(0 0 0 / 0.5);
-    --tds-shadow-hard-sm: 3px 3px 0 0 var(--tds-shadow-ink);
-  }
-}
-
 /* ---- Catalog heading ---- */
-.tools-hero__layout { display: grid; gap: 2rem; align-items: center; }
-.tools-hero__photo { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; }
-@media (min-width: 64rem) { .tools-hero__layout { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: clamp(2rem, 5vw, 5rem); } }
 .tool-card__photo { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; margin-bottom: .75rem; }
 .tool-guide__photo { display: block; width: 100%; height: auto; max-height: 20rem; aspect-ratio: 2 / 1; object-fit: cover; margin-block: 2rem; }
 
@@ -797,22 +767,6 @@
   }
 }
 
-/* ---- Phone: the logo sits IN the first band (2026-10-06) ----
-   On a phone there is no top bar (tds-shared app-shell): the header is the
-   page's first line. When the page opens on the dark hero (`.tools-hero`, the catalogue), that
-   line takes the hero's navy so the logo stands inside the band rather than
-   on a strip of paper above it — the mark and the wordmark turn light. */
-@media (max-width: 63.99rem) {
-  .tds-app body:has(.tools-hero) .tds-app-header {
-    background: var(--color-surface-navy);
-    color: #fff;
-  }
-  .tds-app body:has(.tools-hero) .tds-app-header .brand-logo { background-color: #fff; }
-  .tds-app body:has(.tools-hero) .tds-app-header .brand-wordmark,
-  .tds-app body:has(.tools-hero) .tds-app-header .brand-wordmark .accent-italic { color: #fff; }
-  .tds-app body:has(.tools-hero) .tds-app-header .brand-wordmark .accent-italic { color: var(--color-accent-pink, #ff8fab); }
-}
-
 /* The catalog's filter toggle (tds-shared .tds-filterbar__toggle) closes the
    heading row on the right; position only. */
 .cat-head__filter {
@@ -850,4 +804,45 @@
     align-items: center;
     min-height: 44px;
   }
+}
+
+/* ---- Category colours (2026-10-24) ----
+   Each category owns one shared colour token; the card carries it as
+   `--tool-cat` through `data-category` (ToolCard.astro, and the filter
+   chips, so the chip doubles as the legend). In the grid the card takes a
+   tint of it plus a 4px band along its top edge; everywhere the icon, the
+   hover bar and a square swatch before the category name follow it. Text
+   never takes the colour: `--tool-muted` keeps the measured contrast. */
+[data-category="marketing"] { --tool-cat: var(--color-cat-rose); }
+[data-category="security"] { --tool-cat: var(--color-primary); }
+[data-category="developer"] { --tool-cat: var(--color-cat-violet); }
+[data-category="design"] { --tool-cat: var(--color-cat-amber); }
+[data-category="media"] { --tool-cat: var(--color-cat-cyan); }
+[data-category="content"] { --tool-cat: var(--color-cat-teal); }
+[data-category="business"] { --tool-cat: var(--color-info); }
+[data-category="compliance"] { --tool-cat: var(--color-success); }
+[data-category="other"] { --tool-cat: var(--color-muted); }
+.tool-grid .tool-card {
+  background-color: color-mix(in srgb, var(--tool-cat, transparent) 9%, var(--color-soft));
+  background-image: linear-gradient(var(--tool-cat, transparent), var(--tool-cat, transparent));
+  background-size: 100% 4px;
+  background-repeat: no-repeat;
+}
+.tool-grid .tool-card:is(:hover, :focus-within) {
+  background-color: color-mix(in srgb, var(--tool-cat, transparent) 16%, var(--color-soft));
+  background-image: linear-gradient(var(--tool-cat, transparent), var(--tool-cat, transparent));
+}
+.tool-card[data-category]::before {
+  background: var(--tool-cat);
+}
+.tool-card[data-category] .tool-card__icon svg {
+  color: var(--tool-cat);
+}
+.tool-cat-swatch {
+  display: inline-block;
+  flex: none;
+  width: 0.625rem;
+  height: 0.625rem;
+  margin-inline-end: 0.4rem;
+  background: var(--tool-cat, currentColor);
 }

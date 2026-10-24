@@ -95,5 +95,5 @@ consent mode. Labels are a neutral "Anzeige".
 
 ## Sibling links
 
-Header nav, hero band and footer link *Blog* and *Startseite*; URLs live once in `lib/site.ts` as `links`.
+Header nav and footer link *Blog* and *Startseite*; URLs live once in `lib/site.ts` as `links`.
 `lib/surface.test.ts` asserts both links in both components.

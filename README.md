@@ -15,8 +15,8 @@ host.
 
 Since **0.9.0** it renders the same design as the journal: `data-surface="blog"`
 (tds-shared's flat "kantig" kit — no radii, no elevation, colour blocks and 2px
-accent bars), and it links the blog and the main site by name from the header,
-the hero and the footer. It rendered the admin panel's surface before that; see
+accent bars), and it links the blog and the main site by name from the header
+and the footer. It rendered the admin panel's surface before that; see
 `AGENTS.md` for what moved and what breaks silently if a `--tds-panel-*`
 reference is left behind.
 

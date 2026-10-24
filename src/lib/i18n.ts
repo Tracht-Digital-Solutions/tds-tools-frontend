@@ -27,11 +27,9 @@ export interface SiteCopy {
   tagline: string;
   /** Site-level meta description. Budget: 80 < n ≤ 160, brand + town inside. */
   description: string;
-  heroEyebrow: string;
   heroHeadlineLead: string;
   heroHeadlineAccent: string;
   heroHeadlineTail: string;
-  heroBody: string;
   navAllTools: string;
   navBlog: string;
   navHome: string;
@@ -43,7 +41,6 @@ export interface SiteCopy {
   skipToContent: string;
   emptyCatalog: string;
   /** Heading above the catalog grid; the tool count sits beside it. */
-  catalogHeading: string;
   toolCount: (n: number) => string;
   /** The collapsible filter bar above the grid (tds-shared .tds-filterbar). */
   filter: {
@@ -97,12 +94,9 @@ export const copy = {
      */
     description:
       "Bilder komprimieren, QR-Codes erstellen, UTM-Links, PDF und Texterkennung im Browser — vieles kostenlos, ohne Anmeldung. Von TDS aus Schwarzenbek bei Hamburg.",
-    heroEyebrow: "Digitalisierung für Unternehmen",
     heroHeadlineLead: "Digitale",
     heroHeadlineAccent: "Werkzeuge",
     heroHeadlineTail: "— direkt im Browser.",
-    heroBody:
-      "Bilder komprimieren, QR-Codes erstellen, UTM-Links bauen, PDF-Werkzeuge, Texterkennung und mehr. Vieles kostenlos und ohne Anmeldung, alles ohne Installation. Von Tracht Digital Solutions aus Schwarzenbek bei Hamburg.",
     navAllTools: "Alle Tools",
     navBlog: "Ratgeber",
     navHome: "Startseite",
@@ -112,7 +106,6 @@ export const copy = {
     cta: "Unverbindlich anfragen",
     skipToContent: "Zum Inhalt springen",
     emptyCatalog: "Zurzeit sind keine Tools verfügbar.",
-    catalogHeading: "Alle Werkzeuge",
     toolCount: (n: number) => `${n} ${n === 1 ? "Werkzeug" : "Werkzeuge"}`,
     filter: {
       toggle: "Filter",
@@ -165,12 +158,9 @@ export const copy = {
     tagline: "Digital tools for business, much of it free",
     description:
       "Compress images, create QR codes, UTM links, PDF tools and OCR in your browser — much of it free, no sign-up. By TDS in Schwarzenbek near Hamburg.",
-    heroEyebrow: "Digitalisation for businesses",
     heroHeadlineLead: "Digital",
     heroHeadlineAccent: "tools",
     heroHeadlineTail: "— right in your browser.",
-    heroBody:
-      "Compress images, create QR codes, build UTM links, PDF tools, text recognition and more. Much of it free and without sign-up, all of it without installing anything. By Tracht Digital Solutions in Schwarzenbek near Hamburg.",
     navAllTools: "All tools",
     navBlog: "Ratgeber",
     navHome: "Main site",
@@ -180,7 +170,6 @@ export const copy = {
     cta: "Get in touch",
     skipToContent: "Skip to content",
     emptyCatalog: "No tools are available at the moment.",
-    catalogHeading: "All tools",
     toolCount: (n: number) => `${n} ${n === 1 ? "tool" : "tools"}`,
     filter: {
       toggle: "Filter",

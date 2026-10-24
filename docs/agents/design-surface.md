@@ -42,14 +42,12 @@ layer as `blog.tracht-digital.de`: no radii, nothing elevated, display voice at 
   `document.documentElement.scrollWidth`.
 - `--color-border` is an accepted alias of `--color-line`; prefer `--color-line` in new code.
 
-## Header, hero and brand
+## Header and brand
 
 - **The header owns none of its chrome**: from 64rem it is two corner islands (`.tds-sitebar__island`, two
   wrappers in `Header.astro`) on a transparent `.brand-header`; fill, border and shadow come from tds-shared.
-- **The hero is a flat navy band** (`.tools-hero` = `--color-surface-navy`) with a coral `.eyebrow`, a `.display`
-  headline with one `.accent-italic` word and `.tds-brandbar--on-dark` (required on the dark band). Eyebrow and
-  accent use `--color-accent-pink` (the bordeaux is ~2:1 on navy). On the phone the header is the first line,
-  navy with a light logo where the catalog opens on `.tools-hero`.
+- **The catalogue has no hero and no visible heading** (since 2026-10-24): it opens on the counter, the
+  filter toggle and the grid. Its one `h1` is `sr-only` (the former hero headline); keep it.
 - **The brand mark is `.brand-logo`**, a CSS mask over `--color-primary` using `public/brand/td-logomark.webp`
   (identical to the landing page's and the blog's). Only `--tds-brand-logo-mask` and `--tds-brand-logo-size` are
   local; never override `--tds-brand-logo-ratio` (713 × 483).
@@ -63,9 +61,9 @@ layer as `blog.tracht-digital.de`: no radii, nothing elevated, display voice at 
 ## Catalog grid
 
 `CatalogPage.astro` renders one `.tds-grid-auto.tool-grid` (`--tds-grid-min: 17rem`) over the full viewport width
-in stable `categoryOrder`; the category rides on each card as a mono eyebrow. One display heading, a mono counter
-(`toolCount`) and an accent bar sit above it. The body lifts the shell ceiling (`--tds-shell-max: none`); header
-and hero keep 120rem.
+in stable `categoryOrder`; the category rides on each card as a mono eyebrow. A mono counter
+(`toolCount`), the hidden `h1` and an accent bar sit above it. The body lifts the shell ceiling (`--tds-shell-max: none`); header
+keeps 120rem.
 
 **Filter bar** (tds-shared ≥ 0.53.1 `.tds-filterbar__*` + `mountFilterBar()` from `./filter`): the toggle (a brand
 button) closes the `.cat-head` row on the right (heading + counter wrap as `.cat-head__title`), the panel opens under
@@ -73,6 +71,12 @@ the accent bar, closed by default: search (name, description, category label, `k
 access (Kostenlos / Premium / Mit Anmeldung, from `isPremium` / `requiresLogin`). Each cell carries `data-category`,
 `data-access`, `data-search`; the counter shows the visible count. Client-side only (the page cache keys on the
 path). Copy reaches the script as data attributes, never by importing `~/lib/i18n` into the bundle.
+
+- **Category colours:** `data-category` on each card (and on the filter chips, which double as the legend)
+  sets `--tool-cat` from a shared token (`--color-cat-*`, `--color-primary`, `--color-info`, `--color-success`,
+  `--color-muted` for `other`), mapped at the end of `global.css`. In the grid the card takes a 9 % tint (16 % on
+  hover) and a 4 px top band; icon, hover bar and `.tool-cat-swatch` follow it. Text never takes the colour.
+  A new category needs a line in that map.
 
 - **Seams are not a `gap: 1px` over a line-coloured grid** (`auto-fill` keeps empty tracks that would show as grey
   blocks). Cards draw inset 1 px seams on their right and bottom edges.
