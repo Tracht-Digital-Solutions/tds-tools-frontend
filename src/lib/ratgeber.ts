@@ -53,11 +53,11 @@ export function parseArticle(data: PostResponse, slug: string, lang: Lang): Ratg
 }
 
 /**
- * The article, or null: no slug, no blog CMS, not published in this language,
- * or the API unreachable. A 404 is an answer (remembered), anything else a
- * failure the cache does not keep.
+ * The article; "missing" when the CMS answers that it does not exist in this
+ * language (a 404, remembered); null for no slug, no blog CMS or the API
+ * unreachable (a failure the cache does not keep).
  */
-export function ratgeberArticle(slug: string | null, lang: Lang): Promise<RatgeberArticle | null> {
+export function ratgeberArticle(slug: string | null, lang: Lang): Promise<RatgeberArticle | "missing" | null> {
   if (DEMO_MODE || !slug || !SLUG.test(slug)) return Promise.resolve(null);
   return memoisedOr(
     `tools:ratgeber:${lang}:${slug}`,
@@ -66,11 +66,21 @@ export function ratgeberArticle(slug: string | null, lang: Lang): Promise<Ratgeb
         const data = await readPublicJson<PostResponse>(`${apiBase()}/content/blog/${slug}?lang=${lang}`);
         return parseArticle(data, slug, lang);
       } catch (err) {
-        if (err instanceof PublicHttpError && err.status === 404) return null;
+        if (err instanceof PublicHttpError && err.status === 404) return "missing";
         throw err;
       }
     },
     () => null,
     `Ratgeber article "${slug}" (linked instead)`,
   );
+}
+
+/**
+ * Where the tool page links. An article missing in this language (e.g. only
+ * German, on an English page) would be a dead link on the blog, so the link
+ * goes to the Ratgeber in this language instead.
+ */
+export function ratgeberLink(slug: string | null, lang: Lang, article: RatgeberArticle | "missing" | null): string {
+  if (article === "missing") return ratgeberUrl(null, lang);
+  return article?.url ?? ratgeberUrl(slug, lang);
 }

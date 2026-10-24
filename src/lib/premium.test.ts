@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { cheapestTierFor, formatPrice, parseTiers, tierCopy } from "./premium";
-import { parseArticle, ratgeberUrl } from "./ratgeber";
+import { parseArticle, ratgeberLink, ratgeberUrl } from "./ratgeber";
 
 /**
  * The server half of premium and the Ratgeber link: what the API's payloads
@@ -58,6 +58,11 @@ describe("the Ratgeber link", () => {
   it("falls back to the Ratgeber itself without a usable slug", () => {
     expect(ratgeberUrl(null, "de")).toBe("https://blog.tracht-digital.de/");
     expect(ratgeberUrl("../etc", "en")).toBe("https://blog.tracht-digital.de/en/");
+  });
+
+  it("links to the Ratgeber in this language when the article is missing in it", () => {
+    expect(ratgeberLink("nur-deutsch", "en", "missing")).toBe("https://blog.tracht-digital.de/en/");
+    expect(ratgeberLink("pdf-verkleinern", "en", null)).toBe("https://blog.tracht-digital.de/en/pdf-verkleinern");
   });
 
   it("shows only an article with a title and a body", () => {
