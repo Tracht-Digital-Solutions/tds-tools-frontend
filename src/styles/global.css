@@ -900,7 +900,7 @@ html[data-surface="blog"] {
    with the theme, so one mix serves both; <html> carries it too so an
    overscroll never flashes paper. */
 html[data-surface="blog"] {
-  --tools-ground: color-mix(in srgb, var(--color-primary) 8%, var(--color-paper));
+  --tools-ground: color-mix(in srgb, var(--color-primary) 14%, var(--color-paper));
   background-color: var(--tools-ground);
 }
 html[data-surface="blog"] body {
@@ -915,4 +915,10 @@ html[data-surface="blog"] body {
 .tool-card:is(:hover, :focus-within),
 .tool-grid .tool-card:is(:hover, :focus-within) {
   box-shadow: var(--tds-shadow-hard-hover);
+}
+
+/* The catalogue row holds only the filter toggle now (no visible count, no
+   accent mark); it keeps the space the mark used to open above the grid. */
+.cat-head:has(.cat-head__filter) {
+  margin-bottom: 1.25rem;
 }

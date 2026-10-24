@@ -123,7 +123,10 @@ const jsonLd = asGraph(
             <h1 id="catalog-heading" class="sr-only">
               {s.heroHeadlineLead} {s.heroHeadlineAccent} {s.heroHeadlineTail}
             </h1>
-            <span class="cat-head__count" data-tool-count aria-live="polite">{s.toolCount(orderedTools.length)}</span>
+            {/* No visible count (2026-10-24). The live region stays, empty at
+                load, so a screen reader still hears how many tools a filter
+                leaves. */}
+            <span class="sr-only" data-tool-count aria-live="polite"></span>
           </div>
           {/* The filter toggle (tds-shared .tds-filterbar__toggle, a brand
               button) at the right end of the heading row; its panel opens
@@ -142,7 +145,6 @@ const jsonLd = asGraph(
             <span class="tds-filterbar__count"></span>
           </button>
         </div>
-        <span aria-hidden="true" class="cat-head__mark"></span>
         {/* The filter panel (tds-shared .tds-filterbar__panel),
             closed by default. Client-side over the cards below: the page
             cache keys on the path, so a query string never reaches the

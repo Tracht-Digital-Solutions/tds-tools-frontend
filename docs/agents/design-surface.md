@@ -24,7 +24,7 @@ radius there, never on a class. `global.css` imports `base.css` →
   on any reference.
 - **`app.css` and `prose.css` are not imported.** `app.css` scopes its rules to the panel. `prose.css` styles
   markdown descendants, while guides are structured content with their own ~60-line `.tool-guide*` block.
-- **The ground is tinted** (since 2026-10-24): `--tools-ground` (primary 8 % in paper) on `<html>` and `<body>`; the
+- **The ground is tinted** (since 2026-10-24): `--tools-ground` (primary 14 % in paper) on `<html>` and `<body>`; the
   journal and the landing page keep plain paper.
 - **`data-frontend` stays unset.** It is the panel's accent axis; `admin` would paint the management burgundy,
   a claim a public catalog must not make. tds-shared's `design.test.ts` pins the other half.
@@ -65,15 +65,15 @@ radius there, never on a class. `global.css` imports `base.css` →
 ## Catalog grid
 
 `CatalogPage.astro` renders one `.tds-grid-auto.tool-grid` (`--tds-grid-min: 17rem`) over the full viewport width
-by category size (most tools first, ties in `categoryOrder`), tools A–Z by their localised name; the category rides on each card as a mono eyebrow. A mono counter
-(`toolCount`), the hidden `h1` and an accent bar sit above it. The body lifts the shell ceiling (`--tds-shell-max: none`); header
+by category size (most tools first, ties in `categoryOrder`), tools A–Z by their localised name; the category rides on each card as a mono eyebrow. The hidden `h1` and the filter
+toggle sit above it; the count is no longer visible (2026-10-24), only an `sr-only` live region the filter fills. The body lifts the shell ceiling (`--tds-shell-max: none`); header
 keeps 120rem.
 
 **Filter bar** (tds-shared ≥ 0.53.1 `.tds-filterbar__*` + `mountFilterBar()` from `./filter`): the toggle (a brand
 button) closes the `.cat-head` row on the right (heading + counter wrap as `.cat-head__title`), the panel opens under
 the accent bar, closed by default: search (name, description, category label, `keywords`), category (only categories with a tool),
 access (Kostenlos / Premium / Mit Anmeldung, from `isPremium` / `requiresLogin`). Each cell carries `data-category`,
-`data-access`, `data-search`; the counter shows the visible count. Client-side only (the page cache keys on the
+`data-access`, `data-search`; the counter shows the live region’s count. Client-side only (the page cache keys on the
 path). Copy reaches the script as data attributes, never by importing `~/lib/i18n` into the bundle.
 
 - **Category colours:** `data-category` on each card (and on the filter chips, which double as the legend)
