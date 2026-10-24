@@ -5,7 +5,6 @@ import { describe, expect, it } from "vitest";
 
 import { copy } from "./i18n";
 import { guides } from "./guides";
-import { links } from "./site";
 import { DEFAULT_OG_HEADLINES } from "../og/render";
 
 /**
@@ -19,7 +18,7 @@ import { DEFAULT_OG_HEADLINES } from "../og/render";
  * across BOTH languages and every surface that carries copy.
  *
  * Scope note: `guides.test.ts` pins the same rules for the German guides.
- * This file covers the site chrome, the service note and the English guides,
+ * This file covers the site chrome, the catalogue FAQ and the English guides,
  * so no surface is left unchecked.
  */
 
@@ -36,9 +35,10 @@ const SEP = " ¶ ";
 
 /** Every string the site says, in both languages, as one haystack. */
 const siteText = (["de", "en"] as const)
-  .flatMap((lang) =>
-    Object.values(copy[lang]).filter((v): v is string => typeof v === "string"),
-  )
+  .flatMap((lang) => [
+    ...Object.values(copy[lang]).filter((v): v is string => typeof v === "string"),
+    ...copy[lang].catalogFaq.flatMap((item) => [item.q, item.a]),
+  ])
   .join(SEP);
 
 const guideText = Object.values(guides)
@@ -91,8 +91,6 @@ describe("the positioning rules", () => {
     // promises a scheduled appointment nobody offered.
     expect(copy.de.cta).toBe("Unverbindlich anfragen");
     expect(copy.en.cta).toBe("Get in touch");
-    expect(copy.de.serviceNoteCta).toBe("Unverbindlich anfragen");
-    expect(copy.en.serviceNoteCta).toBe("Get in touch");
   });
 
   it("never promises an appointment", () => {
@@ -100,46 +98,21 @@ describe("the positioning rules", () => {
   });
 });
 
-describe("the service note", () => {
-  it("is one sentence-length line, not a landing page", () => {
-    // The restraint is the point: visitors arrived from a search for a tool,
-    // and a paragraph of sales copy after every one of them reads as bait.
-    for (const lang of ["de", "en"] as const) {
-      const note = copy[lang].serviceNote;
-      expect(note.length, `${lang}: ${note.length} chars`).toBeLessThan(200);
-      expect(note.length, `${lang} is too thin to say anything`).toBeGreaterThan(60);
+describe("the access labels", () => {
+  it("marks every catalog card as free or premium", () => {
+    // A free tool used to carry no badge, so "free" read only as the absence
+    // of "Premium". Both branches must render a chip.
+    const card = readFileSync(join(__dirname, "..", "components", "ToolCard.astro"), "utf8");
+    expect(card).toMatch(/isPremium\s*\?[\s\S]*access\.premium[\s\S]*:[\s\S]*access\.free/);
+    expect(copy.de.access.free).toBe("Kostenlos");
+    expect(copy.en.access.free).toBe("Free");
+  });
+
+  it("keeps the removed service note gone", () => {
+    for (const page of ["CatalogPage.astro", "ToolPage.astro"]) {
+      const source = readFileSync(join(__dirname, "..", "components", page), "utf8");
+      expect(source, page).not.toMatch(/ServiceNote|service-note/);
     }
-  });
-
-  it("names what the business actually sells", () => {
-    // Naming the services is the whole reason the line exists — a vague
-    // "let's talk" would occupy the same space and carry no information.
-    expect(copy.de.serviceNote).toMatch(/Website|Webshop/);
-    expect(copy.en.serviceNote).toMatch(/website|shop/i);
-  });
-
-  it("links once, to the contact form", () => {
-    const note = readFileSync(
-      join(__dirname, "..", "components", "ServiceNote.astro"),
-      "utf8",
-    );
-    // Read as text: an .astro component is compiled by neither vitest nor
-    // tsc, so this is the only way to assert what it actually renders.
-    const hrefs = [...note.matchAll(/href=\{?([^}\s>]+)\}?/g)].map((m) => m[1]);
-    expect(hrefs).toHaveLength(1);
-    expect(hrefs[0]).toContain("links.contact");
-    expect(links.contact).toBe("https://tracht-digital.de/#contact");
-  });
-
-  it("wears no card and no second accent", () => {
-    // `.tds-card` here would make it an advert block on a surface whose own
-    // cards are the tools. It is a `--color-soft` colour block like everything
-    // else on this page.
-    const note = readFileSync(
-      join(__dirname, "..", "components", "ServiceNote.astro"),
-      "utf8",
-    );
-    expect(note).not.toMatch(/tds-card|btn-primary/);
   });
 });
 

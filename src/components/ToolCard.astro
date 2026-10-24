@@ -1,6 +1,6 @@
 ---
 import Icon from "~/components/Icon.astro";
-import { categoryLabels, toolCopyFor } from "~/lib/i18n";
+import { categoryLabels, t, toolCopyFor } from "~/lib/i18n";
 import { site } from "~/lib/site";
 import type { Lang } from "~/lib/seo";
 import type { ResolvedTool } from "~/lib/catalog";
@@ -21,9 +21,9 @@ const copy = toolCopyFor(lang, tool, site.name);
 // The catalog is ONE grid now, so the category that used to be a section
 // heading rides on the card itself.
 const category = categoryLabels[lang][tool.category];
-const badges = lang === "de"
-  ? { premium: "Premium", login: "Login" }
-  : { premium: "Premium", login: "Sign-in" };
+// Every card states its access: a free tool used to carry no badge at all, so
+// "free" was only readable as the absence of "Premium".
+const access = t(lang).access;
 ---
 
 {/* The journal's flat card (`.tool-card`, this repo's global.css): a
@@ -54,10 +54,10 @@ const badges = lang === "de"
     </span>
   </span>
   <p class="tool-card__desc">{copy.description}</p>
-  {(tool.isPremium || tool.requiresLogin) && (
-    <span class="mt-auto flex flex-wrap gap-1.5 pt-1">
-      {tool.isPremium && <span class="chip chip--warning">{badges.premium}</span>}
-      {tool.requiresLogin && <span class="chip chip--info">{badges.login}</span>}
-    </span>
-  )}
+  <span class="tool-access mt-auto flex flex-wrap gap-1.5 pt-1">
+    {tool.isPremium
+      ? <span class="chip chip--warning">{access.premium}</span>
+      : <span class="chip chip--success">{access.free}</span>}
+    {tool.requiresLogin && <span class="chip chip--info">{access.login}</span>}
+  </span>
 </a>

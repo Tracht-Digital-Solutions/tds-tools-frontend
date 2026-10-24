@@ -160,15 +160,31 @@ export function breadcrumbSchema(items: { name: string; url: string }[], id?: st
   };
 }
 
-/** The catalog itself, as an ordered list of tool pages. */
-export function itemListSchema(items: { name: string; url: string }[]) {
+/**
+ * The catalog itself, as an ordered list of tool pages.
+ *
+ * With `isFree` an entry names its tool as a `WebApplication` that points at
+ * the tool page's own `#app` node and says whether it is free. Prices stay on
+ * the tool page, where the current stage price is known.
+ */
+export function itemListSchema(items: { name: string; url: string; isFree?: boolean }[]) {
   return {
     "@type": "ItemList",
     itemListElement: items.map((item, i) => ({
       "@type": "ListItem",
       position: i + 1,
-      name: item.name,
-      url: item.url,
+      // A ListItem carries either `url` or `item`, not both.
+      ...(item.isFree === undefined
+        ? { name: item.name, url: item.url }
+        : {
+            item: {
+              "@type": "WebApplication",
+              "@id": `${item.url}#app`,
+              name: item.name,
+              url: item.url,
+              isAccessibleForFree: item.isFree,
+            },
+          }),
     })),
   };
 }

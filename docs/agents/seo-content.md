@@ -59,8 +59,20 @@ Every tool page carries a guide; a 40-word tool page is thin content against hun
 
 ## Marketing
 
-One line (`components/ServiceNote.astro`, a `--color-soft` block, no card, no second CTA) plus the footer's
-services column, which provides internal links to the pages that sell.
+Only the footer's services column, which provides internal links to the pages that sell. The ServiceNote line
+under the catalogue and each tool was removed on 2026-10-25; `marketing.test.ts` keeps it out.
+
+## Free / premium labels and the catalogue FAQ
+
+- Every catalogue card carries an access chip: `Kostenlos` (`chip--success`) or `Premium` (`chip--warning`),
+  plus `Mit Anmeldung` when login is required. Labels live in `copy.*.access`, derived from `isPremium` /
+  `requiresLogin`, never per tool.
+- A tool page repeats them under the lede (`.tool-facts`: free/premium, sign-in, "Läuft im Browser"), the same
+  flags that set `isAccessibleForFree` on the app node.
+- The catalogue's `ItemList` entries are `WebApplication` items (`@id` = the tool page's `#app`) with
+  `isAccessibleForFree`; no price there.
+- `copy.*.catalogFaq` feeds the visible FAQ under the catalogue, its `FAQPage` node and the "Häufige Fragen"
+  section of `/llms.txt`.
 
 ## OG cards (`src/og/render.ts`)
 

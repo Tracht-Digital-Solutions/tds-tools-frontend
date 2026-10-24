@@ -16,7 +16,6 @@ import ToolGuide from "~/components/ToolGuide.astro";
 import ToolRatgeber from "~/components/ToolRatgeber.astro";
 import { cheapestTierFor, premiumOffer, tierCopy } from "~/lib/premium";
 import RelatedTools from "~/components/RelatedTools.astro";
-import ServiceNote from "~/components/ServiceNote.astro";
 import { components } from "virtual:tools-components";
 import { adsConfig } from "~/lib/catalog";
 import { site } from "~/lib/site";
@@ -208,10 +207,22 @@ const jsonLd = asGraph(
         </h1>
       </div>
       <p class="tds-page__lede max-w-2xl">{copy.description}</p>
+      {/* Access in words, from the same flags as the catalog card and the
+          `isAccessibleForFree` of the app node — the visible and the
+          structured answer to "is it free?" cannot disagree. */}
+      <ul class="tool-facts" aria-label={s.access.label}>
+        {tool.isPremium
+          ? <li class="chip chip--warning">{s.access.premium}</li>
+          : <li class="chip chip--success">{s.access.free}</li>}
+        <li class={tool.requiresLogin || tool.isPremium ? "chip chip--info" : "chip chip--neutral"}>
+          {tool.requiresLogin || tool.isPremium ? s.access.login : s.access.noLogin}
+        </li>
+        <li class="chip chip--neutral">{s.access.browser}</li>
+      </ul>
     </div>
 
     {/* Two columns from 80rem (global.css, "Tool page columns"): the tool and
-        its guide in the main one, the related tools and the service note
+        its guide in the main one, the related tools
         beside them. One column below that, in this same source order. */}
     {/* A workspace tool (`layout: "wide"`) gets the full content width; the
         guide and the related tools follow in the usual two columns. */}
@@ -252,8 +263,6 @@ const jsonLd = asGraph(
             base={base}
           />
         )}
-
-        <ServiceNote lang={lang} />
       </div>
     </div>
   </div>

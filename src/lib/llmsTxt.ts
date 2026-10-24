@@ -17,6 +17,7 @@
  */
 
 import type { ToolCategory } from "@tracht-digital-solutions/tds-tools-contract";
+import { copy } from "./i18n";
 import { absolute } from "./sitemap";
 import { localizedPath, seoConfig } from "./seo";
 import { categoryLabels, categoryOrder, links, site } from "./site";
@@ -82,6 +83,14 @@ export function renderLlmsTxt(input: LlmsInput): string {
   out("werden könnte, und die meisten Werkzeuge arbeiten nach dem Laden der Seite");
   out("auch ohne Netzverbindung weiter. Wo ein Werkzeug davon abweicht, sagt sein");
   out("Ratgeber es im Abschnitt zum Datenschutz.");
+  out();
+
+  // ── the catalogue page's FAQ, verbatim: one source for page and file ────
+  out("## Häufige Fragen");
+  out();
+  for (const item of copy.de.catalogFaq) {
+    out(`- **${item.q}** ${item.a}`);
+  }
   out();
 
   // ── the catalogue, grouped the way the catalogue page groups it ─────────

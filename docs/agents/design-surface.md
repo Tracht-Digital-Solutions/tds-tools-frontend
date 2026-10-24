@@ -98,7 +98,6 @@ path). Copy reaches the script as data attributes, never by importing `~/lib/i18
 - Every grid card has an opaque fill; on hover it shows its whole hard offset over the 1rem gap, and the
   active cell (z-index 2) rises above its neighbours.
 - **A tool card casts no shadow at rest** (since 2026-10-24); the offset appears only on hover/focus with the lift.
-  `.service-note` keeps the large offset.
 - **Restate all four background longhands on a card's hover.** An older hover rule uses the `background` shorthand,
   which resets `background-size`; the 4 px category band then filled the whole card (0.44.0).
 - Hover lifts a card 2 px up-left while its offset grows (`--tds-shadow-hard-hover`). Tilt uses `transform`, lift

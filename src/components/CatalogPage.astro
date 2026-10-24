@@ -8,7 +8,6 @@ import Layout from "~/layouts/Layout.astro";
 import ToolCell from "~/components/ToolCell.astro";
 import PremiumSection from "~/components/PremiumSection.astro";
 import AdSlot from "~/components/AdSlot.astro";
-import ServiceNote from "~/components/ServiceNote.astro";
 import { enabledTools, adsConfig } from "~/lib/catalog";
 import { premiumOffer } from "~/lib/premium";
 import { site, categoryOrder } from "~/lib/site";
@@ -16,6 +15,7 @@ import { t, toolCopyFor, categoryLabels } from "~/lib/i18n";
 import { localizedPath, type Lang } from "~/lib/seo";
 import {
   asGraph,
+  faqPageSchema,
   itemListSchema,
   organizationSchema,
   personSchema,
@@ -94,11 +94,16 @@ const jsonLd = asGraph(
     // The listed NAMES follow the page language too. They used to come
     // straight off the manifest, so the English catalog advertised
     // "PDF-Werkzeuge" to a crawler while the card beside it said "PDF Tools".
+    // Each entry carries whether it is free, so an answer engine reading the
+    // catalogue alone can say which tools cost nothing.
     orderedTools.map((tool) => ({
       name: toolCopyFor(lang, tool, site.name).name,
       url: `${site.origin}${localizedPath(`/tools/${tool.slug}`, lang)}`,
+      isFree: !tool.isPremium,
     })),
   ),
+  /* The FAQ below the catalogue, from the same array the page renders. */
+  faqPageSchema(s.catalogFaq),
 );
 ---
 
@@ -224,7 +229,20 @@ const jsonLd = asGraph(
       </ul>
     </PremiumSection>
 
-    <ServiceNote lang={lang} />
+    {/* Three short answers to the questions a visitor asks before using any
+        tool. Visible text for answer engines on a page that is otherwise
+        cards; <details> keeps the answers in the DOM for the FAQPage node. */}
+    <section class="catalog-faq" aria-labelledby="catalog-faq-heading">
+      <h2 id="catalog-faq-heading" class="tool-guide__h3">{s.catalogFaqHeading}</h2>
+      <div class="tool-guide__faq">
+        {s.catalogFaq.map((item) => (
+          <details>
+            <summary>{item.q}</summary>
+            <p>{item.a}</p>
+          </details>
+        ))}
+      </div>
+    </section>
   </div>
 </Layout>
 

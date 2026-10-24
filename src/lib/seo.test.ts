@@ -222,6 +222,19 @@ describe("structured data", () => {
     expect(round["@graph"]).toHaveLength(6);
   });
 
+  it("lets the catalogue list say which tools are free", () => {
+    const list = itemListSchema([
+      { name: "QR-Code-Generator", url: toolUrl, isFree: true },
+      { name: "PDF-Werkzeuge", url: `${site.origin}/tools/pdf-werkzeuge`, isFree: false },
+    ]) as { itemListElement: Record<string, unknown>[] };
+    const [free, paid] = list.itemListElement.map((entry) => entry.item as Record<string, unknown>);
+    expect(free["@id"]).toBe(`${toolUrl}#app`);
+    expect(free.isAccessibleForFree).toBe(true);
+    expect(paid.isAccessibleForFree).toBe(false);
+    // An entry carries `url` or `item`, never both.
+    expect(list.itemListElement[0].url).toBeUndefined();
+  });
+
   it("declares a free tool as free AND priced at zero", () => {
     const node = softwareApplicationSchema({
       name: "QR-Code-Generator",

@@ -73,9 +73,22 @@ export interface SiteCopy {
   footerPrivacy: string;
   footerAdConsent: string;
   footerTagline: string;
-  /** The one marketing line under the catalog and each tool. */
-  serviceNote: string;
-  serviceNoteCta: string;
+  /**
+   * Access labels on catalog cards and tool pages, derived from the catalog
+   * flags (`isPremium`, `requiresLogin`) — never written per tool.
+   */
+  access: {
+    /** Accessible name of the fact list on a tool page. */
+    label: string;
+    free: string;
+    premium: string;
+    login: string;
+    noLogin: string;
+    browser: string;
+  };
+  /** The short FAQ under the catalog; feeds the visible block and FAQPage. */
+  catalogFaqHeading: string;
+  catalogFaq: readonly { q: string; a: string }[];
   languageSwitch: string;
   languageOther: string;
   /** The premium block under the catalog (visitors without a premium account). */
@@ -160,15 +173,29 @@ export const copy = {
     footerPrivacy: "Datenschutz",
     footerAdConsent: "Werbe-Einwilligung ändern",
     footerTagline: "Digitalisierung für Unternehmen",
-    /**
-     * The site's one piece of marketing copy, and it stays one sentence.
-     * No free consultation is offered on any web property (the classifieds
-     * ads do that, the website deliberately does not), and no customer is
-     * ever named. `marketing.test.ts` pins both.
-     */
-    serviceNote:
-      "Diese Werkzeuge lösen kleine Aufgaben. Wo ein ganzer Ablauf hakt, entwickelt Tracht Digital Solutions Websites, Webshops und individuelle Lösungen für kleine Betriebe.",
-    serviceNoteCta: "Unverbindlich anfragen",
+    access: {
+      label: "Auf einen Blick",
+      free: "Kostenlos",
+      premium: "Premium",
+      login: "Mit Anmeldung",
+      noLogin: "Ohne Anmeldung",
+      browser: "Läuft im Browser",
+    },
+    catalogFaqHeading: "Häufige Fragen",
+    catalogFaq: [
+      {
+        q: "Welche Werkzeuge sind kostenlos?",
+        a: "Jedes Werkzeug mit dem Kennzeichen „Kostenlos“ ist ohne Bezahlung nutzbar. Braucht es ein Konto, steht zusätzlich „Mit Anmeldung“ daran. Premium-Werkzeuge laufen über ein Monatsabo, zum Ende jedes Abrechnungsmonats kündbar.",
+      },
+      {
+        q: "Werden Dateien oder Eingaben hochgeladen?",
+        a: "Nein. Die Werkzeuge rechnen im Browser, Eingaben, Dateien und Bilder verlassen das Gerät nicht. Wo ein Werkzeug davon abweicht, sagt es sein Ratgeber im Abschnitt zum Datenschutz.",
+      },
+      {
+        q: "Muss etwas installiert werden?",
+        a: "Nein. Jedes Werkzeug läuft in einem aktuellen Browser auf Computer, Tablet oder Smartphone. Einmal geöffnete Werkzeugseiten funktionieren auf demselben Gerät auch offline.",
+      },
+    ],
     languageSwitch: "Sprache",
     languageOther: "English",
     premiumHeading: "Premium-Werkzeuge",
@@ -245,9 +272,29 @@ export const copy = {
     footerPrivacy: "Privacy",
     footerAdConsent: "Change ad consent",
     footerTagline: "Digitalisation for businesses",
-    serviceNote:
-      "These tools solve small jobs. When a whole process is the problem, I build websites, online shops and custom solutions for small businesses.",
-    serviceNoteCta: "Get in touch",
+    access: {
+      label: "At a glance",
+      free: "Free",
+      premium: "Premium",
+      login: "Sign-in required",
+      noLogin: "No sign-up",
+      browser: "Runs in your browser",
+    },
+    catalogFaqHeading: "Frequently asked questions",
+    catalogFaq: [
+      {
+        q: "Which tools are free?",
+        a: "Every tool marked “Free” can be used without paying. If it needs an account, it is also marked “Sign-in required”. Premium tools come with a monthly subscription, cancellable at the end of any billing month.",
+      },
+      {
+        q: "Are files or inputs uploaded?",
+        a: "No. The tools compute in your browser; inputs, files and images never leave your device. Where a tool differs, its guide says so in the section on data.",
+      },
+      {
+        q: "Is there anything to install?",
+        a: "No. Every tool runs in a current browser on a computer, tablet or phone. Tool pages opened once keep working offline on the same device.",
+      },
+    ],
     languageSwitch: "Language",
     languageOther: "Deutsch",
     premiumHeading: "Premium tools",
