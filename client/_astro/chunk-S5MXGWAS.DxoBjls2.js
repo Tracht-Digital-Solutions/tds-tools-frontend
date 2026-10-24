@@ -1,0 +1,1 @@
+import{t as e}from"./jsx-runtime.DJqdT774.js";var t=e();function n({tone:e=`danger`,children:n,className:r}){if(n==null||n===!1||n===``)return null;let i=e===`danger`;return(0,t.jsx)(`p`,{className:`tds-alert${e===`neutral`?``:` tds-alert--${e}`} tds-appear${r?` ${r}`:``}`,role:i?`alert`:`status`,children:n})}export{n as t};
