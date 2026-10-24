@@ -806,13 +806,38 @@
   }
 }
 
+/* ---- Panel corners (2026-10-24) ----
+   The site keeps the blog surface but takes the panel's geometry: the same
+   radius tokens `surfaces/panel.css` sets, so buttons, chips, fields, alerts
+   and cards round exactly as they do there. `html[...]` outranks the
+   surface's bare `[data-surface="blog"]` block, whatever the load order. */
+html[data-surface="blog"] {
+  --tds-radius-btn: var(--tds-radius-md);
+  --tds-radius-card: var(--tds-radius-md);
+  --tds-radius-input: 0.5rem;
+  --tds-radius-chip: 0.75rem;
+  --tds-radius-badge: 0.75rem;
+  --tds-radius-alert: 0.5rem;
+  --tds-radius-bar: var(--tds-radius-xs);
+}
+.tool-card {
+  border-radius: var(--tds-radius-card);
+  overflow: hidden;
+}
+.tool-card__photo {
+  border-radius: var(--tds-radius-sm);
+}
+
 /* ---- Category colours (2026-10-24) ----
    Each category owns one shared colour token; the card carries it as
    `--tool-cat` through `data-category` (ToolCard.astro, and the filter
-   chips, so the chip doubles as the legend). In the grid the card takes a
-   tint of it plus a 4px band along its top edge; everywhere the icon, the
-   hover bar and a square swatch before the category name follow it. Text
-   never takes the colour: `--tool-muted` keeps the measured contrast. */
+   chips, so the chip doubles as the legend). In the grid the card is a
+   clear fill of it (22 %, 30 % on hover) with a 4px band along its top edge;
+   everywhere the icon, the hover bar and a square swatch before the
+   category name follow it. Text never takes the colour: the muted ink is
+   mixed into the card's OWN fill, so it keeps its contrast on every tint.
+   Rounded cards cannot share seams, so the grid opens a gap and each card
+   shows its whole hard offset. */
 [data-category="marketing"] { --tool-cat: var(--color-cat-rose); }
 [data-category="security"] { --tool-cat: var(--color-primary); }
 [data-category="developer"] { --tool-cat: var(--color-cat-violet); }
@@ -822,15 +847,26 @@
 [data-category="business"] { --tool-cat: var(--color-info); }
 [data-category="compliance"] { --tool-cat: var(--color-success); }
 [data-category="other"] { --tool-cat: var(--color-muted); }
+.tool-grid {
+  gap: 1rem;
+}
+.tool-grid::after {
+  content: none;
+}
 .tool-grid .tool-card {
-  background-color: color-mix(in srgb, var(--tool-cat, transparent) 9%, var(--color-soft));
+  --tool-card-bg: color-mix(in srgb, var(--tool-cat, transparent) 22%, var(--color-soft));
+  --tool-muted: color-mix(in srgb, var(--color-ink) 80%, var(--tool-card-bg));
+  background-color: var(--tool-card-bg);
   background-image: linear-gradient(var(--tool-cat, transparent), var(--tool-cat, transparent));
   background-size: 100% 4px;
   background-repeat: no-repeat;
+  box-shadow: var(--tds-shadow-hard);
 }
 .tool-grid .tool-card:is(:hover, :focus-within) {
-  background-color: color-mix(in srgb, var(--tool-cat, transparent) 16%, var(--color-soft));
+  --tool-card-bg: color-mix(in srgb, var(--tool-cat, transparent) 30%, var(--color-soft));
+  background-color: var(--tool-card-bg);
   background-image: linear-gradient(var(--tool-cat, transparent), var(--tool-cat, transparent));
+  box-shadow: var(--tds-shadow-hard-hover);
 }
 .tool-card[data-category]::before {
   background: var(--tool-cat);

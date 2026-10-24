@@ -34,20 +34,26 @@ const base = lang === "de" ? "" : "/en";
 const tools = await enabledTools();
 const ads = await adsConfig();
 
-// One grid, still in the site's stable category order: the category that used
-// to be a section heading is now a label on each card. `sort` is stable, so
-// tools keep their manifest order inside a category. A category missing from
-// `categoryOrder` sorts last rather than vanishing (`site.test.ts` keeps the
-// two lists equal anyway).
+// One grid, sorted by category SIZE (2026-10-24): the category with the
+// most tools comes first, a tie keeps the site's stable `categoryOrder`, and
+// a category missing from it sorts last rather than vanishing. Inside a
+// category the tools run A–Z by the name the card shows in this language.
 const rank = (cat: ToolCategory): number => {
   const index = categoryOrder.indexOf(cat);
   return index === -1 ? categoryOrder.length : index;
 };
-const orderedTools = [...tools].sort((a, b) => rank(a.category) - rank(b.category));
+const sizeOf = new Map<ToolCategory, number>();
+for (const tool of tools) sizeOf.set(tool.category, (sizeOf.get(tool.category) ?? 0) + 1);
+const byCategory = (a: ToolCategory, b: ToolCategory): number =>
+  (sizeOf.get(b) ?? 0) - (sizeOf.get(a) ?? 0) || rank(a) - rank(b);
+const nameOf = (tool: (typeof tools)[number]): string => toolCopyFor(lang, tool, site.name).name;
+const orderedTools = [...tools].sort(
+  (a, b) => byCategory(a.category, b.category) || nameOf(a).localeCompare(nameOf(b), lang),
+);
 
 // The filter bar's category chips: only categories that hold a tool, in the
 // grid's order.
-const presentCategories = categoryOrder.filter((cat) => orderedTools.some((tool) => tool.category === cat));
+const presentCategories = [...sizeOf.keys()].sort(byCategory);
 const accessOf = (tool: (typeof tools)[number]): string =>
   [tool.isPremium ? "premium" : "free", tool.requiresLogin ? "login" : ""].filter(Boolean).join(" ");
 const searchOf = (tool: (typeof tools)[number]): string => {
@@ -79,7 +85,7 @@ const jsonLd = asGraph(
     // The listed NAMES follow the page language too. They used to come
     // straight off the manifest, so the English catalog advertised
     // "PDF-Werkzeuge" to a crawler while the card beside it said "PDF Tools".
-    tools.map((tool) => ({
+    orderedTools.map((tool) => ({
       name: toolCopyFor(lang, tool, site.name).name,
       url: `${site.origin}${localizedPath(`/tools/${tool.slug}`, lang)}`,
     })),

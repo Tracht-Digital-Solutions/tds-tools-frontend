@@ -1,10 +1,12 @@
 # Surface, styling and build CSS
 
-## The `blog` surface, borderless
+## The `blog` surface, borderless, with panel corners
 
 `<html data-surface="blog" data-flat>` in `Layout.astro` selects tds-shared's `surfaces/blog.css`, the same
 layer as `blog.tracht-digital.de`: no radii, nothing elevated, display voice at 800, separation by colour blocks
-(`--color-soft`, `--tds-flat-tint`, `--tds-flat-hover`) and 2 px accent bars. `global.css` imports `base.css` →
+(`--color-soft`, `--tds-flat-tint`, `--tds-flat-hover`) and 2 px accent bars. **Corners follow the panel** (since 2026-10-24): `global.css` remaps the `--tds-radius-*` tokens on
+`html[data-surface="blog"]` to the values of `surfaces/panel.css` (8 px cards and buttons, 0.75rem chips). Change a
+radius there, never on a class. `global.css` imports `base.css` →
 `primitives.css` → `surfaces/blog.css`.
 
 - **`data-flat` is an explicit opt-in.** The blog base block keeps `--tds-border-hairline: 1px`; without
@@ -61,7 +63,7 @@ layer as `blog.tracht-digital.de`: no radii, nothing elevated, display voice at 
 ## Catalog grid
 
 `CatalogPage.astro` renders one `.tds-grid-auto.tool-grid` (`--tds-grid-min: 17rem`) over the full viewport width
-in stable `categoryOrder`; the category rides on each card as a mono eyebrow. A mono counter
+by category size (most tools first, ties in `categoryOrder`), tools A–Z by their localised name; the category rides on each card as a mono eyebrow. A mono counter
 (`toolCount`), the hidden `h1` and an accent bar sit above it. The body lifts the shell ceiling (`--tds-shell-max: none`); header
 keeps 120rem.
 
@@ -74,14 +76,14 @@ path). Copy reaches the script as data attributes, never by importing `~/lib/i18
 
 - **Category colours:** `data-category` on each card (and on the filter chips, which double as the legend)
   sets `--tool-cat` from a shared token (`--color-cat-*`, `--color-primary`, `--color-info`, `--color-success`,
-  `--color-muted` for `other`), mapped at the end of `global.css`. In the grid the card takes a 9 % tint (16 % on
+  `--color-muted` for `other`), mapped at the end of `global.css`. In the grid the card takes a 22 % fill (30 % on
   hover) and a 4 px top band; icon, hover bar and `.tool-cat-swatch` follow it. Text never takes the colour.
-  A new category needs a line in that map.
+  Muted text mixes ink 80 % into the card's own fill (≥ 6:1 measured in both
+  themes). A new category needs a line in that map.
 
-- **Seams are not a `gap: 1px` over a line-coloured grid** (`auto-fill` keeps empty tracks that would show as grey
-  blocks). Cards draw inset 1 px seams on their right and bottom edges.
-- `.tool-card` is the journal's flat card: `--color-soft` block, no border or radius; hover deepens to
-  `--tds-flat-hover` and grows a 2 px left accent bar. `.tds-card` still wraps the tool body on tool pages.
+- **The grid has a 1rem gap** (rounded cards cannot share seams); each card shows its whole hard offset.
+- `.tool-card` is a flat, rounded card (`--tds-radius-card`, `overflow: hidden`), no border; hover grows a 2 px
+  left bar in the category colour. `.tds-card` still wraps the tool body on tool pages.
 - **Muted text in the grid is `--tool-muted`** (ink 72 % in soft); `--color-muted` drops to 4.49:1 on the hover
   fill. Measure contrast with transitions disabled.
 - **Hover tilt (`lib/cardTilt.ts`)** runs only for a fine hovering pointer and never under reduced motion. The rect
@@ -91,9 +93,8 @@ path). Copy reaches the script as data attributes, never by importing `~/lib/i18
 
 ## Hard 2D shadows (tds-shared ≥ 0.42)
 
-- The grid has no gap, so each card carries the offset **and an opaque fill**: later cells paint over earlier
-  shadows, and only the block's outer edge shows them. Empty tracks show the page ground; the active cell
-  (z-index 2) shows its whole offset.
+- Every grid card carries the hard offset over its opaque fill; with the 1rem gap each shows it whole, and the
+  active cell (z-index 2) rises above its neighbours.
 - `.tool-card` outside the grid and `.service-note` take the large offset.
 - Hover lifts a card 2 px up-left while its offset grows (`--tds-shadow-hard-hover`). Tilt uses `transform`, lift
   uses `translate`, so neither overwrites the other.
