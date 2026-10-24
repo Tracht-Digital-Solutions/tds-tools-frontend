@@ -1,0 +1,107 @@
+---
+/**
+ * The premium area under the catalog (2026-10-24, replaces PremiumNote).
+ *
+ * The page is cached and the same for everyone, so it renders for the visitor
+ * WITHOUT a premium account: the premium tools in their own block (the slot,
+ * cells from CatalogPage so the filter and the tilt reach them), the
+ * advertising copy, and every stage on sale with its FIXED monthly price and a
+ * "Freischalten" button. `lib/premiumClient.ts` then asks the API who is
+ * looking: for a premium account it moves the tools up into the catalog and
+ * shows only "Premium ist aktiv" with the subscription management.
+ *
+ * Copy rules as everywhere on this site (`marketing.test.ts`,
+ * `addressForm.test.ts`): no free consultation, no named customer, German that
+ * addresses no one.
+ */
+import { t, toolCopyFor } from "~/lib/i18n";
+import { site } from "~/lib/site";
+import { formatPrice, tierCopy, type PremiumOffer } from "~/lib/premium";
+import type { Lang } from "~/lib/seo";
+import type { ResolvedTool } from "~/lib/catalog";
+
+interface Props {
+  tools: ResolvedTool[];
+  offer: PremiumOffer;
+  lang: Lang;
+}
+
+const { tools, offer, lang } = Astro.props;
+const s = t(lang);
+const p = s.premium;
+const premium = tools.filter((tool) => tool.isPremium);
+const nameOf = (id: string): string => {
+  const tool = tools.find((x) => x.id === id);
+  return tool ? toolCopyFor(lang, tool, site.name).name : id;
+};
+---
+
+{premium.length > 0 && (
+  <section
+    class="premium-area"
+    id="premium"
+    aria-labelledby="premium-heading"
+    data-premium-area
+    data-copy-redirecting={p.redirecting}
+    data-copy-failed={p.failed}
+  >
+    <div class="premium-area__offer" data-premium-offer>
+      <h2 id="premium-heading" class="premium-area__title">{s.premiumHeading}</h2>
+      <span aria-hidden="true" class="cat-head__mark"></span>
+      <p class="premium-area__text">{s.premiumBody}</p>
+
+      <slot />
+
+      <h3 class="premium-area__subtitle">{p.plansHeading}</h3>
+      {offer.tiers.length === 0 ? (
+        <p class="premium-area__text">{p.noPlans}</p>
+      ) : (
+        <>
+          <ul class="premium-plans">
+            {offer.tiers.map((tier) => {
+              const c = tierCopy(tier, lang);
+              return (
+                <li class="premium-plan" data-highlight={tier.highlight ? "" : undefined}>
+                  <div class="premium-plan__head">
+                    <h4 class="premium-plan__name">{c.name}</h4>
+                    {tier.highlight && <span class="chip chip--info">{p.recommended}</span>}
+                  </div>
+                  {c.tagline && <p class="premium-plan__tagline">{c.tagline}</p>}
+                  <p class="premium-plan__price">
+                    <span class="premium-plan__amount">{formatPrice(tier.priceCents, offer.currency, lang)}</span>
+                    <span class="premium-plan__per">{p.perMonth}</span>
+                  </p>
+                  {c.features.length > 0 && (
+                    <ul class="premium-plan__features">
+                      {c.features.map((f) => <li>{f}</li>)}
+                    </ul>
+                  )}
+                  <p class="premium-plan__tools">
+                    <span class="premium-plan__label">{p.unlocks}</span> {tier.toolIds.map(nameOf).join(", ")}
+                  </p>
+                  <button type="button" class="btn btn-primary premium-plan__cta" data-subscribe={tier.slug}>
+                    {p.unlock}
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+          <p class="premium-area__terms">{p.terms}</p>
+          <p class="premium-area__account" data-premium-signup>
+            {p.signupHint}{" "}
+            <a class="link-underline premium-area__link" href="#premium" data-signup-link>{p.createAccount}</a>
+            {" · "}
+            <a class="link-underline premium-area__link" href="#premium" data-signin-link>{p.signIn}</a>
+          </p>
+        </>
+      )}
+    </div>
+
+    <div class="premium-area__active" data-premium-active hidden>
+      <p class="premium-area__text">{p.active}</p>
+      <button type="button" class="btn btn-ghost" data-premium-manage hidden>{p.manage}</button>
+    </div>
+
+    <p class="premium-area__message" data-premium-message aria-live="polite"></p>
+  </section>
+)}

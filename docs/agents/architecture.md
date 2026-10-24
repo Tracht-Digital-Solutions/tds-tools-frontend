@@ -97,3 +97,12 @@ consent mode. Labels are a neutral "Anzeige".
 
 Header nav and footer link *Blog* and *Startseite*; URLs live once in `lib/site.ts` as `links`.
 `lib/surface.test.ts` asserts both links in both components.
+
+## Ratgeber article per tool (since 2026-10-24)
+
+`tools_config.blog_slug` (panel: Tool-Verwaltung) arrives as `blogSlug` on `ResolvedTool`.
+`ToolRatgeber.astro` on every tool page: the article from `GET /content/blog/{slug}?lang=` when the
+blog CMS serves it (rendered with tds-shared `renderMarkdown`, `data-nosnippet`, linked to the blog),
+otherwise a link to it, and without a slug a link to the Ratgeber. **Read without the site key**
+(`lib/publicFetch.ts`): the CMS picks the blog from the key, and this site's tools key has no blog
+binding, so with it every article answers "no blog". A 404 is remembered as "no article".

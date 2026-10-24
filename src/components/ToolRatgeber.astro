@@ -1,0 +1,46 @@
+---
+/**
+ * Every tool points at the Ratgeber (2026-10-24):
+ *
+ *  - an assigned article that the blog CMS serves → shown here in full, with
+ *    the link to it on the blog;
+ *  - an assigned article the CMS does not serve (extension not composed, not
+ *    published in this language, API down) → a link to it on the blog;
+ *  - no assignment → a link to the Ratgeber itself.
+ *
+ * `data-nosnippet` on the shown text: the article's own page on the blog is
+ * the one that should rank and be quoted for it, not this copy beside a tool.
+ */
+import { renderMarkdown } from "@tracht-digital-solutions/tds-shared/markdown";
+import { t } from "~/lib/i18n";
+import { ratgeberArticle, ratgeberUrl } from "~/lib/ratgeber";
+import type { Lang } from "~/lib/seo";
+
+interface Props {
+  slug: string | null;
+  lang: Lang;
+}
+
+const { slug, lang } = Astro.props;
+const r = t(lang).ratgeber;
+const article = await ratgeberArticle(slug, lang);
+const url = article?.url ?? ratgeberUrl(slug, lang);
+---
+
+<section class="tool-ratgeber" aria-labelledby="tool-ratgeber-heading">
+  <p class="tool-ratgeber__eyebrow">
+    {r.heading}{article?.readingMinutes ? ` · ${r.minutes(article.readingMinutes)}` : ""}
+  </p>
+  {article ? (
+    <>
+      <h2 id="tool-ratgeber-heading" class="tool-ratgeber__title">{article.title}</h2>
+      <div class="tool-ratgeber__body" data-nosnippet set:html={renderMarkdown(article.body)} />
+      <a class="link-underline tool-ratgeber__link" href={url}>{r.read} →</a>
+    </>
+  ) : (
+    <>
+      <h2 id="tool-ratgeber-heading" class="tool-ratgeber__title">{r.heading}</h2>
+      <a class="link-underline tool-ratgeber__link" href={url}>{slug ? r.read : r.more} →</a>
+    </>
+  )}
+</section>

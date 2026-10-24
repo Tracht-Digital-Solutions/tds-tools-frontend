@@ -1,0 +1,26 @@
+---
+/**
+ * One cell of a catalog grid: the card plus the data the filter bar
+ * (`data-category`, `data-access`, `data-search`) and the premium move
+ * (`data-order`, see lib/premiumClient.ts) read. One component because the
+ * catalog renders cells into two grids — the catalog and the premium block.
+ */
+import ToolCard from "~/components/ToolCard.astro";
+import type { ResolvedTool } from "~/lib/catalog";
+import type { Lang } from "~/lib/seo";
+
+interface Props {
+  tool: ResolvedTool;
+  lang: Lang;
+  base: string;
+  order: number;
+  access: string;
+  search: string;
+}
+
+const { tool, lang, base, order, access, search } = Astro.props;
+---
+
+<li class="tool-grid__cell" data-category={tool.category} data-access={access} data-search={search} data-order={order}>
+  <ToolCard tool={tool} lang={lang} base={base} />
+</li>

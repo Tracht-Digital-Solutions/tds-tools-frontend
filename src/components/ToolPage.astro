@@ -13,6 +13,8 @@ import AdSlot from "~/components/AdSlot.astro";
 import Icon from "~/components/Icon.astro";
 import ToolBody from "~/components/ToolBody.astro";
 import ToolGuide from "~/components/ToolGuide.astro";
+import ToolRatgeber from "~/components/ToolRatgeber.astro";
+import { cheapestTierFor, premiumOffer, tierCopy } from "~/lib/premium";
 import RelatedTools from "~/components/RelatedTools.astro";
 import ServiceNote from "~/components/ServiceNote.astro";
 import { components } from "virtual:tools-components";
@@ -71,6 +73,14 @@ const showAds = ads.enabled && !!ads.slotTool && !tool.isPremium;
 const gated = tool.requiresLogin || tool.isPremium;
 const wide = tool.layout === "wide";
 
+// What "Freischalten" books for this tool: the cheapest stage on sale that
+// unlocks it, with its fixed monthly price (null: nothing to book).
+const offer = tool.isPremium ? await premiumOffer() : { tiers: [], currency: "EUR" };
+const stage = tool.isPremium ? cheapestTierFor(tool.id, offer.tiers) : null;
+const unlock = stage
+  ? { name: tierCopy(stage, lang).name, priceCents: stage.priceCents, currency: offer.currency }
+  : null;
+
 // German copy comes from the pack manifest, English from `lib/i18n`, and a
 // panel edit outranks both — field by field, so an editor who rewrote the
 // description does not also have to restate the name.
@@ -115,7 +125,9 @@ const jsonLd = asGraph(
     type: tool.seo?.jsonLdType ?? "WebApplication",
     lang,
     isFree: !tool.isPremium,
-    priceCents: tool.priceCents,
+    priceCents: tool.isPremium ? (unlock?.priceCents ?? null) : 0,
+    monthly: tool.isPremium,
+    currency: unlock?.currency,
     keywords: tool.keywords,
   }),
   breadcrumbSchema(
@@ -205,13 +217,13 @@ const jsonLd = asGraph(
         guide and the related tools follow in the usual two columns. */}
     {wide && (
       <div class="tool-wide">
-        <ToolBody tool={tool} Tool={Tool} gated={gated} lang={lang} />
+        <ToolBody tool={tool} Tool={Tool} gated={gated} lang={lang} unlock={unlock} />
       </div>
     )}
 
     <div class="tool-layout">
       <div class="tool-main">
-        {!wide && <ToolBody tool={tool} Tool={Tool} gated={gated} lang={lang} />}
+        {!wide && <ToolBody tool={tool} Tool={Tool} gated={gated} lang={lang} unlock={unlock} />}
 
         {showAds && <AdSlot client={ads.publisherId} slot={ads.slotTool} lang={lang} />}
 
@@ -226,6 +238,8 @@ const jsonLd = asGraph(
             <ToolGuide guide={guide} toolName={copy.name} lang={lang} updatedAt={guideUpdatedAt(tool.slug)} />
           </>
         )}
+
+        <ToolRatgeber slug={tool.blogSlug} lang={lang} />
       </div>
 
       <div class="tool-aside">

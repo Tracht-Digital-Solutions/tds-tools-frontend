@@ -5,11 +5,12 @@
  * lives in a component rather than in two route files.
  */
 import Layout from "~/layouts/Layout.astro";
-import ToolCard from "~/components/ToolCard.astro";
-import PremiumNote from "~/components/PremiumNote.astro";
+import ToolCell from "~/components/ToolCell.astro";
+import PremiumSection from "~/components/PremiumSection.astro";
 import AdSlot from "~/components/AdSlot.astro";
 import ServiceNote from "~/components/ServiceNote.astro";
 import { enabledTools, adsConfig } from "~/lib/catalog";
+import { premiumOffer } from "~/lib/premium";
 import { site, categoryOrder } from "~/lib/site";
 import { t, toolCopyFor, categoryLabels } from "~/lib/i18n";
 import { localizedPath, type Lang } from "~/lib/seo";
@@ -50,6 +51,14 @@ const nameOf = (tool: (typeof tools)[number]): string => toolCopyFor(lang, tool,
 const orderedTools = [...tools].sort(
   (a, b) => byCategory(a.category, b.category) || nameOf(a).localeCompare(nameOf(b), lang),
 );
+// Premium tools get their own block (PremiumSection) for everyone the page is
+// cached for — a visitor without a premium account. `data-order` keeps each
+// cell's place in the full order, so the browser can move them back into the
+// catalog for a premium account (lib/premiumClient.ts).
+const orderOf = new Map(orderedTools.map((tool, i) => [tool.id, i]));
+const freeTools = orderedTools.filter((tool) => !tool.isPremium);
+const premiumTools = orderedTools.filter((tool) => tool.isPremium);
+const offer = premiumTools.length > 0 ? await premiumOffer() : { tiers: [], currency: "EUR" };
 
 // The filter bar's category chips: only categories that hold a tool, in the
 // grid's order.
@@ -199,22 +208,21 @@ const jsonLd = asGraph(
             It used to be one small grid per category, which with 1–3 tools
             each left most rows half empty. Why the seams are drawn the way
             they are: the `.tool-grid` block in global.css. */}
-        <ul class="tds-grid-auto tool-grid" style="--tds-grid-min: 17rem;" data-tool-grid>
-          {orderedTools.map((tool) => (
-            <li
-              class="tool-grid__cell"
-              data-category={tool.category}
-              data-access={accessOf(tool)}
-              data-search={searchOf(tool)}
-            >
-              <ToolCard tool={tool} lang={lang} base={base} />
-            </li>
+        <ul class="tds-grid-auto tool-grid" style="--tds-grid-min: 17rem;" data-tool-grid data-catalog-grid>
+          {freeTools.map((tool) => (
+            <ToolCell tool={tool} lang={lang} base={base} order={orderOf.get(tool.id) ?? 0} access={accessOf(tool)} search={searchOf(tool)} />
           ))}
         </ul>
       </section>
     )}
 
-    <PremiumNote tools={tools} lang={lang} base={base} />
+    <PremiumSection tools={tools} offer={offer} lang={lang}>
+      <ul class="tds-grid-auto tool-grid premium-area__tools" style="--tds-grid-min: 17rem;" data-tool-grid data-premium-grid>
+        {premiumTools.map((tool) => (
+          <ToolCell tool={tool} lang={lang} base={base} order={orderOf.get(tool.id) ?? 0} access={accessOf(tool)} search={searchOf(tool)} />
+        ))}
+      </ul>
+    </PremiumSection>
 
     <ServiceNote lang={lang} />
   </div>
@@ -249,5 +257,19 @@ const jsonLd = asGraph(
         if (empty) empty.textContent = visible === 0 ? none : "";
       },
     });
+  }
+
+  import { runtimeSetting } from "@tracht-digital-solutions/tds-shared/api";
+  import { mountPremium } from "~/lib/premiumClient";
+
+  const premiumArea = document.querySelector<HTMLElement>("[data-premium-area]");
+  if (premiumArea) {
+    // Same endpoints and fallbacks as the tool gate: tds-runtime.json on a
+    // configured host, the build-time values otherwise.
+    void (async () => {
+      const api = await runtimeSetting("apiBase", import.meta.env.PUBLIC_API_URL ?? "https://api.tracht-digital.de");
+      const login = await runtimeSetting("loginUrl", import.meta.env.PUBLIC_LOGIN_URL ?? "https://auth.tracht-digital.de");
+      await mountPremium(premiumArea, document.querySelector<HTMLElement>("[data-catalog-grid]"), { api, login });
+    })();
   }
 </script>

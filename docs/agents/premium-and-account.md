@@ -9,15 +9,29 @@
   `tds-core-frontend-pkg`. Production supplies `loginUrl` via `tds-runtime.json`. `ToolGate.test.tsx` pins the
   origin and the `next` parameter.
 
-## `PremiumNote.astro`
+## Premium: monthly stages (since 2026-10-24)
 
-The only place the paid tier is explained (what unlocking gets you; a one-off, not a subscription).
+Premium is a monthly subscription, sold in stages the admin manages in `tds-ext-tools-pkg`
+(name, fixed monthly price, copy, tools). One-off purchases are no longer sold; earlier ones still
+pass `/tools/entitlement`.
 
-- It derives its list from the catalog, so a tool switched to free disappears on the next render; it renders
-  **nothing** when no tool is premium.
-- A plain block on the page ground, not a card (visitors came for a free tool; a boxed advert reads as bait).
-- It links every premium tool by name (internal linking from the crawled catalog).
-- Its copy is scanned by `marketing.test.ts`.
+- **`lib/premium.ts`** reads `GET /tools/tiers` server-side (public route, **no site key**:
+  `lib/publicFetch.ts`). The prices are rendered into the page; a stage change refreshes the cache.
+  Fails soft to no stages ("Premium ist gerade nicht buchbar").
+- **`PremiumSection.astro`** (replaces PremiumNote) renders for a visitor WITHOUT a premium account,
+  because the cached page is the same for everyone: the premium tools in their own grid (cells come
+  from `CatalogPage` through the slot, so filter and tilt reach them), the copy, every stage with its
+  price and "Freischalten", and the account line.
+- **`lib/premiumClient.ts`** asks `GET /tools/premium/status`. Premium account: the cells move into
+  the catalog grid at their `data-order`, the offer hides, "Premium ist aktiv" shows, "Abo verwalten"
+  (only with a subscription) opens `POST /tools/billing-portal`. Guest: "Freischalten" goes to
+  `auth…/registrieren?next=…#premium`. Member: `POST /tools/subscribe`; 409 `has_subscription` →
+  portal, never a second checkout. A failed status call leaves the offer as rendered.
+- **`ToolGate`** books the cheapest stage with the tool (`unlock` from `ToolPage`), states its
+  monthly price, offers "Konto anlegen" next to "Anmelden", and shows no button without a stage.
+- JSON-LD follows the visible price: a premium tool's Offer is the stage's monthly price
+  (`UnitPriceSpecification`, `MON`); without a stage, no Offer.
+- Copy rules: `marketing.test.ts` and `addressForm.test.ts` (neutral German, no free consultation).
 
 ## Account menu
 

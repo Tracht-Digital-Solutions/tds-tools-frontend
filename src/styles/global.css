@@ -665,17 +665,19 @@
   text-wrap: pretty;
 }
 
-/* ---- Premium block ---- */
-/* Sits on the page's own ground, not in a card: a boxed advert with its own
-   accent after a free-tools catalog reads as bait, which is the same reason
-   `.service-note` is a plain block. Separation comes from spacing and the 2px
-   accent bar the category headings already use — this surface draws almost no
-   borders, so one more hairline would be the heaviest thing on the page. */
-.premium-note {
+/* ---- Premium area (2026-10-24) ----
+   Its own block under the catalog for visitors without a premium account:
+   the premium tools in a grid of their own, the copy, and the stages with
+   their fixed monthly price. Set apart by a primary-tinted band (it is an
+   offer, and says so) rather than by a border. A premium account sees only
+   the short "aktiv" line; lib/premiumClient.ts moves the tools up. */
+.premium-area {
   margin-top: 4rem;
-  padding-top: 0.5rem;
+  padding: clamp(1.25rem, 1rem + 2vw, 2.5rem);
+  border-radius: var(--tds-radius-card);
+  background: color-mix(in srgb, var(--color-primary) 10%, var(--color-paper));
 }
-.premium-note__title {
+.premium-area__title {
   margin: 0;
   font-family: var(--font-display);
   font-weight: var(--tds-weight-display);
@@ -684,36 +686,205 @@
   line-height: 1.15;
   color: var(--color-black);
 }
-/* 68ch is the measure body text stays readable at; without it the paragraph
-   runs the full width of the catalog and the eye loses the line. */
-.premium-note__text {
+.premium-area__subtitle {
+  margin: 2.5rem 0 1rem;
+  font-family: var(--font-display);
+  font-weight: var(--tds-weight-display-tight);
+  font-size: 1.25rem;
+  color: var(--color-black);
+}
+/* 68ch: the measure body text stays readable at. */
+.premium-area__text {
   max-width: 68ch;
-  margin: 0;
+  margin: 0 0 1.5rem;
   line-height: 1.7;
   color: var(--color-ink);
   text-wrap: pretty;
 }
-.premium-note__lead {
-  margin: 1.5rem 0 0.625rem;
-  font-family: var(--font-mono);
-  font-size: 0.8125rem;
-  color: var(--color-muted);
+.premium-area__tools {
+  margin-top: 0.5rem;
 }
-.premium-note__list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem 1.5rem;
+.premium-area__terms,
+.premium-area__account {
+  max-width: 68ch;
+  margin: 1rem 0 0;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--color-ink);
+}
+/* `.link-underline` declares `color: inherit` and is unlayered — the accent is
+   set on this unlayered rule, as for `.service-note__cta` and `.tnav-link`. */
+.premium-area__link {
+  font-weight: 600;
+  color: var(--color-primary);
+}
+.premium-area__message:empty {
+  display: none;
+}
+.premium-area__message {
+  margin: 1rem 0 0;
+  font-weight: 600;
+  color: var(--color-ink);
+}
+.premium-area__active .premium-area__text {
+  margin-bottom: 1rem;
+}
+
+.premium-plans {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+  gap: 1rem;
   margin: 0;
   padding: 0;
   list-style: none;
 }
-/* `.link-underline` (tds-shared) declares `color: inherit`, and being unlayered
-   it beats any Tailwind colour utility on the same element — so the accent is
-   set here, on the app's own unlayered rule. Same reason as `.service-note__cta`
-   and `.tnav-link` above. */
-.premium-note__link {
+.premium-plan {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  padding: 1.375rem 1.5rem;
+  border-radius: var(--tds-radius-card);
+  background: var(--color-paper);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-primary) 18%, transparent);
+}
+/* The recommended stage: a 2px primary frame, the one emphasis in the block. */
+.premium-plan[data-highlight] {
+  box-shadow: inset 0 0 0 2px var(--color-primary);
+}
+.premium-plan__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.premium-plan__name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: var(--tds-weight-display-tight);
+  font-size: 1.25rem;
+  line-height: 1.2;
+  color: var(--color-black);
+}
+.premium-plan__tagline {
+  margin: 0;
+  line-height: 1.5;
+  color: var(--color-ink);
+}
+.premium-plan__price {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  margin: 0.25rem 0 0;
+}
+.premium-plan__amount {
+  font-family: var(--font-display);
+  font-weight: var(--tds-weight-display);
+  font-size: 2rem;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-black);
+}
+.premium-plan__per {
+  font-size: 0.875rem;
+  color: var(--color-ink);
+}
+.premium-plan__features {
+  margin: 0;
+  padding-left: 1.1rem;
+  list-style: disc;
+  line-height: 1.55;
+  color: var(--color-ink);
+}
+.premium-plan__tools {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--color-ink);
+}
+.premium-plan__label {
   font-weight: 600;
-  color: var(--color-accent);
+}
+.premium-plan__cta {
+  margin-top: auto;
+  align-self: flex-start;
+}
+
+/* ---- Ratgeber on the tool page (2026-10-24) ----
+   The tool's article from the blog CMS, or the link to it. prose.css is not
+   imported on this site, so the few elements a markdown body uses get their
+   rhythm here, scoped to the block. */
+.tool-ratgeber {
+  margin-top: 3rem;
+  padding: clamp(1.25rem, 1rem + 1.5vw, 2rem);
+  border-radius: var(--tds-radius-card);
+  background: var(--color-soft);
+}
+.tool-ratgeber__eyebrow {
+  margin: 0 0 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--color-ink);
+}
+.tool-ratgeber__title {
+  margin: 0 0 0.75rem;
+  font-family: var(--font-display);
+  font-weight: var(--tds-weight-display);
+  letter-spacing: var(--tds-tracking-display);
+  font-size: clamp(1.375rem, 1.1rem + 1vw, 1.75rem);
+  line-height: 1.2;
+  color: var(--color-black);
+}
+.tool-ratgeber__body {
+  max-width: 68ch;
+  line-height: 1.7;
+  color: var(--color-ink);
+}
+.tool-ratgeber__body > * + * {
+  margin-top: 1rem;
+}
+.tool-ratgeber__body :is(h2, h3, h4) {
+  margin-top: 1.75rem;
+  font-family: var(--font-display);
+  font-weight: var(--tds-weight-display-tight);
+  line-height: 1.25;
+  color: var(--color-black);
+}
+.tool-ratgeber__body h2 { font-size: 1.375rem; }
+.tool-ratgeber__body :is(h3, h4) { font-size: 1.125rem; }
+.tool-ratgeber__body :is(ul, ol) {
+  padding-left: 1.25rem;
+}
+.tool-ratgeber__body ul { list-style: disc; }
+.tool-ratgeber__body ol { list-style: decimal; }
+.tool-ratgeber__body a {
+  color: var(--color-primary);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+.tool-ratgeber__body img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--tds-radius-sm);
+}
+.tool-ratgeber__body :is(pre, code) {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+}
+.tool-ratgeber__body pre {
+  overflow-x: auto;
+  padding: 0.75rem 1rem;
+  border-radius: var(--tds-radius-sm);
+  background: var(--color-paper);
+}
+.tool-ratgeber__body blockquote {
+  padding-left: 1rem;
+  border-left: 2px solid var(--color-primary);
+}
+.tool-ratgeber__link {
+  display: inline-block;
+  margin-top: 1.25rem;
+  font-weight: 600;
+  color: var(--color-primary);
 }
 
 /* === Hard 2D shadows (2026-09-22, tds-shared >= 0.42) =====================
@@ -793,12 +964,13 @@
 }
 
 /* === Tap targets on touch (2026-10-12) ==================================
-   Measured at 360/390px: footer links 18px high, the premium list and the
+   Measured at 360/390px: footer links 18px high, the premium links and the
    "Alle Tools" link 18–21px — under WCAG 2.2's 24px. Lifted on coarse
    pointers only, so the desktop density stays (the shop does the same). */
 @media (pointer: coarse) {
   .tools-footer a,
-  .premium-note__link,
+  .premium-area__link,
+  .tool-ratgeber__link,
   .tnav-link {
     display: inline-flex;
     align-items: center;

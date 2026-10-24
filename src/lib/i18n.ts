@@ -78,10 +78,32 @@ export interface SiteCopy {
   serviceNoteCta: string;
   languageSwitch: string;
   languageOther: string;
-  /** The premium block under the catalog. */
+  /** The premium block under the catalog (visitors without a premium account). */
   premiumHeading: string;
   premiumBody: string;
-  premiumLead: string;
+  premium: {
+    plansHeading: string;
+    perMonth: string;
+    unlock: string;
+    recommended: string;
+    unlocks: string;
+    terms: string;
+    noPlans: string;
+    signupHint: string;
+    createAccount: string;
+    signIn: string;
+    manage: string;
+    active: string;
+    redirecting: string;
+    failed: string;
+  };
+  /** The Ratgeber block on every tool page. */
+  ratgeber: {
+    heading: string;
+    read: string;
+    more: string;
+    minutes: (n: number) => string;
+  };
 }
 
 export const copy = {
@@ -149,10 +171,31 @@ export const copy = {
     serviceNoteCta: "Unverbindlich anfragen",
     languageSwitch: "Sprache",
     languageOther: "English",
-    premiumHeading: "Freischaltbare Werkzeuge",
+    premiumHeading: "Premium-Werkzeuge",
     premiumBody:
-      "Die meisten Werkzeuge hier sind frei nutzbar. Ein paar aufwendigere schaltet man einmalig frei — danach laufen sie genauso im Browser wie alle anderen: ohne Upload, ohne Abo, ohne Konto beim Anbieter der Datei.",
-    premiumLead: "Einmalig freischalten:",
+      "Für alles, was jede Woche wieder anfällt: Die Premium-Werkzeuge erledigen die aufwendigeren Arbeiten in einem Rutsch — genauso direkt im Browser wie alle anderen, ohne Upload und ohne Installation. Ein Abo schaltet alle Werkzeuge seiner Stufe frei.",
+    premium: {
+      plansHeading: "Premium-Stufen",
+      perMonth: "im Monat",
+      unlock: "Freischalten",
+      recommended: "Empfohlen",
+      unlocks: "Schaltet frei:",
+      terms: "Monatliche Abrechnung über Stripe, zum Ende jedes Abrechnungsmonats kündbar.",
+      noPlans: "Premium ist gerade nicht buchbar.",
+      signupHint: "Zum Freischalten braucht es ein Konto. Das Anlegen dauert eine Minute.",
+      createAccount: "Konto anlegen",
+      signIn: "Anmelden",
+      manage: "Abo verwalten",
+      active: "Premium ist aktiv: Die freigeschalteten Werkzeuge stehen oben im Katalog.",
+      redirecting: "Weiterleitung …",
+      failed: "Das Freischalten konnte nicht gestartet werden. Bitte später erneut versuchen.",
+    },
+    ratgeber: {
+      heading: "Aus dem Ratgeber",
+      read: "Ganzen Artikel im Ratgeber lesen",
+      more: "Mehr Anleitungen und Hintergründe im Ratgeber",
+      minutes: (n: number) => `${n} Min. Lesezeit`,
+    },
   },
   en: {
     tagline: "Digital tools for business, much of it free",
@@ -207,10 +250,31 @@ export const copy = {
     serviceNoteCta: "Get in touch",
     languageSwitch: "Language",
     languageOther: "Deutsch",
-    premiumHeading: "Tools you unlock",
+    premiumHeading: "Premium tools",
     premiumBody:
-      "Most tools here are free to use. A few of the heavier ones are unlocked once — after that they run in your browser exactly like the rest: no upload, no subscription, no account with whoever made the file.",
-    premiumLead: "Unlock once:",
+      "For the jobs that come back every week: the premium tools handle the heavier work in one go — right in your browser like all the others, no upload, no installation. One subscription unlocks every tool in its plan.",
+    premium: {
+      plansHeading: "Premium plans",
+      perMonth: "per month",
+      unlock: "Unlock",
+      recommended: "Recommended",
+      unlocks: "Unlocks:",
+      terms: "Billed monthly through Stripe, cancellable at the end of any billing month.",
+      noPlans: "Premium cannot be booked right now.",
+      signupHint: "Unlocking needs an account. Creating one takes a minute.",
+      createAccount: "Create account",
+      signIn: "Sign in",
+      manage: "Manage subscription",
+      active: "Premium is active: your unlocked tools are listed in the catalogue above.",
+      redirecting: "Redirecting …",
+      failed: "Unlocking could not be started. Please try again later.",
+    },
+    ratgeber: {
+      heading: "From the Ratgeber",
+      read: "Read the full article in the Ratgeber",
+      more: "More guides and background in the Ratgeber",
+      minutes: (n: number) => `${n} min read`,
+    },
   },
 } satisfies Record<Lang, SiteCopy>;
 

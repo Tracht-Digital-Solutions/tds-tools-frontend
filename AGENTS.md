@@ -40,7 +40,7 @@ npm run audit:geo -- <url>
 | [docs/agents/architecture.md](docs/agents/architecture.md) | Changing composition, the catalog, routes, PWA, site key or shared site helpers |
 | [docs/agents/design-surface.md](docs/agents/design-surface.md) | Changing styles, the header, brand mark, catalog grid, shadows or build CSS |
 | [docs/agents/seo-content.md](docs/agents/seo-content.md) | Changing titles, descriptions, JSON-LD, OG cards, hreflang, guides or marketing copy |
-| [docs/agents/premium-and-account.md](docs/agents/premium-and-account.md) | Touching `ToolGate`, `PremiumNote`, the account menu or the language switch |
+| [docs/agents/premium-and-account.md](docs/agents/premium-and-account.md) | Touching `ToolGate`, `PremiumSection`/`premiumClient`, the account menu or the language switch |
 | [docs/agents/ocr-assets.md](docs/agents/ocr-assets.md) | Touching `scripts/sync-ocr.mjs` or `public/ocr/` |
 | [docs/agents/testing.md](docs/agents/testing.md) | Writing or changing tests |
 | [docs/agents/deployment.md](docs/agents/deployment.md) | Changing workflows, `.htaccess`, env or host setup |

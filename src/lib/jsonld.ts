@@ -182,7 +182,15 @@ export interface SoftwareAppInput {
   lang: Lang;
   /** Free tools declare `isAccessibleForFree`; premium ones carry an Offer. */
   isFree: boolean;
-  priceCents: number;
+  /**
+   * A premium tool's price: the monthly price of the cheapest stage that
+   * unlocks it, or null when no stage is on sale — then no Offer at all, since
+   * a page that books nothing must not declare a price.
+   */
+  priceCents: number | null;
+  /** Premium is a monthly subscription: the Offer carries a per-month unit price. */
+  monthly?: boolean;
+  currency?: string;
   /** Manifest keywords — a genuine relevance signal on an app node. */
   keywords?: readonly string[];
 }
@@ -198,7 +206,29 @@ export interface SoftwareAppInput {
  * charges money.
  */
 export function softwareApplicationSchema(input: SoftwareAppInput) {
-  const price = input.isFree ? 0 : input.priceCents / 100;
+  const currency = input.currency ?? "EUR";
+  const price = input.isFree ? 0 : input.priceCents === null ? null : input.priceCents / 100;
+  const offers =
+    price === null
+      ? {}
+      : {
+          offers: {
+            "@type": "Offer",
+            price: price.toFixed(2),
+            priceCurrency: currency,
+            availability: "https://schema.org/InStock",
+            ...(input.monthly && !input.isFree
+              ? {
+                  priceSpecification: {
+                    "@type": "UnitPriceSpecification",
+                    price: price.toFixed(2),
+                    priceCurrency: currency,
+                    referenceQuantity: { "@type": "QuantitativeValue", value: 1, unitCode: "MON" },
+                  },
+                }
+              : {}),
+          },
+        };
 
   return {
     "@type": input.type,
@@ -211,12 +241,7 @@ export function softwareApplicationSchema(input: SoftwareAppInput) {
     browserRequirements: "Requires JavaScript",
     inLanguage: input.lang === "de" ? "de-DE" : "en-GB",
     isAccessibleForFree: input.isFree,
-    offers: {
-      "@type": "Offer",
-      price: price.toFixed(2),
-      priceCurrency: "EUR",
-      availability: "https://schema.org/InStock",
-    },
+    ...offers,
     provider: { "@id": ORG_ID },
     publisher: { "@id": ORG_ID },
     ...(input.keywords?.length ? { keywords: input.keywords.join(", ") } : {}),

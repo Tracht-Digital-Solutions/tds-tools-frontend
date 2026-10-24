@@ -14,9 +14,11 @@ interface Props {
   Tool: ((props: Record<string, unknown>) => unknown) | undefined;
   gated: boolean;
   lang: Lang;
+  /** The stage "Freischalten" books for a premium tool (cheapest on sale), or null. */
+  unlock?: { name: string; priceCents: number; currency: string } | null;
 }
 
-const { tool, Tool, gated, lang } = Astro.props;
+const { tool, Tool, gated, lang, unlock = null } = Astro.props;
 ---
 
 {gated && (
@@ -25,7 +27,7 @@ const { tool, Tool, gated, lang } = Astro.props;
     toolId={tool.id}
     isPremium={tool.isPremium}
     lang={lang}
-    priceCents={tool.priceCents}
+    unlock={unlock}
     bodySelector="#tool-body"
   />
 )}

@@ -35,7 +35,6 @@ function renderGate(props: Partial<React.ComponentProps<typeof ToolGate>> = {}) 
     <ToolGate
       toolId="pdf-tools"
       isPremium={false}
-      priceCents={0}
       bodySelector="#tool-body"
       {...props}
     />,
@@ -109,9 +108,20 @@ describe("session probe", () => {
 
   it("labels the prompt differently for a premium tool", async () => {
     fetchMock.mockResolvedValue(res(401));
-    renderGate({ isPremium: true, priceCents: 500 });
+    renderGate({ isPremium: true, unlock: { name: "Büro", priceCents: 500, currency: "EUR" } });
 
     expect(await screen.findByText("Premium-Tool")).toBeDefined();
+  });
+
+  it("offers an account next to the sign-in for a premium tool", async () => {
+    fetchMock.mockResolvedValue(res(401));
+    renderGate({ isPremium: true });
+
+    const signup = (await screen.findByRole("link", { name: "Konto anlegen" })) as HTMLAnchorElement;
+    const url = new URL(signup.href);
+    expect(url.origin + url.pathname).toBe("https://auth.tracht-digital.de/registrieren");
+    expect(url.searchParams.get("next")).toBe(location.href);
+    expect(screen.getByRole("link", { name: "Anmelden" })).toBeDefined();
   });
 
   it("sends the current page as an encoded next on the login link", async () => {
@@ -162,7 +172,7 @@ describe("free tool behind a login", () => {
 });
 
 describe("premium entitlement", () => {
-  const premium = { isPremium: true, priceCents: 500 };
+  const premium = { isPremium: true, unlock: { name: "Büro", priceCents: 500, currency: "EUR" } };
 
   it("checks the entitlement for the specific tool", async () => {
     fetchMock
@@ -193,7 +203,7 @@ describe("premium entitlement", () => {
     fetchMock.mockResolvedValueOnce(res(200)).mockResolvedValueOnce(res(200, { entitled: false }));
     renderGate(premium);
 
-    expect(await screen.findByRole("button", { name: "Jetzt freischalten" })).toBeDefined();
+    expect(await screen.findByRole("button", { name: "Freischalten" })).toBeDefined();
     expect(body().hidden).toBe(true);
   });
 
@@ -205,7 +215,7 @@ describe("premium entitlement", () => {
     renderGate(premium);
 
     expect(await screen.findByText(/konnte nicht geprüft werden/)).toBeDefined();
-    expect(screen.queryByRole("button", { name: "Jetzt freischalten" })).toBeNull();
+    expect(screen.queryByRole("button", { name: "Freischalten" })).toBeNull();
     expect(body().hidden).toBe(true);
   });
 
@@ -220,33 +230,44 @@ describe("premium entitlement", () => {
     fetchMock.mockResolvedValueOnce(res(200)).mockResolvedValueOnce(res(200, { entitled: false }));
     renderGate({ ...premium, lang: "en" });
 
-    expect(await screen.findByRole("button", { name: "Unlock now" })).toBeDefined();
-    expect(screen.getByText(/One-off/).textContent).toContain("€5.00");
+    expect(await screen.findByRole("button", { name: "Unlock" })).toBeDefined();
+    expect(screen.getByText(/per month/).textContent).toContain("€5.00");
   });
 
   it("offers the purchase when the entitlement response is a 403", async () => {
     fetchMock.mockResolvedValueOnce(res(200)).mockResolvedValueOnce(res(403));
     renderGate(premium);
 
-    expect(await screen.findByRole("button", { name: "Jetzt freischalten" })).toBeDefined();
+    expect(await screen.findByRole("button", { name: "Freischalten" })).toBeDefined();
   });
 
-  it("formats the price in euros", async () => {
+  it("states the stage and its monthly price", async () => {
     fetchMock.mockResolvedValueOnce(res(200)).mockResolvedValueOnce(res(200, { entitled: false }));
-    renderGate({ isPremium: true, priceCents: 500 });
+    renderGate(premium);
 
-    const line = await screen.findByText(/Einmalig/);
+    const line = await screen.findByText(/im Monat/);
+    expect(line.textContent).toContain("„Büro“");
     expect(line.textContent).toContain("5,00");
+    expect(line.textContent).not.toMatch(/Einmalig/);
+  });
+
+  it("offers no button when no stage has the tool", async () => {
+    fetchMock.mockResolvedValueOnce(res(200)).mockResolvedValueOnce(res(200, { entitled: false }));
+    renderGate({ isPremium: true, unlock: null });
+
+    expect(await screen.findByText("Premium ist gerade nicht buchbar.")).toBeDefined();
+    expect(screen.queryByRole("button", { name: "Freischalten" })).toBeNull();
+    expect(screen.getByRole("link", { name: "Alle Premium-Stufen" }).getAttribute("href")).toBe("/#premium");
   });
 });
 
 describe("checkout", () => {
-  const premium = { isPremium: true, priceCents: 500 };
+  const premium = { isPremium: true, unlock: { name: "Büro", priceCents: 500, currency: "EUR" } };
 
   const reachBuy = async () => {
     fetchMock.mockResolvedValueOnce(res(200)).mockResolvedValueOnce(res(200, { entitled: false }));
     renderGate(premium);
-    return screen.findByRole("button", { name: "Jetzt freischalten" });
+    return screen.findByRole("button", { name: "Freischalten" });
   };
 
   it("posts the tool id and follows the Stripe URL", async () => {

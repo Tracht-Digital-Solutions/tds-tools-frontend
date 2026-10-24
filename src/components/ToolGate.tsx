@@ -1,10 +1,16 @@
 import { useEffect, useState } from "react";
 import { runtimeSetting } from "@tracht-digital-solutions/tds-shared/api";
+import { signupUrl } from "~/lib/premiumClient";
 
 interface Props {
   toolId: string;
   isPremium: boolean;
-  priceCents: number;
+  /**
+   * What "Freischalten" books: the cheapest premium stage on sale with this
+   * tool and its FIXED monthly price. Null when no stage has it — then the
+   * gate says so instead of offering a button that cannot work.
+   */
+  unlock?: { name: string; priceCents: number; currency: string } | null;
   /** CSS selector of the (initially hidden) tool body to reveal on access. */
   bodySelector: string;
   /** The page language. Every string here was German, on `/en/` pages too. */
@@ -16,13 +22,16 @@ const TX = {
     checking: "Zugang wird geprüft …",
     premium: "Premium-Tool",
     loginRequired: "Anmeldung erforderlich",
-    loginPremium: "Nach der Anmeldung lässt sich dieses Premium-Tool freischalten.",
+    loginPremium: "Mit einem Konto lässt sich dieses Premium-Tool freischalten.",
     loginFree: "Dieses Tool steht nach der Anmeldung zur Verfügung.",
     login: "Anmelden",
+    signup: "Konto anlegen",
     unlockTitle: "Dieses Tool freischalten",
-    once: (price: string) => `Einmalig ${price} — danach dauerhaft nutzbar.`,
+    monthly: (stage: string, price: string) => `Enthalten in „${stage}“: ${price} im Monat, monatlich kündbar.`,
+    notBookable: "Premium ist gerade nicht buchbar.",
+    allPlans: "Alle Premium-Stufen",
     redirecting: "Weiterleitung …",
-    unlock: "Jetzt freischalten",
+    unlock: "Freischalten",
     httpError: (status: number) => `Fehler (HTTP ${status}).`,
     payFailed: "Zahlung konnte nicht gestartet werden.",
     failed: "Der Zugang konnte nicht geprüft werden. Bitte später erneut versuchen.",
@@ -32,13 +41,16 @@ const TX = {
     checking: "Checking access …",
     premium: "Premium tool",
     loginRequired: "Sign-in required",
-    loginPremium: "Sign in to unlock this premium tool.",
+    loginPremium: "With an account you can unlock this premium tool.",
     loginFree: "Please sign in to use this tool.",
     login: "Sign in",
+    signup: "Create account",
     unlockTitle: "Unlock this tool",
-    once: (price: string) => `One-off ${price} — yours to use from then on.`,
+    monthly: (stage: string, price: string) => `Included in “${stage}”: ${price} per month, cancellable monthly.`,
+    notBookable: "Premium cannot be booked right now.",
+    allPlans: "All premium plans",
     redirecting: "Redirecting …",
-    unlock: "Unlock now",
+    unlock: "Unlock",
     httpError: (status: number) => `Error (HTTP ${status}).`,
     payFailed: "The payment could not be started.",
     failed: "Access could not be checked. Please try again later.",
@@ -75,14 +87,17 @@ type State = "checking" | "login" | "buy" | "granted" | "error";
  * Client-side access gate for login-required / premium tools. On mount it probes
  * the shared session (`/auth/me`, cross-subdomain cookie), then — for premium —
  * the entitlement (`/tools/entitlement`). On access it reveals the tool body and
- * removes itself; otherwise it shows a login prompt or a "Freischalten" purchase
- * button (Stripe Checkout). Free tools never render this.
+ * removes itself; otherwise it shows a login prompt (with "Konto anlegen") or
+ * the "Freischalten" button, which opens the MONTHLY checkout of the cheapest
+ * premium stage with this tool (2026-10-24; one-off purchases are no longer
+ * sold, earlier ones still pass the entitlement check). Free tools never
+ * render this.
  *
  * Note: premium tools are client-side, so their code ships to everyone — this is
  * a convenience/paywall gate, not DRM. The value is the polished UI + the
  * purchase flow, not withholding the bundle.
  */
-export default function ToolGate({ toolId, isPremium, priceCents, bodySelector, lang = "de" }: Props) {
+export default function ToolGate({ toolId, isPremium, unlock = null, bodySelector, lang = "de" }: Props) {
   const t = TX[lang];
   const [state, setState] = useState<State>("checking");
   const [busy, setBusy] = useState(false);
@@ -146,7 +161,21 @@ export default function ToolGate({ toolId, isPremium, priceCents, bodySelector, 
     };
   }, [toolId, isPremium]);
 
-  const loginHref = `${endpoints.login}?next=${encodeURIComponent(typeof location !== "undefined" ? location.href : "")}`;
+  const here = typeof location !== "undefined" ? location.href : "";
+  const loginHref = `${endpoints.login}?next=${encodeURIComponent(here)}`;
+  const signupHref = signupUrl(endpoints.login, here);
+  const catalogHref = lang === "de" ? "/#premium" : "/en/#premium";
+
+  /** A running subscription on another stage: change it in the portal, never book a second. */
+  const portal = async () => {
+    const res = await fetch(`${endpoints.api}/tools/billing-portal`, { method: "POST", credentials: "include" });
+    const data = await res.json().catch(() => null);
+    if (res.ok && data?.url) {
+      window.location.href = data.url;
+      return;
+    }
+    setError(data?.error ?? t.httpError(res.status));
+  };
 
   const buy = async () => {
     setBusy(true);
@@ -165,6 +194,10 @@ export default function ToolGate({ toolId, isPremium, priceCents, bodySelector, 
       const data = await res.json().catch(() => null);
       if (res.ok && data?.url) {
         window.location.href = data.url;
+        return;
+      }
+      if (res.status === 409 && data?.code === "has_subscription") {
+        await portal();
         return;
       }
       setError(data?.error ?? t.httpError(res.status));
@@ -192,9 +225,16 @@ export default function ToolGate({ toolId, isPremium, priceCents, bodySelector, 
       <div className={box}>
         <p className="mb-1 text-lg font-semibold">{isPremium ? t.premium : t.loginRequired}</p>
         <p className="mb-4 text-sm text-[color:var(--color-muted)]">{isPremium ? t.loginPremium : t.loginFree}</p>
-        <a href={loginHref} className="btn btn-primary no-underline">
-          {t.login}
-        </a>
+        <div className="tds-toolbar justify-center">
+          {isPremium && (
+            <a href={signupHref} className="btn btn-primary no-underline">
+              {t.signup}
+            </a>
+          )}
+          <a href={loginHref} className={`btn ${isPremium ? "btn-ghost" : "btn-primary"} no-underline`}>
+            {t.login}
+          </a>
+        </div>
       </div>
     );
   }
@@ -205,12 +245,21 @@ export default function ToolGate({ toolId, isPremium, priceCents, bodySelector, 
         <span className="chip chip--warning mb-2 inline-flex">Premium</span>
         <p className="mb-1 text-lg font-semibold">{t.unlockTitle}</p>
         <p className="mb-4 text-sm text-[color:var(--color-muted)]">
-          {t.once((priceCents / 100).toLocaleString(t.locale, { style: "currency", currency: "EUR" }))}
+          {unlock
+            ? t.monthly(unlock.name, (unlock.priceCents / 100).toLocaleString(t.locale, { style: "currency", currency: unlock.currency }))
+            : t.notBookable}
         </p>
         {error && <p className="tds-alert tds-alert--danger mb-3">{error}</p>}
-        <button type="button" className="btn btn-primary" onClick={buy} disabled={busy}>
-          {busy ? t.redirecting : t.unlock}
-        </button>
+        <div className="tds-toolbar justify-center">
+          {unlock && (
+            <button type="button" className="btn btn-primary" onClick={buy} disabled={busy}>
+              {busy ? t.redirecting : t.unlock}
+            </button>
+          )}
+          <a href={catalogHref} className="btn btn-ghost no-underline">
+            {t.allPlans}
+          </a>
+        </div>
       </div>
     );
   }

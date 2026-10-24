@@ -47,6 +47,8 @@ export interface ResolvedTool extends ToolDef {
   requiresLogin: boolean;
   isPremium: boolean;
   priceCents: number;
+  /** The Ratgeber article the tool page shows or links (panel: Tool-Verwaltung). */
+  blogSlug: string | null;
 }
 
 /** Resolved AdSense config (mirrors the tds-blog `ads` block shape). */
@@ -81,6 +83,7 @@ interface CatalogApiTool {
   requires_login?: boolean;
   is_premium?: boolean;
   price_cents?: number;
+  blog_slug?: string | null;
 }
 interface CatalogApiResponse {
   tools?: CatalogApiTool[];
@@ -100,6 +103,7 @@ function resolve(tool: ToolDef, row: CatalogApiTool | undefined): ResolvedTool {
     requiresLogin: row?.requires_login ?? tool.requiresLoginDefault ?? false,
     isPremium: row?.is_premium ?? tool.premiumDefault ?? false,
     priceCents: row?.price_cents ?? tool.priceCentsDefault ?? 0,
+    blogSlug: typeof row?.blog_slug === "string" && row.blog_slug !== "" ? row.blog_slug : null,
   };
 }
 
