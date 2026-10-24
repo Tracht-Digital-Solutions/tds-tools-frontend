@@ -24,7 +24,8 @@ radius there, never on a class. `global.css` imports `base.css` →
   on any reference.
 - **`app.css` and `prose.css` are not imported.** `app.css` scopes its rules to the panel. `prose.css` styles
   markdown descendants, while guides are structured content with their own ~60-line `.tool-guide*` block.
-- `<body>` paints no canvas; the page is plain `--color-paper` with `--color-soft` blocks.
+- **The ground is tinted** (since 2026-10-24): `--tools-ground` (primary 8 % in paper) on `<html>` and `<body>`; the
+  journal and the landing page keep plain paper.
 - **`data-frontend` stays unset.** It is the panel's accent axis; `admin` would paint the management burgundy,
   a claim a public catalog must not make. tds-shared's `design.test.ts` pins the other half.
 
@@ -48,6 +49,7 @@ radius there, never on a class. `global.css` imports `base.css` →
 
 - **The header owns none of its chrome**: from 64rem it is two corner islands (`.tds-sitebar__island`, two
   wrappers in `Header.astro`) on a transparent `.brand-header`; fill, border and shadow come from tds-shared.
+  Only this site rounds them: `.tds-sitebar { --tds-radius-bar: var(--tds-radius-lg) }` in `global.css`.
 - **The catalogue has no hero and no visible heading** (since 2026-10-24): it opens on the counter, the
   filter toggle and the grid. Its one `h1` is `sr-only` (the former hero headline); keep it.
 - **The brand mark is `.brand-logo`**, a CSS mask over `--color-primary` using `public/brand/td-logomark.webp`
@@ -93,9 +95,12 @@ path). Copy reaches the script as data attributes, never by importing `~/lib/i18
 
 ## Hard 2D shadows (tds-shared ≥ 0.42)
 
-- Every grid card carries the hard offset over its opaque fill; with the 1rem gap each shows it whole, and the
+- Every grid card has an opaque fill; on hover it shows its whole hard offset over the 1rem gap, and the
   active cell (z-index 2) rises above its neighbours.
-- `.tool-card` outside the grid and `.service-note` take the large offset.
+- **A tool card casts no shadow at rest** (since 2026-10-24); the offset appears only on hover/focus with the lift.
+  `.service-note` keeps the large offset.
+- **Restate all four background longhands on a card's hover.** An older hover rule uses the `background` shorthand,
+  which resets `background-size`; the 4 px category band then filled the whole card (0.44.0).
 - Hover lifts a card 2 px up-left while its offset grows (`--tds-shadow-hard-hover`). Tilt uses `transform`, lift
   uses `translate`, so neither overwrites the other.
 - **Never transition a `box-shadow`.**

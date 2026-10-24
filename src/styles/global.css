@@ -864,8 +864,12 @@ html[data-surface="blog"] {
 }
 .tool-grid .tool-card:is(:hover, :focus-within) {
   --tool-card-bg: color-mix(in srgb, var(--tool-cat, transparent) 30%, var(--color-soft));
+  /* All four longhands: the older hover rule above uses the `background`
+     shorthand, which resets the size, and the 4px band would fill the card. */
   background-color: var(--tool-card-bg);
   background-image: linear-gradient(var(--tool-cat, transparent), var(--tool-cat, transparent));
+  background-size: 100% 4px;
+  background-repeat: no-repeat;
   box-shadow: var(--tds-shadow-hard-hover);
 }
 .tool-card[data-category]::before {
@@ -881,4 +885,34 @@ html[data-surface="blog"] {
   height: 0.625rem;
   margin-inline-end: 0.4rem;
   background: var(--tool-cat, currentColor);
+}
+
+/* ---- Tools-only: round nav, coloured ground, shadow on hover (2026-10-24) ----
+   Local to this site on purpose; the journal and the landing page keep
+   their square islands and paper ground.
+   The two header islands round through the token tds-shared reads
+   (`--tds-radius-bar`), scoped to the bar so menu bars elsewhere keep
+   theirs. lg (12px) = the 8px buttons inside plus the island's padding. */
+.tds-sitebar {
+  --tds-radius-bar: var(--tds-radius-lg);
+}
+/* A brand-tinted ground instead of plain paper. `--color-primary` flips
+   with the theme, so one mix serves both; <html> carries it too so an
+   overscroll never flashes paper. */
+html[data-surface="blog"] {
+  --tools-ground: color-mix(in srgb, var(--color-primary) 8%, var(--color-paper));
+  background-color: var(--tools-ground);
+}
+html[data-surface="blog"] body {
+  background-color: var(--tools-ground);
+}
+/* A tool card casts no shadow at rest; the hard offset appears only on
+   hover/focus, together with the lift. Never transitioned (see above). */
+.tool-card,
+.tool-grid .tool-card {
+  box-shadow: none;
+}
+.tool-card:is(:hover, :focus-within),
+.tool-grid .tool-card:is(:hover, :focus-within) {
+  box-shadow: var(--tds-shadow-hard-hover);
 }
