@@ -446,6 +446,12 @@ export const toolCopyEn: Record<string, ToolCopy> = {
   },
 
   // tds-tool-office
+  "anfahrtskosten-rechner": {
+    name: "Travel Cost Calculator",
+    description:
+      "Works out the trip from Schwarzenbek to an address: distance, driving time and cost at a price per kilometre of your choice, one way or return.",
+    seoTitle: "Calculate travel costs from Schwarzenbek",
+  },
   "etiketten-drucken": {
     name: "Print Labels",
     description:

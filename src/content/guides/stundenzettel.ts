@@ -68,7 +68,7 @@ const guide: ToolGuideSet = {
         a: "Nein, die Angaben stehen nur im geöffneten Tab. Das PDF also erzeugen, bevor die Seite zugeht — die fertige Datei ist die Fassung, die bleibt.",
       },
     ],
-    related: ["etiketten-drucken", "pdf-werkzeuge"],
+    related: ["etiketten-drucken", "anfahrtskosten-rechner"],
   },
   en: {
     intro: [
@@ -136,7 +136,7 @@ const guide: ToolGuideSet = {
         a: "No, they live only in the open tab. Create the PDF before leaving the page — the finished file is the version that lasts.",
       },
     ],
-    related: ["etiketten-drucken", "pdf-werkzeuge"],
+    related: ["etiketten-drucken", "anfahrtskosten-rechner"],
   },
 };
 

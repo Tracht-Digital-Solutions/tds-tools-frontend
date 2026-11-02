@@ -12,6 +12,7 @@ import pdfWasserzeichen from "~/content/guides/pdf-wasserzeichen";
 import bilderZuPdf from "~/content/guides/bilder-zu-pdf";
 import pdfZuBildern from "~/content/guides/pdf-zu-bildern";
 import etikettenDrucken from "~/content/guides/etiketten-drucken";
+import anfahrtskostenRechner from "~/content/guides/anfahrtskosten-rechner";
 import stundenzettel from "~/content/guides/stundenzettel";
 import texterkennung from "~/content/guides/texterkennung";
 import impressumGenerator from "~/content/guides/impressum-generator";
@@ -91,6 +92,7 @@ export const guides: Record<string, ToolGuideSet> = {
   "bilder-zu-pdf": bilderZuPdf,
   "pdf-zu-bildern": pdfZuBildern,
   "etiketten-drucken": etikettenDrucken,
+  "anfahrtskosten-rechner": anfahrtskostenRechner,
   stundenzettel,
   texterkennung,
   "impressum-generator": impressumGenerator,
