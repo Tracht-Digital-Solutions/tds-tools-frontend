@@ -27,7 +27,7 @@ const source = raw
 describe("the wordmark", () => {
   it("sets the TD mark beside the name Online-Tools", () => {
     // Since 2026-10-19 the site is called "Online-Tools", beside the TD mark —
-    // the same construction as the Ratgeber's and the Digitalmarkt's, which
+    // the same construction as the Ratgeber's and the Shop's, which
     // is what makes the public properties read as one brand.
     expect(source).toContain('<span class="brand-logo" aria-hidden="true">');
     expect(source).toContain("<span class=\"accent-italic\">Online-Tools</span>");

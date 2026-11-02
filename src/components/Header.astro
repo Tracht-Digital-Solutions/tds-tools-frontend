@@ -33,7 +33,7 @@ const base = lang === "de" ? "" : "/en";
 const path = Astro.url.pathname;
 const onCatalog = neutralPath(path) === "/";
 
-/** Startseite · Ratgeber · Online-Tools · Digitalmarkt, with this site marked current. */
+/** Startseite · Ratgeber · Online-Tools · Shop, with this site marked current. */
 const nav = propertyNav("tools", lang, `${base}/`);
 const contact = propertyContact(lang);
 
@@ -66,7 +66,7 @@ const langHrefs: { code: Lang; href: string; label: string }[] = [
         from layout. */}
     <div class="tds-sitebar__island">
       {/* The TD mark, then the site's name "Online-Tools" (since 2026-10-19),
-          the same construction as the Ratgeber's and the Digitalmarkt's.
+          the same construction as the Ratgeber's and the Shop's.
           Because the mark is decorative, the
           `aria-label` restates the full name and the mark is `aria-hidden`;
           drop that and the link announces as "Tools". */}
