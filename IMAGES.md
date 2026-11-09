@@ -12,5 +12,5 @@ input controls, tool outputs and generated social cards remain code-owned.
 
 Eight new originals were generated with the built-in image tool and visually
 inspected. Sorted PNG originals, WebP copies and full generation prompts are
-in `stuff/03-Materialien/Bildserie-2026-11/` in the workspace (series 2026-11, group 07). Images are decorative,
+in `stuff/03-Bilder/Bildserie-2026-11/` in the workspace (series 2026-11, group 07). Images are decorative,
 illustrative scenes, never screenshots of the application or client work.
