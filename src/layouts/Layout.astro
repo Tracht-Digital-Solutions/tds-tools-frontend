@@ -17,7 +17,7 @@ import "@fontsource/lato/900.css";
 import "@fontsource-variable/plus-jakarta-sans";
 import "@fontsource-variable/jetbrains-mono";
 import "~/styles/global.css";
-import { ConsentBanner } from "@tracht-digital-solutions/tds-shared/consent";
+import { consentBannerHostMarkup } from "@tracht-digital-solutions/tds-shared/dom";
 import {
   errorBounceScript,
   hoverTipScript,
@@ -302,13 +302,21 @@ const jsonLdText = jsonLd ? serializeJsonLd(jsonLd) : null;
       The AdSense loader below is unchanged: it still reads `tds-ad-consent`,
       which the new store keeps writing.
     */}
-    <ConsentBanner
-      client:idle
-      lang={lang}
-      categories={adsActive ? ["analytics", "marketing"] : ["analytics"]}
-      privacyUrl={links.datenschutz}
-      imprintUrl={links.impressum}
+    {/* Plain DOM since tds-shared 0.64.11 (same markup as the React island
+        it replaced, without the React runtime); mounted at idle below. */}
+    <Fragment
+      set:html={consentBannerHostMarkup({
+        lang,
+        categories: adsActive ? ["analytics", "marketing"] : ["analytics"],
+        privacyUrl: links.datenschutz,
+        imprintUrl: links.impressum,
+      })}
     />
+    <script>
+      import { mountConsentBannerHost } from "@tracht-digital-solutions/tds-shared/dom";
+
+      mountConsentBannerHost();
+    </script>
 
     {/* Consent-gated AdSense loader. Injects adsbygoogle.js only after the
         visitor grants ad consent (now or via the banner event) — nothing loads
