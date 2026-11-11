@@ -1,7 +1,7 @@
 {
   "name": "tds-tools-frontend",
   "license": "UNLICENSED",
-  "version": "0.52.2",
+  "version": "0.52.3",
   "private": true,
   "type": "module",
   "scripts": {
@@ -27,7 +27,7 @@
     "@fontsource-variable/plus-jakarta-sans": "^5.2.8",
     "@fontsource/lato": "^5.2.7",
     "@tailwindcss/postcss": "^4.3.3",
-    "@tracht-digital-solutions/tds-shared": "^0.64.11",
+    "@tracht-digital-solutions/tds-shared": "^0.64.14",
     "@tracht-digital-solutions/tds-tool-businesscard": "^0.1.4",
     "@tracht-digital-solutions/tds-tool-devkit": "^0.2.3",
     "@tracht-digital-solutions/tds-tool-legal": "^0.1.3",
