@@ -1,0 +1,1 @@
+function e(e=`de`){return e===`en`?`en-GB`:`de-DE`}function t(t,n=`de`,r=1){let i=[`B`,`KB`,`MB`,`GB`],a=Math.max(0,t),o=0,s=(e,t)=>Number(e.toFixed(t===0?0:r));for(;s(a,o)>=1024&&o<i.length-1;)a/=1024,o++;let c=o===0?0:r;return`${a.toLocaleString(e(n),{minimumFractionDigits:c,maximumFractionDigits:c})} ${i[o]}`}export{t};

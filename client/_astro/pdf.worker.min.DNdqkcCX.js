@@ -1,0 +1,1 @@
+var e=`/_astro/pdf.worker.min.CIqJB0yW.mjs`;export{e as default};
